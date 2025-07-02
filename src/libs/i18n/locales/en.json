@@ -1,0 +1,19 @@
+{
+  "Metadata": {
+    "home": {
+      "title": "PureSound - Pure Music Essence",
+      "description": "Homepage of PureSound - Pure Music Essence"
+    },
+    "login": {
+      "title": "PureSound - Login",
+      "description": "Login into PureSound - Pure Music Essence"
+    }
+  },
+  "Login": {
+    "title": "Login"
+  },
+
+  "Home": {
+    "title": "Home"
+  }
+}

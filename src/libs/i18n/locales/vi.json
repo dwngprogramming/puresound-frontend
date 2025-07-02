@@ -1,0 +1,18 @@
+{
+  "Metadata": {
+    "home": {
+      "title": "PureSound - Tinh hoa âm nhạc thuần khiết",
+      "description": "Trang chủ của PureSound - Tinh hoa âm nhạc thuần khiết"
+    },
+    "login": {
+      "title": "PureSound - Đăng nhập",
+      "description": "Đăng nhập vào PureSound - Tinh hoa âm nhạc thuần khiết"
+    }
+  },
+  "Login": {
+    "title": "Đăng nhập"
+  },
+  "Home": {
+    "title": "Trang chủ"
+  }
+}
