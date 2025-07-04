@@ -20,23 +20,35 @@ export const useBreakpoint = () => {
       setBreakpoint(newBreakpoint);
     };
 
+    // Debounce function
+    const debounce = (func: Function, delay: number) => {
+      let timeoutId: NodeJS.Timeout;
+      return (...args: any[]) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func.apply(null, args), delay);
+      };
+    };
+
+    // Tạo debounced version của updateBreakpoint
+    const debouncedUpdateBreakpoint = debounce(updateBreakpoint, 50);
+
     // Update breakpoint ngay lập tức
     updateBreakpoint();
 
-    // Set mounted sau 1 giây
+    // Set mounted sau 0.5 giây
     const mountTimer = setTimeout(() => {
       setMounted(true);
     }, 500);
 
-    // Add event listener cho resize
-    window.addEventListener('resize', updateBreakpoint);
+    // Add event listener cho resize với debounce
+    window.addEventListener('resize', debouncedUpdateBreakpoint);
 
     // Cleanup
     return () => {
       clearTimeout(mountTimer);
-      window.removeEventListener('resize', updateBreakpoint);
+      window.removeEventListener('resize', debouncedUpdateBreakpoint);
     };
-  }, [mounted]);
+  }, []); // Removed mounted from dependency array
 
   return { breakpoint, mounted };
 };
