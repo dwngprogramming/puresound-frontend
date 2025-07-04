@@ -10,7 +10,15 @@
     }
   },
   "Login": {
-    "title": "Đăng nhập"
+    "title": "Đăng nhập vào",
+    "google": "Đăng nhập bằng Google",
+    "facebook": "Đăng nhập bằng Facebook",
+    "submit": "Đăng nhập",
+    "processing": "Đang xử lý...",
+    "usernameOrEmail": "Username/Email",
+    "placeholderUOE": "Nhập Username hoặc Email",
+    "password": "Mật khẩu",
+    "placeholderPassword": "Nhập mật khẩu"
   },
   "Home": {
     "title": "Trang chủ"

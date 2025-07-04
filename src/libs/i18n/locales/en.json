@@ -10,7 +10,15 @@
     }
   },
   "Login": {
-    "title": "Login"
+    "title": "Log in to",
+    "google": "Continue with Google",
+    "facebook": "Continue with Facebook",
+    "submit": "Login",
+    "processing": "Processing...",
+    "usernameOrEmail": "Username/Email",
+    "placeholderUOE": "Type your Username/Email",
+    "password": "Password",
+    "placeholderPassword": "Type your Password"
   },
 
   "Home": {

@@ -1,11 +1,12 @@
 import type {Metadata} from "next";
 import {Manrope} from 'next/font/google'
 import "@/styles/globals.css";
-import {NextIntlClientProvider, hasLocale} from 'next-intl';
+import {hasLocale, NextIntlClientProvider} from 'next-intl';
 import {getMessages, getTranslations} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/libs/i18n/routing';
 import React from "react";
+import {HeroUILibProviders} from "@/context/heroui-provider";
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -42,7 +43,11 @@ export default async function LocaleLayout({
     <body
       className={`${manrope.variable} ${manrope.className} antialiased`}
     >
-    <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+    <NextIntlClientProvider messages={messages}>
+      <HeroUILibProviders>
+        {children}
+      </HeroUILibProviders>
+    </NextIntlClientProvider>
     </body>
     </html>
   );
