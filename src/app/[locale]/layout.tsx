@@ -7,6 +7,8 @@ import {notFound} from 'next/navigation';
 import {routing} from '@/libs/i18n/routing';
 import React from "react";
 import {HeroUILibProviders} from "@/context/heroui-provider";
+import {ReactQueryProvider} from "@/context/react-query-provider";
+import {ReduxProvider} from "@/context/redux-provider";
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -43,11 +45,15 @@ export default async function LocaleLayout({
     <body
       className={`${manrope.variable} ${manrope.className} antialiased`}
     >
-    <NextIntlClientProvider messages={messages}>
-      <HeroUILibProviders>
-        {children}
-      </HeroUILibProviders>
-    </NextIntlClientProvider>
+    <ReduxProvider>
+      <NextIntlClientProvider messages={messages}>
+        <ReactQueryProvider>
+          <HeroUILibProviders>
+            {children}
+          </HeroUILibProviders>
+        </ReactQueryProvider>
+      </NextIntlClientProvider>
+    </ReduxProvider>
     </body>
     </html>
   );

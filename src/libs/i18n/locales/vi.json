@@ -18,7 +18,15 @@
     "usernameOrEmail": "Username/Email",
     "placeholderUOE": "Nhập Username hoặc Email",
     "password": "Mật khẩu",
-    "placeholderPassword": "Nhập mật khẩu"
+    "placeholderPassword": "Nhập mật khẩu",
+    "validation": {
+      "uoeRequired": "Username/Email không được để trống",
+      "uoeFormat": "Định dạng Username/Email không hợp lệ",
+      "usernameFormat": "Username phải có 6-30 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (-_.)",
+      "emailFormat": "Email không đúng định dạng. Vui lòng nhập email hợp lệ",
+      "passwordRequired": "Mật khẩu không được để trống",
+      "passwordFormat": "Mật khẩu phải có 8-30 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (@-_=+.)"
+    }
   },
   "Home": {
     "title": "Trang chủ"

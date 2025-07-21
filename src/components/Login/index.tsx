@@ -3,102 +3,67 @@
 import {useTranslations} from "next-intl";
 import Image from "next/image";
 import {Button, Divider, Form, Input} from "@heroui/react";
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {useBreakpoint} from "@/hooks/useBreakpoint";
 import {Controller, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import regex from "@/const/regex";
-
-// Login Request Interface
-export interface LoginRequest {
-  usernameOrEmail: string;
-  password: string;
-}
-
-// Schema validation with updated rules
-const loginSchema = yup.object({
-  usernameOrEmail: yup
-    .string()
-    .required('Username/Email không được để trống')
-    .test('username-or-email-format', 'Định dạng không hợp lệ', function (value) {
-      if (!value) return false;
-
-      // If it contains @, validate as email
-      if (value.includes('@')) {
-        if (!regex.EMAIL_REGEX.test(value)) {
-          return this.createError({
-            message: 'Email không đúng định dạng. Vui lòng nhập email hợp lệ.'
-          });
-        }
-        return true;
-      } else {
-        // Validate as username
-        if (!regex.USERNAME_REGEX.test(value)) {
-          return this.createError({
-            message: 'Username phải có 6-30 ký tự, chỉ chứa chữ hoa, chữ thường, số và ký tự đặc biệt (-_.)'
-          });
-        }
-        return true;
-      }
-    }),
-  password: yup
-    .string()
-    .required('Password không được để trống')
-    .test('password-strength', 'Mật khẩu phải có 8-30 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (@-_=+.)', function (value) {
-      if (!value) return false;
-      return regex.PASSWORD_REGEX.test(value);
-    }),
-});
-
-type LoginFormData = yup.InferType<typeof loginSchema>;
-
-// Mock API function (console.log only)
-const loginAPI = async (loginData: LoginRequest): Promise<any> => {
-  console.log('=== LOGIN API CALL ===');
-  console.log('Request URL: /api/auth/login');
-  console.log('Method: POST');
-  console.log('Headers:', {
-    'Content-Type': 'application/json',
-  });
-  console.log('Body:', JSON.stringify(loginData, null, 2));
-
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1500));
-
-  // Mock response
-  const mockResponse = {
-    success: true,
-    token: 'mock-jwt-token-12345',
-    user: {
-      id: 1,
-      username: loginData.usernameOrEmail.includes('@') ? 'user123' : loginData.usernameOrEmail,
-      email: loginData.usernameOrEmail.includes('@') ? loginData.usernameOrEmail : 'user@example.com'
-    }
-  };
-
-  console.log('Response:', mockResponse);
-  console.log('=== END LOGIN API CALL ===');
-
-  return mockResponse;
-};
+import {LoginFormData} from "@/types/auth.types";
+import {createLoginSchema} from "@/libs/validation/auth.validation";
+import {LoginRequest} from "@/models/auth/LoginRequest";
+import authApi from "@/apis/auth/auth.api";
+import {useMutation} from "@tanstack/react-query";
+import { useAppDispatch } from "@/libs/redux/hooks";
+import {setCredentials} from "@/libs/redux/features/auth/authSlice";
+import {TokenResponse} from "@/models/auth/TokenResponse";
+import {ApiResponse} from "@/models/ApiResponse";
+import {CustomJwtPayload} from "@/models/auth/CustomJwtPayload";
+import {jwtDecode} from "jwt-decode";
+import {UserPrincipal} from "@/models/auth/UserPrincipal";
 
 export const Login = () => {
   const t = useTranslations("Login");
   const [isVisible, setIsVisible] = useState(false);
   const [loginError, setLoginError] = useState<string>('');
   const {breakpoint, mounted} = useBreakpoint();
+  const dispatch = useAppDispatch();
+  const tValidation = useTranslations("Login.validation");
+  // Yub schema for validation
+  const loginSchema = useMemo(() => createLoginSchema(tValidation), [tValidation]);
 
-  console.log(breakpoint);
+  const loginMutation = useMutation({
+    mutationFn: async (request: LoginRequest) => {
+      return await authApi.login(request);
+    },
+    onSuccess: (response: ApiResponse<TokenResponse>) => {
+      const accessToken = response.data.accessToken;
+      const payload: CustomJwtPayload = jwtDecode(accessToken);
+      const user: UserPrincipal = {
+        id: payload.sub,
+        fullname: payload.fullname,
+        userType: payload.userType,
+        authorities: payload.authorities,
+      };
+
+      dispatch(setCredentials({
+        user: user,
+        token: accessToken
+      }));
+
+      const refreshToken = response.data.refreshToken;
+      localStorage.setItem('rt', refreshToken);
+
+      console.log('Login successful:', response);
+    },
+  })
 
   // React Hook Form setup
   const {
     control,
     handleSubmit,
     formState: {errors, isSubmitting},
-    setError,
   } = useForm<LoginFormData>({
     resolver: yupResolver(loginSchema),
+    mode: 'onBlur',
     defaultValues: {
       usernameOrEmail: '',
       password: '',
@@ -109,60 +74,15 @@ export const Login = () => {
     setIsVisible(!isVisible);
   };
 
-  // Form submit handler
   const onSubmit = async (data: LoginFormData) => {
-    try {
-      // Clear previous errors
-      setLoginError('');
+    setLoginError('');
 
-      // Create LoginRequest object
-      const loginRequest: LoginRequest = {
-        usernameOrEmail: data.usernameOrEmail,
-        password: data.password,
-      };
+    const loginRequest: LoginRequest = {
+      usernameOrEmail: data.usernameOrEmail,
+      password: data.password,
+    };
 
-      console.log('Form submitted with data:', loginRequest);
-
-      // Call mock API
-      const response = await loginAPI(loginRequest);
-
-      // Handle successful login
-      console.log('Login successful, storing token...');
-      console.log('Token would be stored:', response.token);
-      console.log('User data:', response.user);
-
-      // Mock token storage
-      console.log('localStorage.setItem("authToken", token)');
-
-      // Show success message
-      alert('Đăng nhập thành công!');
-
-      // Mock redirect
-      console.log('Would redirect to: /dashboard');
-
-    } catch (error: any) {
-      console.error('Login error:', error);
-
-      // Handle different types of errors
-      if (error.message?.includes('Invalid credentials')) {
-        setError('usernameOrEmail', {
-          type: 'manual',
-          message: 'Username/Email hoặc mật khẩu không đúng'
-        });
-        setError('password', {
-          type: 'manual',
-          message: 'Username/Email hoặc mật khẩu không đúng'
-        });
-      } else if (error.message?.includes('User not found')) {
-        setError('usernameOrEmail', {
-          type: 'manual',
-          message: 'Tài khoản không tồn tại'
-        });
-      } else {
-        // General error
-        setLoginError(error.message || 'Có lỗi xảy ra, vui lòng thử lại');
-      }
-    }
+    loginMutation.mutate(loginRequest);
   };
 
   // Social login handlers (console.log only)
@@ -181,7 +101,8 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center bg-gray-900 sm:p-8 sm:bg-gradient-to-t from-black to-blue-950 min-h-screen">
+    <div
+      className="flex justify-center items-center bg-gray-900 sm:p-8 sm:bg-gradient-to-t from-black to-blue-950 min-h-screen">
       {mounted ? (
         <div
           className="w-full flex flex-col justify-center items-center gap-2 md:max-w-[768px] mx-auto px-6 py-12 sm:p-8 sm:bg-gray-900 sm:rounded-xl">

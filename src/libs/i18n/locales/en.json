@@ -18,7 +18,16 @@
     "usernameOrEmail": "Username/Email",
     "placeholderUOE": "Type your Username/Email",
     "password": "Password",
-    "placeholderPassword": "Type your Password"
+    "placeholderPassword": "Type your Password",
+    "validation": {
+      "uoeRequired": "Username/Email is required",
+      "uoeFormat": "Invalid Username/Email",
+      "usernameFormat": "Username must be 6–30 characters long and include uppercase letters, lowercase letters, numbers, and special characters (-_.)",
+      "emailFormat": "Invalid email. Please enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordFormat": "Password must be 8–30 characters long and include uppercase letters, lowercase letters, numbers, and special characters (@-_=+.)"
+    }
+
   },
 
   "Home": {

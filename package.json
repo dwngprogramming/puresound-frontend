@@ -12,12 +12,18 @@
     "@heroui/react": "^2.8.0-beta.11",
     "@heroui/theme": "^2.4.18-beta.3",
     "@hookform/resolvers": "^5.1.1",
+    "@reduxjs/toolkit": "^2.8.2",
+    "@tanstack/react-query": "^5.83.0",
+    "@tanstack/react-query-devtools": "^5.83.0",
+    "axios": "^1.10.0",
     "framer-motion": "^12.23.0",
+    "jwt-decode": "^4.0.0",
     "next": "15.3.4",
     "next-intl": "^4.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.59.0",
+    "react-redux": "^9.2.0",
     "yup": "^1.6.1"
   },
   "devDependencies": {
