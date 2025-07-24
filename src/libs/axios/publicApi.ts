@@ -1,4 +1,7 @@
 import axios, {AxiosRequestConfig} from "axios";
+import {store} from "@/libs/redux/store";
+import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
+import {tProvider} from "@/libs/singleton/translation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 console.log(BASE_URL);
@@ -25,8 +28,22 @@ publicAxiosInstance.interceptors.response.use(
   },
 
   (error) => {
-    console.error("Response error:", error);
-    return Promise.reject(error);
+    // Bắt lỗi mạng/server
+    if (error === null) {
+      store.dispatch(showErrorNotification(tProvider('General.Error.system')));
+      return Promise.reject(new Error(tProvider('General.Error.unknown')));
+    } else if (axios.isAxiosError(error)) {
+      if (error.code === 'ERR_NETWORK') {
+        store.dispatch(showErrorNotification(tProvider('General.Error.network')));
+        return Promise.reject(error);
+      } else if (!error.response) {
+        store.dispatch(showErrorNotification(tProvider('General.Error.server')));
+        return Promise.reject(error);
+      } else {
+        store.dispatch(showErrorNotification(tProvider('General.Error.system')));
+        return Promise.reject(error);
+      }
+    }
   }
 );
 

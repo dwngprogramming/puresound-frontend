@@ -1,34 +1,53 @@
 {
   "Metadata": {
-    "home": {
-      "title": "PureSound - Tinh hoa âm nhạc thuần khiết",
-      "description": "Trang chủ của PureSound - Tinh hoa âm nhạc thuần khiết"
+    "Listener": {
+      "home": {
+        "title": "PureSound - Tinh hoa âm nhạc thuần khiết",
+        "description": "Trang chủ của PureSound - Tinh hoa âm nhạc thuần khiết"
+      },
+      "login": {
+        "title": "PureSound - Đăng nhập",
+        "description": "Đăng nhập vào PureSound - Tinh hoa âm nhạc thuần khiết"
+      },
+      "me": {
+        "title": "PureSound - Tài khoản",
+        "description": "Trang tài khoản của PureSound - Tinh hoa âm nhạc thuần khiết"
+      }
+    }
+  },
+  "General": {
+    "Error": {
+      "unknown": "Lỗi không xác định",
+      "system": "Lỗi hệ thống",
+      "network": "Lỗi kết nối mạng",
+      "server": "Lỗi mạng hoặc máy chủ không phản hồi"
+    }
+  },
+  "Listener": {
+    "Login": {
+      "title": "Đăng nhập vào",
+      "google": "Đăng nhập bằng Google",
+      "facebook": "Đăng nhập bằng Facebook",
+      "submit": "Đăng nhập",
+      "processing": "Đang xử lý...",
+      "usernameOrEmail": "Username/Email",
+      "placeholderUOE": "Nhập Username hoặc Email",
+      "password": "Mật khẩu",
+      "placeholderPassword": "Nhập mật khẩu",
+      "validation": {
+        "uoeRequired": "Username/Email không được để trống",
+        "uoeFormat": "Định dạng Username/Email không hợp lệ",
+        "usernameFormat": "Username phải có 6-30 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (-_.)",
+        "emailFormat": "Email không đúng định dạng. Vui lòng nhập email hợp lệ",
+        "passwordRequired": "Mật khẩu không được để trống",
+        "passwordFormat": "Mật khẩu phải có 8-30 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (@-_=+.)"
+      }
     },
-    "login": {
-      "title": "PureSound - Đăng nhập",
-      "description": "Đăng nhập vào PureSound - Tinh hoa âm nhạc thuần khiết"
+    "Home": {
+      "title": "Trang chủ"
+    },
+    "Me": {
+      "me": "Tài khoản"
     }
-  },
-  "Login": {
-    "title": "Đăng nhập vào",
-    "google": "Đăng nhập bằng Google",
-    "facebook": "Đăng nhập bằng Facebook",
-    "submit": "Đăng nhập",
-    "processing": "Đang xử lý...",
-    "usernameOrEmail": "Username/Email",
-    "placeholderUOE": "Nhập Username hoặc Email",
-    "password": "Mật khẩu",
-    "placeholderPassword": "Nhập mật khẩu",
-    "validation": {
-      "uoeRequired": "Username/Email không được để trống",
-      "uoeFormat": "Định dạng Username/Email không hợp lệ",
-      "usernameFormat": "Username phải có 6-30 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (-_.)",
-      "emailFormat": "Email không đúng định dạng. Vui lòng nhập email hợp lệ",
-      "passwordRequired": "Mật khẩu không được để trống",
-      "passwordFormat": "Mật khẩu phải có 8-30 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (@-_=+.)"
-    }
-  },
-  "Home": {
-    "title": "Trang chủ"
   }
 }

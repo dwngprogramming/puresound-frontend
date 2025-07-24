@@ -1,29 +1,22 @@
-import type {Metadata} from "next";
 import {Manrope} from 'next/font/google'
 import "@/styles/globals.css";
 import {hasLocale, NextIntlClientProvider} from 'next-intl';
-import {getMessages, getTranslations} from 'next-intl/server';
+import {getMessages} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/libs/i18n/routing';
 import React from "react";
 import {HeroUILibProviders} from "@/context/heroui-provider";
 import {ReactQueryProvider} from "@/context/react-query-provider";
 import {ReduxProvider} from "@/context/redux-provider";
+import NavigationProvider from "@/context/navigation-provider";
+import NotificationMessageContainer from "@/components/Notification/NotificationMessageContainer";
+import TranslationProvider from "@/context/translation-provider";
 
 const manrope = Manrope({
   subsets: ['latin'],
   weight: ['200', '300', '400', '500', '600', '700', '800'],
   variable: '--font-manrope',
 })
-
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('Metadata.home');
-
-  return {
-    title: t('title'),
-    description: t('description'),
-  };
-}
 
 export default async function LocaleLayout({
                                              children,
@@ -47,9 +40,12 @@ export default async function LocaleLayout({
     >
     <ReduxProvider>
       <NextIntlClientProvider messages={messages}>
+        <TranslationProvider />
         <ReactQueryProvider>
           <HeroUILibProviders>
+            <NavigationProvider/>
             {children}
+            <NotificationMessageContainer/>
           </HeroUILibProviders>
         </ReactQueryProvider>
       </NextIntlClientProvider>

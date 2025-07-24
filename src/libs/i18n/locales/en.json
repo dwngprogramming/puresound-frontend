@@ -1,36 +1,53 @@
 {
   "Metadata": {
-    "home": {
-      "title": "PureSound - Pure Music Essence",
-      "description": "Homepage of PureSound - Pure Music Essence"
+    "Listener": {
+      "home": {
+        "title": "PureSound - Pure Music Essence",
+        "description": "Homepage of PureSound - Pure Music Essence"
+      },
+      "login": {
+        "title": "PureSound - Login",
+        "description": "Login into PureSound - Pure Music Essence"
+      },
+      "me": {
+        "title": "PureSound - Account",
+        "description": "Account page of PureSound - Pure Music Essence"
+      }
+    }
+  },
+  "General": {
+    "Error": {
+      "unknown": "Unknown error",
+      "system": "System error",
+      "network": "Network error",
+      "server": "Network error or server not response"
+    }
+  },
+  "Listener": {
+    "Login": {
+      "title": "Log in to",
+      "google": "Continue with Google",
+      "facebook": "Continue with Facebook",
+      "submit": "Login",
+      "processing": "Processing...",
+      "usernameOrEmail": "Username/Email",
+      "placeholderUOE": "Type your Username/Email",
+      "password": "Password",
+      "placeholderPassword": "Type your Password",
+      "validation": {
+        "uoeRequired": "Username/Email is required",
+        "uoeFormat": "Invalid Username/Email",
+        "usernameFormat": "Username must be 6–30 characters long and include uppercase letters, lowercase letters, numbers, and special characters (-_.)",
+        "emailFormat": "Invalid email. Please enter a valid email address",
+        "passwordRequired": "Password is required",
+        "passwordFormat": "Password must be 8–30 characters long and include uppercase letters, lowercase letters, numbers, and special characters (@-_=+.)"
+      }
     },
-    "login": {
-      "title": "PureSound - Login",
-      "description": "Login into PureSound - Pure Music Essence"
+    "Home": {
+      "title": "Home"
+    },
+    "Me": {
+      "me": "Account"
     }
-  },
-  "Login": {
-    "title": "Log in to",
-    "google": "Continue with Google",
-    "facebook": "Continue with Facebook",
-    "submit": "Login",
-    "processing": "Processing...",
-    "usernameOrEmail": "Username/Email",
-    "placeholderUOE": "Type your Username/Email",
-    "password": "Password",
-    "placeholderPassword": "Type your Password",
-    "validation": {
-      "uoeRequired": "Username/Email is required",
-      "uoeFormat": "Invalid Username/Email",
-      "usernameFormat": "Username must be 6–30 characters long and include uppercase letters, lowercase letters, numbers, and special characters (-_.)",
-      "emailFormat": "Invalid email. Please enter a valid email address",
-      "passwordRequired": "Password is required",
-      "passwordFormat": "Password must be 8–30 characters long and include uppercase letters, lowercase letters, numbers, and special characters (@-_=+.)"
-    }
-
-  },
-
-  "Home": {
-    "title": "Home"
   }
 }

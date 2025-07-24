@@ -21,12 +21,12 @@ import {jwtDecode} from "jwt-decode";
 import {UserPrincipal} from "@/models/auth/UserPrincipal";
 
 export const Login = () => {
-  const t = useTranslations("Login");
+  const t = useTranslations("Listener.Login");
   const [isVisible, setIsVisible] = useState(false);
   const [loginError, setLoginError] = useState<string>('');
   const {breakpoint, mounted} = useBreakpoint();
   const dispatch = useAppDispatch();
-  const tValidation = useTranslations("Login.validation");
+  const tValidation = useTranslations("Listener.Login.validation");
   // Yub schema for validation
   const loginSchema = useMemo(() => createLoginSchema(tValidation), [tValidation]);
 
@@ -37,7 +37,7 @@ export const Login = () => {
     onSuccess: (response: ApiResponse<TokenResponse>) => {
       const accessToken = response.data.accessToken;
       const payload: CustomJwtPayload = jwtDecode(accessToken);
-      const user: UserPrincipal = {
+      const principal: UserPrincipal = {
         id: payload.sub,
         fullname: payload.fullname,
         userType: payload.userType,
@@ -45,7 +45,7 @@ export const Login = () => {
       };
 
       dispatch(setCredentials({
-        user: user,
+        principal: principal,
         token: accessToken
       }));
 
