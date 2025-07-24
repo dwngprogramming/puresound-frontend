@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {AuthState} from "@/models/auth/AuthState";
 
 const initState: AuthState = {
-  user: null,
+  principal: null,
   token: null,
   isAuthenticated: false
 };
@@ -12,13 +12,13 @@ const auth = createSlice({
   initialState: initState,
   reducers: {
     setCredentials(state: AuthState, action: PayloadAction<AuthState>) {
-      state.user = action.payload.user;
+      state.principal = action.payload.principal;
       state.token = action.payload.token;
       state.isAuthenticated = true;
     },
 
     deleteCredentials(state: AuthState) {
-      state.user = null;
+      state.principal = null;
       state.token = null;
       state.isAuthenticated = false;
     }
