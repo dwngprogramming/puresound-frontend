@@ -6,7 +6,7 @@ import meApi from "@/apis/main/listener/me.api";
 
 export const Me = () => {
   const t = useTranslations("Listener.Me");
-  const { data: me, isLoading, error } = useQuery<string>({
+  const { data: me, isLoading } = useQuery<string>({
     queryKey: ["me"],
     queryFn: async () => {
       return await meApi.getMe(); // ✅ Gọi function đúng cách

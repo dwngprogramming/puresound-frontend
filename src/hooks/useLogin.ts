@@ -1,5 +1,4 @@
 import {useMutation} from "@tanstack/react-query";
-import {LoginRequest} from "@/models/auth/LoginRequest";
 import authApi from "@/apis/auth/auth.api";
 import {ApiResponse} from "@/models/ApiResponse";
 import {TokenResponse} from "@/models/auth/TokenResponse";
