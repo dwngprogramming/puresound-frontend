@@ -10,7 +10,7 @@ import {ReactQueryProvider} from "@/context/react-query-provider";
 import {ReduxProvider} from "@/context/redux-provider";
 import NavigationProvider from "@/context/navigation-provider";
 import NotificationMessageContainer from "@/components/Notification/NotificationMessageContainer";
-import TranslationProvider from "@/context/translation-provider";
+import I18nProvider from "@/context/i18n-provider";
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -40,7 +40,7 @@ export default async function LocaleLayout({
     >
     <ReduxProvider>
       <NextIntlClientProvider messages={messages}>
-        <TranslationProvider />
+        <I18nProvider />
         <ReactQueryProvider>
           <HeroUILibProviders>
             <NavigationProvider/>

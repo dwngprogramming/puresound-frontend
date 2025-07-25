@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 
 export const useBreakpoint = () => {
   const [breakpoint, setBreakpoint] = useState<'base' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'>('base');
-  const [mounted, setMounted] = useState(false);
+  const [mountedBreakpoint, setMountedBreakpoint] = useState(false);
 
   useEffect(() => {
     const getBreakpoint = (width: number): 'base' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' => {
@@ -37,7 +37,7 @@ export const useBreakpoint = () => {
 
     // Set mounted sau 0.5 giây
     const mountTimer = setTimeout(() => {
-      setMounted(true);
+      setMountedBreakpoint(true);
     }, 500);
 
     // Add event listener cho resize với debounce
@@ -50,5 +50,5 @@ export const useBreakpoint = () => {
     };
   }, []); // Removed mounted from dependency array
 
-  return { breakpoint, mounted };
+  return { breakpoint, mountedBreakpoint };
 };

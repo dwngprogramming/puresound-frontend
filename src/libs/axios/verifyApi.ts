@@ -7,13 +7,13 @@ import {store} from "@/libs/redux/store";
 import {deleteCredentials, setCredentials} from "@/libs/redux/features/auth/authSlice";
 import {getRouter} from "@/libs/singleton/navigation";
 import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
-import {tProvider} from "@/libs/singleton/translation";
+import {tProvider, getLocale} from "@/libs/singleton/translation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const verifyAxiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000
+  timeout: 10000,
 })
 
 const refreshTokenInstance = axios.create({
@@ -57,6 +57,7 @@ const handleAuthState = (accessToken: string) => {
 
 const handleLogout = () => {
   store.dispatch(deleteCredentials());
+  localStorage.removeItem('rt');
   // Lấy locale từ localStorage hoặc fallback sang 'en'
   const locale = localStorage.getItem('locale') || 'en';
   const navigationRouter = getRouter();
@@ -68,11 +69,28 @@ const handleLogout = () => {
   }
 };
 
+refreshTokenInstance.interceptors.request.use(
+  (config) => {
+    const locale = getLocale();
+    if (locale) {
+      config.headers['Accept-Language'] = locale;
+    }
+    return config;
+  },
+);
+
 verifyAxiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('at');
+    const authState = store.getState().auth;
+    const token = authState.token;
+    const locale = getLocale();
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    if (locale) {
+      config.headers['Accept-Language'] = locale;
     }
     return config;
   },
@@ -134,9 +152,7 @@ verifyAxiosInstance.interceptors.response.use(
           throw error;
         }
 
-        const response = await refreshTokenInstance.post('/auth/refresh-token', {
-          refreshToken
-        });
+        const response = await refreshTokenInstance.post('/v1/auth/local/refresh-token', refreshToken);
 
         const accessToken: string = response.data.data.accessToken;
         handleAuthState(accessToken);

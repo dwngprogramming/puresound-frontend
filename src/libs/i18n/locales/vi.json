@@ -41,13 +41,15 @@
         "emailFormat": "Email không đúng định dạng. Vui lòng nhập email hợp lệ",
         "passwordRequired": "Mật khẩu không được để trống",
         "passwordFormat": "Mật khẩu phải có 8-30 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (@-_=+.)"
-      }
+      },
+      "needLogout": "Bạn cần đăng xuất trước"
     },
     "Home": {
       "title": "Trang chủ"
     },
     "Me": {
-      "me": "Tài khoản"
+      "me": "Tài khoản",
+      "unknown": "Không xác định"
     }
   }
 }

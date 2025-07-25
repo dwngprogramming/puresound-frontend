@@ -41,7 +41,8 @@
         "emailFormat": "Invalid email. Please enter a valid email address",
         "passwordRequired": "Password is required",
         "passwordFormat": "Password must be 8–30 characters long and include uppercase letters, lowercase letters, numbers, and special characters (@-_=+.)"
-      }
+      },
+      "needLogout": "You need to log out first"
     },
     "Home": {
       "title": "Home"

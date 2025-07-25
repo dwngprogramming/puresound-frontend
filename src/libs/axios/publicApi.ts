@@ -1,10 +1,9 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {store} from "@/libs/redux/store";
 import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
-import {tProvider} from "@/libs/singleton/translation";
+import {getLocale, tProvider} from "@/libs/singleton/translation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-console.log(BASE_URL);
 
 const publicAxiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -13,6 +12,10 @@ const publicAxiosInstance = axios.create({
 
 publicAxiosInstance.interceptors.request.use(
   (config) => {
+    const locale = getLocale();
+    if (locale) {
+      config.headers['Accept-Language'] = locale;
+    }
     return config;
   },
 
@@ -40,7 +43,7 @@ publicAxiosInstance.interceptors.response.use(
         store.dispatch(showErrorNotification(tProvider('General.Error.server')));
         return Promise.reject(error);
       } else {
-        store.dispatch(showErrorNotification(tProvider('General.Error.system')));
+        store.dispatch(showErrorNotification(error.response.data.message));
         return Promise.reject(error);
       }
     }

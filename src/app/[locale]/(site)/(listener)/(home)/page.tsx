@@ -1,5 +1,6 @@
 import {getTranslations} from "next-intl/server";
 import type {Metadata} from "next";
+import Home from "@/components/Listener/Home";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Metadata.Listener.home');
@@ -10,12 +11,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const MainPage = async () => {
-  const t = await getTranslations("Listener.Home");
-  console.log(t("title"));
+const MainPage = () => {
   return (
     <div>
-      <h1>{t('title')}</h1>
+      <Home />
     </div>
   );
 }
