@@ -2,6 +2,12 @@
   "redirects": [
     {
       "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "puresound.space"
+        }
+      ],
       "destination": "https://app.puresound.space/$1",
       "permanent": true
     }
