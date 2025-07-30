@@ -7,7 +7,8 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const publicAxiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000
+  timeout: 10000,
+  withCredentials: true
 })
 
 publicAxiosInstance.interceptors.request.use(

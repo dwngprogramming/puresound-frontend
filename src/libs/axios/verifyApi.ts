@@ -14,11 +14,13 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export const verifyAxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
+  withCredentials: true
 })
 
 const refreshTokenInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000
+  timeout: 10000,
+  withCredentials: true
 })
 
 // Failed queue request when refresh token
@@ -57,7 +59,6 @@ const handleAuthState = (accessToken: string) => {
 
 const handleLogout = () => {
   store.dispatch(deleteCredentials());
-  localStorage.removeItem('rt');
   // Lấy locale từ localStorage hoặc fallback sang 'en'
   const locale = localStorage.getItem('locale') || 'en';
   const navigationRouter = getRouter();
@@ -144,15 +145,7 @@ verifyAxiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const refreshToken = localStorage.getItem('rt');
-        if (!refreshToken) {
-          const error = new Error('No refresh token');
-          processQueue(error, null);
-          handleLogout();
-          throw error;
-        }
-
-        const response = await refreshTokenInstance.post('/v1/auth/local/refresh-token', refreshToken);
+        const response = await refreshTokenInstance.post('/v1/auth/local/refresh-token');
 
         const accessToken: string = response.data.data.accessToken;
         handleAuthState(accessToken);
