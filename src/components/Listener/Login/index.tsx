@@ -16,6 +16,7 @@ import {tryRelogin} from "@/libs/auth/tryRelogin";
 import Loader from "@/components/Loader";
 import {useAppDispatch} from "@/libs/redux/hooks";
 import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
+import {store} from "@/libs/redux/store";
 
 export const Login = () => {
   const t = useTranslations("Listener.Login");
@@ -28,8 +29,9 @@ export const Login = () => {
   const login = useLogin();
   const router = useRouter();
   const locale = useLocale();
-  const [isCheckingRt, setIsCheckingRt] = useState(false);
+  const [isTryingRelogin, setIsTryingRelogin] = useState(false);
   const dispatch = useAppDispatch();
+  const accessToken = store.getState().auth.token;
 
   // React Hook Form setup
   const {
@@ -48,25 +50,37 @@ export const Login = () => {
   useEffect(() => {
     let isMounted = true;
 
-    const checkRt = async () => {
-      setIsCheckingRt(true);
-      try {
-        const success = await tryRelogin();
-        if (success && isMounted) {
-          dispatch(showErrorNotification(t('needLogout')));
+    const relogin = async () => {
+      // Early return nếu đã có token
+      if (accessToken) {
+        if (isMounted) {
           router.replace('/');
         }
+        return;
+      }
+
+      setIsTryingRelogin(true);
+
+      try {
+        const success = await tryRelogin();
+
+        if (success) {
+          router.replace('/');
+          dispatch(showErrorNotification(t('needLogout')));
+        }
       } finally {
-        setIsCheckingRt(false);
+        if (isMounted) {
+          setIsTryingRelogin(false);
+        }
       }
     };
 
-    checkRt();
+    relogin();
 
     return () => {
       isMounted = false;
     };
-  }, [router, mountedBreakpoint]);
+  }, []);
 
   const handleVisiblePw = () => {
     setIsVisible(!isVisible);
@@ -100,7 +114,7 @@ export const Login = () => {
     console.log('=== END FACEBOOK LOGIN ===');
   };
 
-  const isLoadingPage = isCheckingRt || !mountedBreakpoint;
+  const isLoadingPage = isTryingRelogin || !mountedBreakpoint;
 
   return (
     <div

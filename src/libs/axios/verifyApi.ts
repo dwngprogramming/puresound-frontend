@@ -8,20 +8,7 @@ import {deleteCredentials, setCredentials} from "@/libs/redux/features/auth/auth
 import {getRouter} from "@/libs/singleton/navigation";
 import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
 import {tProvider, getLocale} from "@/libs/singleton/translation";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
-export const verifyAxiosInstance = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000,
-  withCredentials: true
-})
-
-const refreshTokenInstance = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000,
-  withCredentials: true
-})
+import {refreshTokenInstance, verifyAxiosInstance} from "@/libs/axios/axiosInstances";
 
 // Failed queue request when refresh token
 let isRefreshing = false;
@@ -145,7 +132,7 @@ verifyAxiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const response = await refreshTokenInstance.post('/v1/auth/local/refresh-token');
+        const response = await refreshTokenInstance.post('/v1/auth/refresh-token');
 
         const accessToken: string = response.data.data.accessToken;
         handleAuthState(accessToken);
