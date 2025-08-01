@@ -6,17 +6,24 @@ import {store} from "@/libs/redux/store";
 
 const InitialLoadListener = () => {
   const token = store.getState().auth.token;
+  const firstLoad = useRef(true);
   const reloginTried = useRef(false);
 
-  if (!token) {
-    reloginTried.current = true;
-    useEffect(() => {
+  useEffect(() => {
+    if (firstLoad.current) {
+      firstLoad.current = false;
+      return;
+    }
+
+    if (!token && !reloginTried.current) {
+      reloginTried.current = true;
+
       const initialLoad = async () => {
         await tryRelogin();
-      }
+      };
       initialLoad();
-    }, []);
-  }
+    }
+  }, [token]);
 
   return null;
 };

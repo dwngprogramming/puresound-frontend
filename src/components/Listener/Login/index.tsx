@@ -7,7 +7,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import {useBreakpoint} from "@/hooks/useBreakpoint";
 import {Controller, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {LoginFormData} from "@/types/auth.types";
+import {LocalLoginData} from "@/types/auth.types";
 import {createLoginSchema} from "@/libs/validation/auth.validation";
 import {LoginRequest} from "@/models/auth/LoginRequest";
 import {useLogin} from "@/hooks/useLogin";
@@ -32,13 +32,14 @@ export const Login = () => {
   const [isTryingRelogin, setIsTryingRelogin] = useState(false);
   const dispatch = useAppDispatch();
   const accessToken = store.getState().auth.token;
+  const baseApiUrl = process.env.NEXT_PUBLIC_BASE_URL;  // Original base URL, not contains "/api"
 
   // React Hook Form setup
   const {
     control,
     handleSubmit,
     formState: {errors, isSubmitting},
-  } = useForm<LoginFormData>({
+  } = useForm<LocalLoginData>({
     resolver: yupResolver(loginSchema),
     mode: 'onBlur',
     defaultValues: {
@@ -86,7 +87,7 @@ export const Login = () => {
     setIsVisible(!isVisible);
   };
 
-  const onSubmit = async (data: LoginFormData) => {
+  const handleLocalLogin = async (data: LocalLoginData) => {
     setLoginError('');
 
     const loginRequest: LoginRequest = {
@@ -99,12 +100,10 @@ export const Login = () => {
     router.push('/');
   };
 
-  // Social login handlers (console.log only)
+  // Social login handlers
   const handleGoogleLogin = () => {
-    console.log('=== GOOGLE LOGIN ===');
-    console.log('Would redirect to: /api/auth/google');
-    console.log('Or open Google OAuth popup');
-    console.log('=== END GOOGLE LOGIN ===');
+    localStorage.setItem('locale', locale);
+    window.location.href = `${baseApiUrl}/oauth2/authorize/google?user_type=listener`;
   };
 
   const handleFacebookLogin = () => {
@@ -187,7 +186,7 @@ export const Login = () => {
 
               {/* Login Form with React Hook Form */
               }
-              <Form className="mx-auto gap-4" onSubmit={handleSubmit(onSubmit)}>
+              <Form className="mx-auto gap-4" onSubmit={handleSubmit(handleLocalLogin)}>
                 <Controller
                   name="usernameOrEmail"
                   control={control}

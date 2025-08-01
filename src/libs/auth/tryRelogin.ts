@@ -7,9 +7,14 @@ import {reloginInstance} from "@/libs/axios/axiosInstances";
 
 export const tryRelogin = async (): Promise<boolean> => {
   const dispatch = store.dispatch;
+  const token = store.getState().auth.token;
+
+  if (token) {
+    return false;
+  }
 
   try {
-    const response = await reloginInstance.post('/v1/auth/refresh-token');
+    const response = await reloginInstance.post('/v1/token/refresh');
     const accessToken: string = response.data.data.accessToken;
     const payload: CustomJwtPayload = jwtDecode(accessToken);
     const principal: UserPrincipal = {

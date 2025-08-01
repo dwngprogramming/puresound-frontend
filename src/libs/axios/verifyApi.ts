@@ -132,7 +132,7 @@ verifyAxiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const response = await refreshTokenInstance.post('/v1/auth/refresh-token');
+        const response = await refreshTokenInstance.post('/v1/token/refresh');
 
         const accessToken: string = response.data.data.accessToken;
         handleAuthState(accessToken);
