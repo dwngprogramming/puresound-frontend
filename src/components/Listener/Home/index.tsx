@@ -10,6 +10,7 @@ import {setCredentials} from "@/libs/redux/features/auth/authSlice";
 import {CustomJwtPayload} from "@/models/auth/CustomJwtPayload";
 import {jwtDecode} from "jwt-decode";
 import {UserPrincipal} from "@/models/auth/UserPrincipal";
+import Cookies from 'js-cookie';
 
 const Home = () => {
   const t = useTranslations("Listener.Home");
@@ -18,7 +19,7 @@ const Home = () => {
   const principal = useAppSelector(state => state.auth.principal);
 
   const exchangeTokenMutation = useMutation({
-    mutationFn: (code: string,) => tokenApi.exchangeToken(code),
+    mutationFn: (code: string) => tokenApi.exchangeToken(code),
     onSuccess: (response) => {
       const locale = localStorage.getItem('locale') || 'en';
       const accessToken = response.data.accessToken;
@@ -42,9 +43,9 @@ const Home = () => {
     }
   });
 
+  // Using for OAuth 2. Exchange code -> access token
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("token");
+    const code = Cookies.get('exchangeCode');
 
     if (code) {
       exchangeTokenMutation.mutate(code);
