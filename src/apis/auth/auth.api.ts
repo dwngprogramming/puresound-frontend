@@ -7,6 +7,8 @@ import {ApiResponse} from "@/models/ApiResponse";
 const authApi = {
   login: (request: LoginRequest, options?: AxiosRequestConfig<never>) =>
     publicApi.post<ApiResponse<TokenResponse>>('/v1/auth/local/login', request, options),
+  logout: (options?: AxiosRequestConfig<never>) =>
+    publicApi.delete<ApiResponse<void>>('/v1/auth/logout', options),
 };
 
 export default authApi;
