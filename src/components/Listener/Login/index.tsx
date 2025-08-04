@@ -41,7 +41,7 @@ export const Login = () => {
     formState: {errors, isSubmitting},
   } = useForm<LocalLoginData>({
     resolver: yupResolver(loginSchema),
-    mode: 'onBlur',
+    mode: 'onSubmit',
     defaultValues: {
       usernameOrEmail: '',
       password: '',
