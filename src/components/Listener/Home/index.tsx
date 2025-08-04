@@ -37,6 +37,7 @@ const Home = () => {
         token: accessToken
       }));
 
+      handleFacebookHash();
       handleLinkedOAuth2();
     },
     onError: () => {
@@ -60,6 +61,12 @@ const Home = () => {
     }
   }
 
+  const handleFacebookHash = () => {
+    if (window.location.hash === '#_=_') {
+      const url = window.location.href.replace(/#_=_$/, '')
+      window.history.replaceState(null, '', url)
+    }
+  }
   const handleLogout = async () => {
     await authApi.logout();
     dispatch(deleteCredentials());
