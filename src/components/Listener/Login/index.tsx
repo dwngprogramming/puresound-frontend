@@ -107,10 +107,8 @@ export const Login = () => {
   };
 
   const handleFacebookLogin = () => {
-    console.log('=== FACEBOOK LOGIN ===');
-    console.log('Would redirect to: /api/auth/facebook');
-    console.log('Or open Facebook OAuth popup');
-    console.log('=== END FACEBOOK LOGIN ===');
+    localStorage.setItem('locale', locale);
+    window.location.href = `${baseApiUrl}/oauth2/authorize/facebook?user_type=listener`;
   };
 
   const isLoadingPage = isTryingRelogin || !mountedBreakpoint;
