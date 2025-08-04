@@ -28,9 +28,6 @@ export const useLogin = () => {
         token: accessToken
       }));
 
-      const refreshToken = response.data.refreshToken;
-      localStorage.setItem('rt', refreshToken);
-
       console.log('Login successful:', response);
     },
   });
