@@ -2,13 +2,7 @@ import axios, {AxiosRequestConfig} from "axios";
 import {store} from "@/libs/redux/store";
 import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
 import {getLocale, tProvider} from "@/libs/singleton/translation";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
-const publicAxiosInstance = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000
-})
+import { publicAxiosInstance } from "@/libs/axios/axiosInstances";
 
 publicAxiosInstance.interceptors.request.use(
   (config) => {

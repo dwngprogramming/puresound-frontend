@@ -7,7 +7,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import {useBreakpoint} from "@/hooks/useBreakpoint";
 import {Controller, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {LoginFormData} from "@/types/auth.types";
+import {LocalLoginData} from "@/types/auth.types";
 import {createLoginSchema} from "@/libs/validation/auth.validation";
 import {LoginRequest} from "@/models/auth/LoginRequest";
 import {useLogin} from "@/hooks/useLogin";
@@ -16,6 +16,7 @@ import {tryRelogin} from "@/libs/auth/tryRelogin";
 import Loader from "@/components/Loader";
 import {useAppDispatch} from "@/libs/redux/hooks";
 import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
+import {store} from "@/libs/redux/store";
 
 export const Login = () => {
   const t = useTranslations("Listener.Login");
@@ -28,15 +29,17 @@ export const Login = () => {
   const login = useLogin();
   const router = useRouter();
   const locale = useLocale();
-  const [isCheckingRt, setIsCheckingRt] = useState(false);
+  const [isTryingRelogin, setIsTryingRelogin] = useState(false);
   const dispatch = useAppDispatch();
+  const accessToken = store.getState().auth.token;
+  const baseApiUrl = process.env.NEXT_PUBLIC_BASE_URL;  // Original base URL, not contains "/api"
 
   // React Hook Form setup
   const {
     control,
     handleSubmit,
     formState: {errors, isSubmitting},
-  } = useForm<LoginFormData>({
+  } = useForm<LocalLoginData>({
     resolver: yupResolver(loginSchema),
     mode: 'onBlur',
     defaultValues: {
@@ -48,31 +51,43 @@ export const Login = () => {
   useEffect(() => {
     let isMounted = true;
 
-    const checkRt = async () => {
-      setIsCheckingRt(true);
-      try {
-        const success = await tryRelogin();
-        if (success && isMounted) {
-          dispatch(showErrorNotification(t('needLogout')));
+    const relogin = async () => {
+      // Early return nếu đã có token
+      if (accessToken) {
+        if (isMounted) {
           router.replace('/');
         }
+        return;
+      }
+
+      setIsTryingRelogin(true);
+
+      try {
+        const success = await tryRelogin();
+
+        if (success) {
+          router.replace('/');
+          dispatch(showErrorNotification(t('needLogout')));
+        }
       } finally {
-        setIsCheckingRt(false);
+        if (isMounted) {
+          setIsTryingRelogin(false);
+        }
       }
     };
 
-    checkRt();
+    relogin();
 
     return () => {
       isMounted = false;
     };
-  }, [router, mountedBreakpoint]);
+  }, []);
 
   const handleVisiblePw = () => {
     setIsVisible(!isVisible);
   };
 
-  const onSubmit = async (data: LoginFormData) => {
+  const handleLocalLogin = async (data: LocalLoginData) => {
     setLoginError('');
 
     const loginRequest: LoginRequest = {
@@ -85,12 +100,10 @@ export const Login = () => {
     router.push('/');
   };
 
-  // Social login handlers (console.log only)
+  // Social login handlers
   const handleGoogleLogin = () => {
-    console.log('=== GOOGLE LOGIN ===');
-    console.log('Would redirect to: /api/auth/google');
-    console.log('Or open Google OAuth popup');
-    console.log('=== END GOOGLE LOGIN ===');
+    localStorage.setItem('locale', locale);
+    window.location.href = `${baseApiUrl}/oauth2/authorize/google?user_type=listener`;
   };
 
   const handleFacebookLogin = () => {
@@ -100,7 +113,7 @@ export const Login = () => {
     console.log('=== END FACEBOOK LOGIN ===');
   };
 
-  const isLoadingPage = isCheckingRt || !mountedBreakpoint;
+  const isLoadingPage = isTryingRelogin || !mountedBreakpoint;
 
   return (
     <div
@@ -173,7 +186,7 @@ export const Login = () => {
 
               {/* Login Form with React Hook Form */
               }
-              <Form className="mx-auto gap-4" onSubmit={handleSubmit(onSubmit)}>
+              <Form className="mx-auto gap-4" onSubmit={handleSubmit(handleLocalLogin)}>
                 <Controller
                   name="usernameOrEmail"
                   control={control}

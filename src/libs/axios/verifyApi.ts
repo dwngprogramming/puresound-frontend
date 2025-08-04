@@ -8,18 +8,7 @@ import {deleteCredentials, setCredentials} from "@/libs/redux/features/auth/auth
 import {getRouter} from "@/libs/singleton/navigation";
 import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
 import {tProvider, getLocale} from "@/libs/singleton/translation";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
-export const verifyAxiosInstance = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000,
-})
-
-const refreshTokenInstance = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000
-})
+import {refreshTokenInstance, verifyAxiosInstance} from "@/libs/axios/axiosInstances";
 
 // Failed queue request when refresh token
 let isRefreshing = false;
@@ -57,7 +46,6 @@ const handleAuthState = (accessToken: string) => {
 
 const handleLogout = () => {
   store.dispatch(deleteCredentials());
-  localStorage.removeItem('rt');
   // Lấy locale từ localStorage hoặc fallback sang 'en'
   const locale = localStorage.getItem('locale') || 'en';
   const navigationRouter = getRouter();
@@ -144,15 +132,7 @@ verifyAxiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const refreshToken = localStorage.getItem('rt');
-        if (!refreshToken) {
-          const error = new Error('No refresh token');
-          processQueue(error, null);
-          handleLogout();
-          throw error;
-        }
-
-        const response = await refreshTokenInstance.post('/v1/auth/local/refresh-token', refreshToken);
+        const response = await refreshTokenInstance.post('/v1/token/refresh');
 
         const accessToken: string = response.data.data.accessToken;
         handleAuthState(accessToken);

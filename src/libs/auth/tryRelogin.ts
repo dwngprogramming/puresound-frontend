@@ -1,23 +1,20 @@
-import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import {setCredentials} from "@/libs/redux/features/auth/authSlice";
 import {UserPrincipal} from "@/models/auth/UserPrincipal";
 import {store} from "@/libs/redux/store";
 import {CustomJwtPayload} from "@/models/auth/CustomJwtPayload";
+import {reloginInstance} from "@/libs/axios/axiosInstances";
 
 export const tryRelogin = async (): Promise<boolean> => {
   const dispatch = store.dispatch;
-  const refreshToken = localStorage.getItem('rt');
-  const reloginInstance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL,
-    timeout: 10000
-  });
+  const token = store.getState().auth.token;
 
-  // Not have refresh token -> false
-  if (!refreshToken) return false;
+  if (token) {
+    return false;
+  }
 
   try {
-    const response = await reloginInstance.post('/v1/auth/local/refresh-token', refreshToken);
+    const response = await reloginInstance.post('/v1/token/refresh');
     const accessToken: string = response.data.data.accessToken;
     const payload: CustomJwtPayload = jwtDecode(accessToken);
     const principal: UserPrincipal = {
