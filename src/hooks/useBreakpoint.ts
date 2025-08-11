@@ -35,7 +35,7 @@ export const useBreakpoint = () => {
     // Update breakpoint ngay lập tức
     updateBreakpoint();
 
-    // Set mounted sau 0.5 giây
+    // Set mounted sau 0.2 giây
     const mountTimer = setTimeout(() => {
       setMountedBreakpoint(true);
     }, 500);

@@ -1,7 +1,7 @@
 {
   "Metadata": {
     "Privacy": {
-      "title": "PureSound - Privacy Policy",
+      "title": "Privacy Policy - PureSound",
       "description": "Privacy Policy of PureSound - Pure Music Essence"
     },
     "Listener": {
@@ -10,11 +10,15 @@
         "description": "Homepage of PureSound - Pure Music Essence"
       },
       "login": {
-        "title": "PureSound - Login",
+        "title": "Login - PureSound",
         "description": "Login into PureSound - Pure Music Essence"
       },
+      "signup": {
+        "title": "Register - PureSound",
+        "description": "Register PureSound account - Pure Music Essence"
+      },
       "me": {
-        "title": "PureSound - Account",
+        "title": "Account - PureSound",
         "description": "Account page of PureSound - Pure Music Essence"
       }
     }
@@ -38,16 +42,87 @@
       "placeholderUOE": "Type your Username/Email",
       "password": "Password",
       "placeholderPassword": "Type your Password",
+      "dontHaveAccount": "Don't have an account?",
+      "register": "Register now",
+      "forgotPassword": "Forgot password?",
       "validation": {
         "uoeRequired": "Username/Email is required",
         "uoeFormat": "Invalid Username/Email",
         "usernameFormat": "Username must be 6–30 characters long and include uppercase letters, lowercase letters, numbers, and special characters (-_.)",
         "emailFormat": "Invalid email. Please enter a valid email address",
         "passwordRequired": "Password is required",
-        "passwordFormat": "Password must be 8–30 characters long and include uppercase letters, lowercase letters, numbers, and special characters (@-_=+.)"
-      },
-      "needLogout": "You need to log out first"
+        "passwordFormat": "Password must be 8–30 characters long, with at least one lowercase, one uppercase, one digit, and one special character (@-_=+.)"
+      }
     },
+    "SignUp": {
+      "title": "Discover music with",
+      "username": "Username",
+      "placeholderUsername": "Type your Username",
+      "email": "Email",
+      "placeholderEmail": "Type your Email",
+      "password": "Password",
+      "placeholderPassword": "Type your Password",
+      "retypePassword": "Retype Password",
+      "placeholderPasswordConfirm": "Retype your Password",
+      "firstname": "First name",
+      "placeholderFirstname": "Type your First name",
+      "lastname": "Last name",
+      "placeholderLastname": "Type your Last name",
+      "gender": "Gender",
+      "genderChoice": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
+      },
+      "placeholderGender": "Select your Gender",
+      "dob": "Date of birth",
+      "next": "Next",
+      "submit": "Sign up",
+      "google": "Sign up with Google",
+      "facebook": "Sign up with Facebook",
+      "processing": "Processing...",
+      "or": "or",
+      "alreadyHaveAccount": "Already have an account?",
+      "login": "Login now",
+      "forgotPassword": "Forgot password?",
+      "validation": {
+        "usernameRequired": "Username is required",
+        "usernameFormat": "Username must be between 6–30 characters long and may contain uppercase letters, lowercase letters, numbers, or special characters (-_.)",
+        "emailRequired": "Email is required",
+        "emailFormat": "Email is invalid. Make sure you enter a email like example@email.com",
+        "passwordRequired": "Password is required",
+        "passwordFormat": "Password must be between 8–30 characters long, with at least one lowercase, one uppercase, one digit, and one special character (@-_=+.)",
+        "passwordRetypeRequired": "Retype Password is required",
+        "passwordRetypeNotMatch": "Password and Retype Password do not match",
+        "firstnameRequired": "First name is required",
+        "lastnameRequired": "Last name is required",
+        "genderRequired": "Gender is required",
+        "dobRequired": "Date of birth is required",
+        "dobPast": "Date of birth is invalid",
+        "passwordInclude": "Password must include:",
+        "passwordIncludeUppercase": "1 uppercase letter",
+        "passwordIncludeLowercase": "1 lowercase letter",
+        "passwordIncludeNumber": "1 number",
+        "passwordIncludeSpecial": "1 special character (example: @ - _ = + .)",
+        "passwordLength": "8-30 characters",
+        "otpRequired": "OTP is required",
+        "otpLengthError": "OTP must be 6 characters long"
+      },
+      "otp": {
+        "title": "Verify your account",
+        "description": "We have sent a verification code to your email. Please enter the code below to verify your email address",
+        "cantReceive": "Can't receive the code? ",
+        "resend": "Resend",
+        "isResending": "You can resend the code in {count} seconds",
+        "send": "Send code"
+      },
+      "step": {
+        "password": "Create a Password",
+        "info": "Your Information",
+        "verify": "Verify your account"
+      }
+    },
+    "needLogout": "You need to log out first",
     "Home": {
       "title": "Home",
       "name": "Welcome,"

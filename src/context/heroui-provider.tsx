@@ -6,8 +6,10 @@ import React from "react";
 export function HeroUILibProviders({children}: { children: React.ReactNode }) {
   return (
     <HeroUIProvider>
-      <ToastProvider />
-      {children}
+      <main className="dark text-foreground bg-background">
+        <ToastProvider/>
+        {children}
+      </main>
     </HeroUIProvider>
   )
 }
