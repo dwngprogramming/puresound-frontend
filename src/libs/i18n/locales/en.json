@@ -20,14 +20,6 @@
       "me": {
         "title": "Account - PureSound",
         "description": "Account page of PureSound - Pure Music Essence"
-      },
-      "forgotPassword": {
-        "title": "Forgot Password - PureSound",
-        "description": "Password recovery page of PureSound - Pure Music Essence"
-      },
-      "authFailure": {
-        "title": "Oops - PureSound",
-        "description": "Authentication failure"
       }
     }
   },
@@ -114,74 +106,20 @@
         "passwordIncludeSpecial": "1 special character (example: @ - _ = + .)",
         "passwordLength": "8-30 characters",
         "otpRequired": "OTP is required",
-        "otpLengthError": "OTP must be 6 characters long",
-        "validationMessage": "Invalid request data: \n",
-        "emailExists": "This email has been used. Please use another email",
-        "usernameExists": "This username has been used. Please use another username"
+        "otpLengthError": "OTP must be 6 characters long"
       },
       "otp": {
         "title": "Verify your account",
         "description": "We have sent a verification code to your email. Please enter the code below to verify your email address",
         "cantReceive": "Can't receive the code? ",
         "resend": "Resend",
-        "sending": "Sending...",
         "isResending": "You can resend the code in {count} seconds",
-        "send": "Send code",
-        "resendSuccess": "We have sent a new verification code to your email. Check your email to get the code",
-        "submit": "Verify",
-        "processing": "Processing...",
-        "waiting": "Your OTP code may take a little time to be delivered. Please wait a moment"
+        "send": "Send code"
       },
       "step": {
         "password": "Create a Password",
         "info": "Your Information",
-        "verify": "Verify your account",
-        "complete": "Complete"
-      },
-      "complete": {
-        "title": "Complete - You're all set!",
-        "description": "Your account has been created! You can now start listening to music.\n\nExperience music with PureSound – Pure Music Essence!",
-        "backToLogin": "Back to login"
-      }
-    },
-    "ForgotPassword": {
-      "title": "Forgot Password",
-      "email": "Email",
-      "placeholderEmail": "Type your Email",
-      "submit": "Submit",
-      "processing": "Processing...",
-      "newPassword": "Password",
-      "placeholderNewPassword": "Type your Password",
-      "retypePassword": "Retype Password",
-      "placeholderPasswordConfirm": "Retype your Password",
-      "validation": {
-        "emailRequired": "Email is required",
-        "emailFormat": "Email is invalid. Make sure you enter a email like example@email.com",
-        "otpRequired": "OTP is required",
-        "otpLengthError": "OTP must be 6 characters long",
-        "passwordRequired": "Password is required",
-        "passwordFormat": "Password must be between 8–30 characters long, with at least one lowercase, one uppercase, one digit, and one special character (@-_=+.)",
-        "passwordRetypeRequired": "Retype Password is required",
-        "passwordRetypeNotMatch": "Password and Retype Password do not match",
-        "passwordInclude": "Password must include:",
-        "passwordIncludeUppercase": "1 uppercase letter",
-        "passwordIncludeLowercase": "1 lowercase letter",
-        "passwordIncludeNumber": "1 number",
-        "passwordIncludeSpecial": "1 special character (example: @ - _ = + .)",
-        "passwordLength": "8-30 characters"
-      },
-      "login": "Back to Login",
-      "dontHaveAccount": "Don't have an account?",
-      "register": "Register now",
-      "otp": {
-        "title": "Verify your account",
-        "description": "We have sent a verification code to your email. Please enter the code below to verify your email address",
-        "cantReceive": "Can't receive the code? ",
-        "resend": "Resend",
-        "sending": "Sending...",
-        "isResending": "You can resend the code in {count} seconds",
-        "send": "Send code",
-        "resendSuccess": "We have sent a new verification code to your email. Check your email to get the code"
+        "verify": "Verify your account"
       }
     },
     "needLogout": "You need to log out first",
@@ -191,53 +129,6 @@
     },
     "Me": {
       "me": "Account"
-    },
-    "Common": {
-      "searchPlaceholder": "What’s on your vibe today?",
-      "login": "Login",
-      "signup": "Sign up",
-      "weather": {
-        "mood": {
-          "sunny": "Sunlight sings",
-          "rainy": "Rain whispers",
-          "snowy": "Snow in harmony",
-          "cloudy": "Clouds in chorus",
-          "clear_night": "Clear night serenade"
-        },
-        "status": {
-          "sunny": "Sunny",
-          "rainy": "Rainy",
-          "snowy": "Snowy",
-          "cloudy": "Cloudy",
-          "clear_night": "Clear"
-        },
-        "playlist": "Melody of the Weather",
-        "click": "Click to feel the Weather Mood Playlist",
-        "error": {
-          "oops": "Oops!",
-          "noData": "Oops! Trouble",
-          "notFound": "Weather data not found",
-          "description": "Ensure that your device's location services are enabled and try again."
-        }
-      },
-      "freemium": {
-        "weatherPopup": "Upgrade Premium to enjoy Weather Mood Playlists",
-        "subscription": "Explore Premium",
-        "upgrade": "Upgrade Premium Now"
-      },
-      "premium": {
-        "tag": {
-          "sunny": "☀️ Warm",
-          "rainy": "🌧️ Meditative",
-          "snowy": "🌨️ Gentle",
-          "cloudy": "⛅ Dreamy",
-          "clear_night": "🌙 Calm"
-        }
-      },
-      "me": "Account",
-      "profile": "Profile",
-      "settings": "Settings",
-      "logout": "Logout"
     }
   }
 }

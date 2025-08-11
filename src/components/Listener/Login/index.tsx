@@ -4,6 +4,7 @@ import {useLocale, useTranslations} from "next-intl";
 import Image from "next/image";
 import {Button, Divider, Form, Input} from "@heroui/react";
 import React, {useEffect, useMemo, useState} from "react";
+import {useBreakpoint} from "@/hooks/useBreakpoint";
 import {Controller, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {LocalLoginData} from "@/types/auth.types";
@@ -11,11 +12,10 @@ import {createLoginSchema} from "@/libs/validation/auth.validation";
 import {LoginRequest} from "@/models/auth/LoginRequest";
 import {useLogin} from "@/hooks/auth/useLogin";
 import {useRouter} from "next/navigation";
-import ComponentLoader from "@/components/ComponentLoader";
+import Loader from "@/components/Loader";
 import Link from "next/link";
 import {useAutoRelogin} from "@/hooks/auth/useAutoRelogin";
 import {handleFacebookLogin, handleGoogleLogin} from "@/utils/oAuth2Redirect";
-import {useBreakpoint} from "@/context/breakpoint-auth-context";
 
 export const Login = () => {
   const t = useTranslations("Listener.Login");
@@ -67,13 +67,13 @@ export const Login = () => {
 
   const isLoadingPage = isTryingRelogin || !mountedBreakpoint;
 
-  return isLoadingPage ? (<ComponentLoader/>) :
+  return isLoadingPage ? (<Loader/>) :
     (
       <div
         className="auth-container">
         <>
           <Image src="/puresound-logo.svg" alt="logo" width={80} height={80}/>
-          <div className="mb-6 text-center sm:text-left">
+          <div className="mb-6">
             <h1
               className={`text-darkmode ${breakpoint === 'base' ? 'text-2xl' : 'text-3xl'} font-bold inline`}>{t('title')}</h1>
             <h1

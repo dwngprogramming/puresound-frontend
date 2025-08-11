@@ -94,6 +94,7 @@ const PasswordStep = ({t, breakpoint}: PasswordStepProps) => {
             autoComplete="current-password"
             onChange={field.onChange}
             isInvalid={!!errors.password}
+            // errorMessage={errors.password?.message}
             endContent={
               <button
                 type="button"

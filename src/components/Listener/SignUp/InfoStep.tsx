@@ -1,16 +1,12 @@
 import {useLocale} from "next-intl";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Controller, useFormContext} from "react-hook-form";
 import {SignUpData} from "@/types/auth.types";
-import {DatePicker, Input, Select, SelectItem, Spinner} from "@heroui/react";
+import {DatePicker, Input, Select, SelectItem} from "@heroui/react";
 import ErrorMessageCustom from "@/components/Utility/ErrorMessageCustom";
-import {Gender} from "@/const/user/Gender";
-import {Check, Mars, Users, Venus, X} from "lucide-react";
+import {Gender} from "@/const/Gender";
+import {Mars, Users, Venus} from "lucide-react";
 import {I18nProvider} from "@react-aria/i18n";
-import {debounce} from "lodash";
-import {useQuery} from "@tanstack/react-query";
-import authApi from "@/apis/auth/auth.api";
-import {CheckExistsRequest} from "@/models/auth/CheckExistsRequest";
 
 interface InfoStepProps {
   t: any,
@@ -19,98 +15,13 @@ interface InfoStepProps {
 
 const InfoStep = ({t, breakpoint}: InfoStepProps) => {
   const [visible, setVisible] = useState(false);
-  const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid' | 'exists'>('idle');
-  const [isRegistrationComplete, setIsRegistrationComplete] = useState(false); // ✅ Thêm state này
-
   const {
     control,
-    formState: {errors, isSubmitSuccessful}, // ✅ Thêm isSubmitSuccessful
+    formState: {errors},
     watch,
-    setValue,
     trigger
   } = useFormContext<SignUpData>();
-
   const locale = useLocale();
-  const [debouncedUsername, setDebouncedUsername] = useState('');
-  const username = watch('username');
-
-  const debouncedSetUsername = useCallback(
-    debounce((value: string) => {
-      if (isRegistrationComplete) return; // ✅ Không debounce nếu đã đăng ký thành công
-
-      setDebouncedUsername(value);
-      if (value) {
-        setUsernameStatus('checking');
-      } else {
-        setUsernameStatus('idle');
-      }
-    }, 500),
-    [isRegistrationComplete]
-  );
-
-  const {data: response} = useQuery({
-    queryKey: ['checkUsername', debouncedUsername],
-    queryFn: async () => {
-      if (!debouncedUsername || debouncedUsername.length < 6 || debouncedUsername.length > 30) {
-        setUsernameStatus('invalid');
-        await trigger('username');
-        return null;
-      }
-
-      const request: CheckExistsRequest = {field: debouncedUsername};
-      const response = await authApi.checkUsername(request);
-
-      if (response.data.exists) {
-        setUsernameStatus('exists');
-      } else {
-        setUsernameStatus('valid');
-      }
-
-      return response;
-    },
-    retry: false,
-    enabled: !!debouncedUsername && !isRegistrationComplete && !isSubmitSuccessful // ✅ Disable khi đăng ký thành công
-  });
-
-  // ✅ Theo dõi trạng thái đăng ký thành công
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      setIsRegistrationComplete(true);
-      setUsernameStatus('valid'); // Set về valid để hiển thị check mark
-    }
-  }, [isSubmitSuccessful]);
-
-  useEffect(() => {
-    if (username !== undefined && !isRegistrationComplete) {
-      debouncedSetUsername(username);
-    }
-    return () => {
-      debouncedSetUsername.cancel();
-    };
-  }, [username, debouncedSetUsername, isRegistrationComplete]);
-
-  // Logic hiển thị icon cực đơn giản
-  const renderEndContent = () => {
-    switch (usernameStatus) {
-      case 'checking':
-        return <Spinner size="sm"/>;
-      case 'valid':
-        return <Check className="text-green-500"/>;
-      case 'invalid':
-      case 'exists':
-        return (
-          <X
-            className="text-red-500 cursor-pointer"
-            onClick={() => {
-              setValue('username', '');
-              setUsernameStatus('idle');
-            }}
-          />
-        );
-      default:
-        return null;
-    }
-  };
 
   const genderIcons = [
     {
@@ -172,14 +83,9 @@ const InfoStep = ({t, breakpoint}: InfoStepProps) => {
                 errorMessage: 'text-base mt-2 text-sm w-full'
               }}
               placeholder={t('placeholderUsername')}
-              endContent={renderEndContent()}
-              isInvalid={!!errors.username || response?.data.exists}
+              isInvalid={!!errors.username}
               errorMessage={errors.username?.message}
             />
-
-            {response?.data.exists &&
-              <ErrorMessageCustom message={t('validation.usernameExists')}/>
-            }
           </div>
         )}
       />
@@ -303,9 +209,8 @@ const InfoStep = ({t, breakpoint}: InfoStepProps) => {
                     label: `${!!errors.dob ? 'text-red-500' : 'text-darkmode'}  text-sm font-bold`,
                     input: 'w-full',
                     timeInputLabel: 'font-inherit',
-                    calendar: 'bg-primary-900 text-white',
-                    calendarContent: 'bg-primary-900 text-white',
-                    popoverContent: 'bg-primary-900 text-white'
+                    calendar: 'bg-black text-white',
+                    calendarContent: 'bg-black text-white',
                   }}
                   isInvalid={!!errors.dob}
                 />

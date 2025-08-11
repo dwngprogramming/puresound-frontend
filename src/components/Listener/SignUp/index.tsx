@@ -6,9 +6,10 @@ import {SignUpData} from "@/types/auth.types";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {createRegisterSchema} from "@/libs/validation/auth.validation";
 import React, {useEffect, useMemo, useState} from "react";
+import {useBreakpoint} from "@/hooks/useBreakpoint";
 import {useAutoRelogin} from "@/hooks/auth/useAutoRelogin";
 import {useRouter} from "next/navigation";
-import ComponentLoader from "@/components/ComponentLoader";
+import Loader from "@/components/Loader";
 import Image from "next/image";
 import {Button, Divider, Form, Input} from "@heroui/react";
 import Link from "next/link";
@@ -20,13 +21,8 @@ import StepIndicator from "@/components/Listener/SignUp/StepIndicator";
 import PasswordStep from "@/components/Listener/SignUp/PasswordStep";
 import InfoStep from "@/components/Listener/SignUp/InfoStep";
 import {getLocalTimeZone, today} from "@internationalized/date";
-import {Gender} from "@/const/user/Gender";
+import {Gender} from "@/const/Gender";
 import VerifyStep from "@/components/Listener/SignUp/VerifyStep";
-import authApi from "@/apis/auth/auth.api";
-import {CircleCheckBig, LockKeyhole} from "lucide-react";
-import CompleteStep from "@/components/Listener/SignUp/CompleteStep";
-import {useBreakpoint} from "@/context/breakpoint-auth-context";
-import {CheckExistsRequest} from "@/models/auth/CheckExistsRequest";
 
 const SignUp = () => {
   const t = useTranslations("Listener.SignUp");
@@ -39,7 +35,7 @@ const SignUp = () => {
   const {relogin, isTryingRelogin} = useAutoRelogin(router);
   const signup = useSignUp();
   const [currentStep, setCurrentStep] = useState(0);  // Email tính là step 0
-  const totalIndicatorSteps = 4;   // Không tính email step, vì không nằm trong indicator
+  const totalIndicatorSteps = 3;   // Không tính email step, vì không nằm trong indicator
   const todayDate = useMemo(() => today(getLocalTimeZone()), []);
 
   const reactFormMethods = useForm<SignUpData>({
@@ -61,8 +57,6 @@ const SignUp = () => {
     control,
     handleSubmit,
     trigger,
-    watch,
-    setError,
     formState: {errors, isSubmitting}
   } = reactFormMethods;
 
@@ -72,7 +66,7 @@ const SignUp = () => {
     2: ['username', 'firstname', 'lastname', 'gender', 'dob'],
   };
 
-  const stepTitles = ['email', t('step.password'), t('step.info'), t('step.verify'), t('step.complete')];
+  const stepTitles = ['email', t('step.password'), t('step.info'), t('step.verify')];
 
   useEffect(() => {
     // Auto check relogin if user access /signup
@@ -85,59 +79,34 @@ const SignUp = () => {
       email: data.email,
       password: data.password,
       retypePassword: data.retypePassword,
-      firstname: data.firstname,
-      lastname: data.lastname,
+      firstName: data.firstname,
+      lastName: data.lastname,
       gender: data.gender,
       dob: data.dob.toString()
     };
-    // Chạy tiến trình ngầm (Có gửi OTP)
-    signup.mutate(request);
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    setCurrentStep(prev => prev + 1);
 
-    /*catch (error) {
-    if (error instanceof AxiosError) {
-      const data = error.response?.data.data;
-      let message = tValidation('validationMessage');
-      if (data) {
-        const errorList = Object.entries(data)
-          .map(([, value]) => `- ${value}`)
-          .join('\n');
-
-        message += errorList;
-        dispatch(showErrorNotification(message));
-      }
-    }*/
+    try {
+      // await signup.mutateAsync(request);
+      localStorage.setItem('locale', locale);
+      console.log(request);
+      setCurrentStep(prev => prev + 1);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const handleNextStep = async () => {
     const validateFields = stepFields[currentStep];
     const isValid = await trigger(validateFields); // Add this option
-    if (isValid) {
-      if (currentStep === 0) {
-        const email = watch('email');
-        const request: CheckExistsRequest = {
-          field: email
-        }
-        const response = await authApi.checkEmail(request);
-        if (response.data.exists) {
-          setError('email', {
-            message: tValidation('emailExists'),
-          });
-          return;
-        }
-      }
-      setCurrentStep(prev => prev + 1);
-    }
+    if (isValid) setCurrentStep(prev => prev + 1);
   };
-
   const handlePrevStep = () => {
     setCurrentStep(prev => prev - 1);
   };
 
   const isLoadingPage = isTryingRelogin || !mountedBreakpoint;
 
-  return isLoadingPage ? (<ComponentLoader/>) : (
+  return isLoadingPage ? (<Loader/>) : (
     <div
       className="auth-container">
       <>
@@ -164,7 +133,7 @@ const SignUp = () => {
           <>
             <StepIndicator
               currentStep={currentStep}
-              totalSteps={4}
+              totalSteps={3}
             />
           </>
         }
@@ -205,18 +174,12 @@ const SignUp = () => {
 
             {currentStep > 0 && (
               <div className="flex items-center justify-start gap-2 mb-4">
-                {currentStep > 0 && currentStep < 3 ? (
-                  <span onClick={handlePrevStep}>
-                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M15 6L9 12L15 18" stroke="#99a1af" strokeWidth="2" strokeLinecap="round"
-                            strokeLinejoin="round"/>
-                    </svg>
-                  </span>
-                ) : currentStep === 3 ? (
-                  <LockKeyhole/>
-                ) : currentStep === 4 && (
-                  <CircleCheckBig/>
-                )}
+              <span onClick={handlePrevStep}>
+                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 6L9 12L15 18" stroke="#99a1af" strokeWidth="2" strokeLinecap="round"
+                        strokeLinejoin="round"/>
+                </svg>
+              </span>
                 <div className="flex flex-col gap-1">
                   <h6 className="font-bold text-gray-400">Step {currentStep} of {totalIndicatorSteps}</h6>
                   <p className="text-darkmode text-sm font-bold">{stepTitles[currentStep]}</p>
@@ -265,14 +228,7 @@ const SignUp = () => {
         </FormProvider>
 
         {currentStep === 3 && (
-          <VerifyStep
-            email={watch('email')}
-            handleNextStep={() => setCurrentStep(prev => prev + 1)}
-          />
-        )}
-
-        {currentStep === 4 && (
-          <CompleteStep/>
+          <VerifyStep/>
         )}
 
         {currentStep === 0 && (

@@ -13,7 +13,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const SignUpPage = () => {
   return (
-    <SignUp/>
+    <div>
+      <SignUp />
+    </div>
   );
 };
 
