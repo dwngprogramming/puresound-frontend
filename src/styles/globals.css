@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 @plugin "../styles/hero.ts";
 @source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 
@@ -30,6 +31,58 @@
   --color-neutral-900: #171717;
 }
 
+@layer base {
+  html,
+  body {
+    @apply text-neutral-50;
+  }
+
+  h1 {
+    @apply text-4xl font-bold;
+  }
+
+  h2 {
+    @apply text-3xl font-semibold;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold;
+  }
+
+  h4 {
+    @apply text-xl font-medium;
+  }
+
+  h5 {
+    @apply text-lg font-medium;
+  }
+
+  h6 {
+    @apply text-base font-normal;
+  }
+}
+
+@layer utilities {
+  .text-foreground {
+    @apply !text-neutral-50;
+  }
+
+  .text-default-foreground {
+    @apply !text-neutral-50;
+  }
+
+  .auth-container {
+    @apply w-full flex flex-col items-center gap-2
+    min-w-[300px] max-w-[450px] sm:w-[600px] sm:max-w-none
+    mx-auto sm:py-8 sm:px-16 sm:bg-gray-900 sm:rounded-xl
+    md:px-24
+  }
+}
+
+.text-darkmode {
+  @apply text-neutral-50;
+}
+
 /* Custom gradients */
 .bg-premium-gradient {
   background: linear-gradient(135deg, var(--color-premium-400), var(--color-premium-600));
@@ -52,7 +105,7 @@
 }
 
 .auth-input {
-  @apply w-60 sm:w-70 md:w-110
+  @apply w-60 sm:w-full md:w-full
 }
 
 .divider {

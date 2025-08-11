@@ -27,8 +27,6 @@ export const useLogin = () => {
         principal: principal,
         token: accessToken
       }));
-
-      console.log('Login successful:', response);
     },
   });
 }
