@@ -23,6 +23,12 @@ import InfoStep from "@/components/Listener/SignUp/InfoStep";
 import {getLocalTimeZone, today} from "@internationalized/date";
 import {Gender} from "@/const/Gender";
 import VerifyStep from "@/components/Listener/SignUp/VerifyStep";
+import {AxiosError} from "axios";
+import {useAppDispatch} from "@/libs/redux/hooks";
+import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
+import authApi from "@/apis/auth/auth.api";
+import {CircleCheckBig, LockKeyhole} from "lucide-react";
+import CompleteStep from "@/components/Listener/SignUp/CompleteStep";
 
 const SignUp = () => {
   const t = useTranslations("Listener.SignUp");
@@ -35,8 +41,9 @@ const SignUp = () => {
   const {relogin, isTryingRelogin} = useAutoRelogin(router);
   const signup = useSignUp();
   const [currentStep, setCurrentStep] = useState(0);  // Email tính là step 0
-  const totalIndicatorSteps = 3;   // Không tính email step, vì không nằm trong indicator
+  const totalIndicatorSteps = 4;   // Không tính email step, vì không nằm trong indicator
   const todayDate = useMemo(() => today(getLocalTimeZone()), []);
+  const dispatch = useAppDispatch();
 
   const reactFormMethods = useForm<SignUpData>({
     resolver: yupResolver(registerSchema),
@@ -57,6 +64,8 @@ const SignUp = () => {
     control,
     handleSubmit,
     trigger,
+    watch,
+    setError,
     formState: {errors, isSubmitting}
   } = reactFormMethods;
 
@@ -66,7 +75,7 @@ const SignUp = () => {
     2: ['username', 'firstname', 'lastname', 'gender', 'dob'],
   };
 
-  const stepTitles = ['email', t('step.password'), t('step.info'), t('step.verify')];
+  const stepTitles = ['email', t('step.password'), t('step.info'), t('step.verify'), t('step.complete')];
 
   useEffect(() => {
     // Auto check relogin if user access /signup
@@ -79,27 +88,49 @@ const SignUp = () => {
       email: data.email,
       password: data.password,
       retypePassword: data.retypePassword,
-      firstName: data.firstname,
-      lastName: data.lastname,
+      firstname: data.firstname,
+      lastname: data.lastname,
       gender: data.gender,
       dob: data.dob.toString()
     };
 
     try {
-      // await signup.mutateAsync(request);
-      localStorage.setItem('locale', locale);
-      console.log(request);
+      await signup.mutateAsync(request);
       setCurrentStep(prev => prev + 1);
     } catch (error) {
-      console.log(error);
+      if (error instanceof AxiosError) {
+        const data = error.response?.data.data;
+        let message = tValidation('validationMessage');
+        if (data) {
+          const errorList = Object.entries(data)
+            .map(([, value]) => `- ${value}`)
+            .join('\n');
+
+          message += errorList;
+          dispatch(showErrorNotification(message));
+        }
+      }
     }
   }
 
   const handleNextStep = async () => {
     const validateFields = stepFields[currentStep];
     const isValid = await trigger(validateFields); // Add this option
-    if (isValid) setCurrentStep(prev => prev + 1);
+    if (isValid) {
+      if (currentStep === 0) {
+        const email = watch('email');
+        const response = await authApi.checkEmail(email);
+        if (response.data.exists) {
+          setError('email', {
+            message: tValidation('emailExists'),
+          });
+          return;
+        }
+      }
+      setCurrentStep(prev => prev + 1);
+    }
   };
+
   const handlePrevStep = () => {
     setCurrentStep(prev => prev - 1);
   };
@@ -133,7 +164,7 @@ const SignUp = () => {
           <>
             <StepIndicator
               currentStep={currentStep}
-              totalSteps={3}
+              totalSteps={4}
             />
           </>
         }
@@ -174,12 +205,18 @@ const SignUp = () => {
 
             {currentStep > 0 && (
               <div className="flex items-center justify-start gap-2 mb-4">
-              <span onClick={handlePrevStep}>
-                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M15 6L9 12L15 18" stroke="#99a1af" strokeWidth="2" strokeLinecap="round"
-                        strokeLinejoin="round"/>
-                </svg>
-              </span>
+                {currentStep > 0 && currentStep < 3 ? (
+                  <span onClick={handlePrevStep}>
+                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15 6L9 12L15 18" stroke="#99a1af" strokeWidth="2" strokeLinecap="round"
+                            strokeLinejoin="round"/>
+                    </svg>
+                  </span>
+                ) : currentStep === 3 ? (
+                  <LockKeyhole />
+                ) : currentStep === 4 && (
+                  <CircleCheckBig />
+                )}
                 <div className="flex flex-col gap-1">
                   <h6 className="font-bold text-gray-400">Step {currentStep} of {totalIndicatorSteps}</h6>
                   <p className="text-darkmode text-sm font-bold">{stepTitles[currentStep]}</p>
@@ -228,7 +265,14 @@ const SignUp = () => {
         </FormProvider>
 
         {currentStep === 3 && (
-          <VerifyStep/>
+          <VerifyStep
+            email={watch('email')}
+            handleNextStep={() => setCurrentStep(prev => prev + 1)}
+          />
+        )}
+
+        {currentStep === 4 && (
+          <CompleteStep/>
         )}
 
         {currentStep === 0 && (

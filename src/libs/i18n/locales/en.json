@@ -106,7 +106,9 @@
         "passwordIncludeSpecial": "1 special character (example: @ - _ = + .)",
         "passwordLength": "8-30 characters",
         "otpRequired": "OTP is required",
-        "otpLengthError": "OTP must be 6 characters long"
+        "otpLengthError": "OTP must be 6 characters long",
+        "validationMessage": "Invalid request data: \n",
+        "emailExists": "This email has been used. Please use another email"
       },
       "otp": {
         "title": "Verify your account",
@@ -114,12 +116,19 @@
         "cantReceive": "Can't receive the code? ",
         "resend": "Resend",
         "isResending": "You can resend the code in {count} seconds",
-        "send": "Send code"
+        "send": "Send code",
+        "resendSuccess": "We have sent a new verification code to your email. Check your email to get the code"
       },
       "step": {
         "password": "Create a Password",
         "info": "Your Information",
-        "verify": "Verify your account"
+        "verify": "Verify your account",
+        "complete": "Complete"
+      },
+      "complete": {
+        "title": "Complete - You're all set!",
+        "description": "Your account has been created! You can now start listening to music.\n\nExperience music with PureSound – Pure Music Essence!",
+        "backToLogin": "Back to login"
       }
     },
     "needLogout": "You need to log out first",

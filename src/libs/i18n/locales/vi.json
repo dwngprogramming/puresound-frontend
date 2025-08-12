@@ -106,7 +106,9 @@
         "passwordIncludeSpecial": "1 ký tự đặc biệt (ví dụ: @ - _ = + .)",
         "passwordLength": "8-30 ký tự",
         "otpRequired": "OTP không được để trống",
-        "otpLengthError": "OTP phải bao gồm 6 ký tự"
+        "otpLengthError": "OTP phải bao gồm 6 ký tự",
+        "validationMessage": "Dữ liệu không hợp lệ: \n",
+        "emailExists": "Email này đã được sử dụng. Vui lòng sử dụng một email khác"
       },
       "otp": {
         "title": "Xác thực tài khoản",
@@ -114,12 +116,21 @@
         "cantReceive": "Không nhận được mã? ",
         "resend": "Gửi lại",
         "isResending": "Có thể gửi lại sau {count} giây",
-        "send": "Gửi mã"
+        "send": "Gửi mã",
+        "resendSuccess": "Chúng tôi đã gửi một mã xác minh mới đến email của bạn. Kiểm tra email của bạn",
+        "submit": "Xác nhận",
+        "processing": "Đang xử lý..."
       },
       "step": {
         "password": "Tạo mật khẩu",
         "info": "Thông tin của bạn",
-        "verify": "Xác thực tài khoản"
+        "verify": "Xác thực tài khoản",
+        "complete": "Hoàn tất"
+      },
+      "complete": {
+        "title": "Hoàn tất - Mọi thứ đã sẵn sàng!",
+        "description": "Tài khoản của bạn đã được tạo. Bạn có thể bắt đầu nghe nhạc ngay bây giờ.\n\nTận hưởng âm nhạc cùng PureSound - Tinh hoa âm nhạc thuần khiết!",
+        "backToLogin": "Về trang đăng nhập"
       }
     },
     "needLogout": "Bạn cần đăng xuất trước",

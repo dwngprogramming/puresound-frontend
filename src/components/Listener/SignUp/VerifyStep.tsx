@@ -6,23 +6,29 @@ import {useTranslations} from "next-intl";
 import {useMutation} from "@tanstack/react-query";
 import authApi from "@/apis/auth/auth.api";
 import {useAccurateCountdown} from "@/hooks/util/useAccurateCountdown";
+import {OtpEmailRequest} from "@/models/otp/OtpEmailRequest";
+import {useAppDispatch} from "@/libs/redux/hooks";
+import {showSuccessNotification} from "@/libs/redux/features/notification/notificationAction";
 
-interface VerifyCode {
-  code: string
+interface VerifyProps {
+  email: string
+  handleNextStep: () => void
 }
 
-const VerifyStep = () => {
+const VerifyStep = ({email, handleNextStep}: VerifyProps) => {
   const [visible, setVisible] = useState(false);
-  const { countdown, start: startCountdown, isActive } = useAccurateCountdown();
+  const {countdown, start: startCountdown, isActive} = useAccurateCountdown();
   const {breakpoint} = useBreakpoint();
   const t = useTranslations("Listener.SignUp");
   const tValidation = useTranslations("Listener.SignUp.validation");
+  const dispatch = useAppDispatch();
   const verifyCode = useMutation({
     mutationFn: authApi.verifyRegister
   })
   const resendCode = useMutation({
-    mutationFn: () => authApi.sendOtp(),
+    mutationFn: () => authApi.resendOtp(email),
     onSuccess: () => {
+      dispatch(showSuccessNotification(t('otp.resendSuccess')));
       startCountdown(60); // Bắt đầu đếm ngược 60s
     },
     onError: () => {
@@ -35,27 +41,34 @@ const VerifyStep = () => {
     setValue,
     handleSubmit,
     formState: {errors, isSubmitting}
-  } = useForm<VerifyCode>(
+  } = useForm<OtpEmailRequest>(
     {
       mode: "onTouched",
       defaultValues: {
-        code: ''
+        email: '',
+        otp: ''
       }
     }
   );
-  const code = watch('code');
+
+  useEffect(() => {
+    setValue("email", email);
+  }, []);
+
+  const otp = watch('otp');
 
   useEffect(() => {
     const timeout = setTimeout(() => setVisible(true), 10) // Delay nhỏ để trigger transition
     return () => clearTimeout(timeout)
   }, [])
 
-  const handleSetCode = (value: string) => {
-    setValue('code', value);
+  const handleSetOtp = (value: string) => {
+    setValue('otp', value);
   }
 
-  const handleVerify = (data: VerifyCode) => {
-    console.log(data);
+  const handleVerify = async (data: OtpEmailRequest) => {
+    await verifyCode.mutateAsync(data);
+    handleNextStep();
   }
 
   const handleResendClick = () => {
@@ -68,18 +81,18 @@ const VerifyStep = () => {
     <Form className="mx-auto gap-4 w-full" onSubmit={handleSubmit(handleVerify)}>
       <div
         className={`w-full mb-2 flex flex-col items-center gap-4 transition-all duration-300 ease-in-out ${visible ? 'opacity-100' : 'opacity-0'}`}>
-        <h2 className="text-2xl font-bold text-center">{t('otp.title')}</h2>
+        <h3 className="text-center">{t('otp.title')}</h3>
         <p className="text-center text-gray-400">{t('otp.description')}</p>
         <InputOtp
-          {...register('code', {
+          {...register('otp', {
             required: `${tValidation('otpRequired')}`,
             minLength: {value: 6, message: `${tValidation('otpLengthError')}`}
           })}
           length={6}
-          value={code}
-          onValueChange={handleSetCode}
-          isInvalid={!!errors.code}
-          errorMessage={errors.code?.message}
+          value={otp}
+          onValueChange={handleSetOtp}
+          isInvalid={!!errors.otp}
+          errorMessage={errors.otp?.message}
         />
 
         <Button
@@ -99,7 +112,7 @@ const VerifyStep = () => {
           {countdown > 0 ? (
             // Đang đếm ngược - không thể click
             <span className="text-gray-500 cursor-not-allowed">
-              {t('otp.isResending', { count: countdown })} {/* Pass countdown as parameter */}
+              {t('otp.isResending', {count: countdown})} {/* Pass countdown as parameter */}
             </span>
           ) : (
             // Có thể click để gửi lại
