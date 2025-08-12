@@ -3,8 +3,8 @@ export interface SignupRequest {
   email: string;
   password: string;
   retypePassword: string;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   gender: string;
   dob: string;
 }

@@ -14,7 +14,7 @@ export const useAutoRelogin = (router: AppRouterInstance) => {
 
   const relogin = async () => {
     if (accessToken) {
-      await router.replace('/');
+      router.replace('/');
       return;
     }
 
@@ -24,7 +24,7 @@ export const useAutoRelogin = (router: AppRouterInstance) => {
       const success = await tryRelogin();
 
       if (success) {
-        await router.replace('/');
+        router.replace('/');
         dispatch(showErrorNotification(t('needLogout')));
       }
     } finally {
