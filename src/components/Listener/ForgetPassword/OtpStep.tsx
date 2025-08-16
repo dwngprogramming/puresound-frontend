@@ -1,23 +1,22 @@
 import {Button, Form, InputOtp} from "@heroui/react";
 import {useForm} from "react-hook-form";
 import React, {useEffect, useState} from "react";
-import {useBreakpoint} from "@/hooks/useBreakpoint";
 import {useTranslations} from "next-intl";
 import {useMutation} from "@tanstack/react-query";
 import authApi from "@/apis/auth/auth.api";
 import {OtpEmailRequest} from "@/models/otp/OtpEmailRequest";
 import {useSendOtp} from "@/hooks/common/useSendOtp";
+import {useBreakpoint} from "@/context/breakpoint-auth-context";
 
-interface VerifyProps {
+interface OtpStep {
   email: string
   handleNextStep: () => void
 }
 
-const VerifyStep = ({email, handleNextStep}: VerifyProps) => {
+const OtpStep = ({email, handleNextStep}: OtpStep) => {
   const [visible, setVisible] = useState(false);
   const {breakpoint} = useBreakpoint();
-  const t = useTranslations("Listener.SignUp");
-  const tValidation = useTranslations("Listener.SignUp.validation");
+  const t = useTranslations("Listener.ForgotPassword");
   const verifyCode = useMutation({
     mutationFn: authApi.verifyRegister
   })
@@ -64,7 +63,7 @@ const VerifyStep = ({email, handleNextStep}: VerifyProps) => {
 
   const handleResendClick = () => {
     if (!isActive && !isPending) {
-      handleSendOtp()
+      handleSendOtp();
     }
   };
 
@@ -76,8 +75,8 @@ const VerifyStep = ({email, handleNextStep}: VerifyProps) => {
         <p className="text-center text-gray-400">{t('otp.description')}</p>
         <InputOtp
           {...register('otp', {
-            required: `${tValidation('otpRequired')}`,
-            minLength: {value: 6, message: `${tValidation('otpLengthError')}`}
+            required: `${t('validation.otpRequired')}`,
+            minLength: {value: 6, message: `${t('validation.otpLengthError')}`}
           })}
           length={6}
           value={otp}
@@ -94,7 +93,7 @@ const VerifyStep = ({email, handleNextStep}: VerifyProps) => {
       disabled:opacity-50 disabled:hover:bg-blue-400 disabled:pointer-events-none
       ${isSubmitting ? 'hover:bg-blue-500 hover:text-darkmode hover:border-white' : ''}`}
         >
-          {verifyCode.isPending ? t('processing') : t('otp.send')}
+          {isSubmitting ? t('processing') : t('otp.send')}
         </Button>
 
         <p
@@ -124,4 +123,4 @@ const VerifyStep = ({email, handleNextStep}: VerifyProps) => {
   )
 }
 
-export default VerifyStep;
+export default OtpStep;

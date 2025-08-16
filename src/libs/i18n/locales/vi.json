@@ -20,6 +20,10 @@
       "me": {
         "title": "Tài khoản - PureSound",
         "description": "Trang tài khoản của PureSound - Tinh hoa âm nhạc thuần khiết"
+      },
+      "forgotPassword": {
+        "title": "Quên mật khẩu - PureSound",
+        "description": "Trang khôi phục mật khẩu của PureSound - Tinh hoa âm nhạc thuần khiết"
       }
     }
   },
@@ -115,6 +119,7 @@
         "description": "Chúng tôi đã gửi một mã xác minh đến email của bạn. Vui lòng nhập mã bên dưới để xác nhận địa chỉ email.",
         "cantReceive": "Không nhận được mã? ",
         "resend": "Gửi lại",
+        "sending": "Đang gửi mã...",
         "isResending": "Có thể gửi lại sau {count} giây",
         "send": "Gửi mã",
         "resendSuccess": "Chúng tôi đã gửi một mã xác minh mới đến email của bạn. Kiểm tra email của bạn",
@@ -131,6 +136,44 @@
         "title": "Hoàn tất - Mọi thứ đã sẵn sàng!",
         "description": "Tài khoản của bạn đã được tạo. Bạn có thể bắt đầu nghe nhạc ngay bây giờ.\n\nTận hưởng âm nhạc cùng PureSound - Tinh hoa âm nhạc thuần khiết!",
         "backToLogin": "Về trang đăng nhập"
+      }
+    },
+    "ForgotPassword": {
+      "title": "Quên mật khẩu",
+      "email": "Email",
+      "placeholderEmail": "Nhập email",
+      "submit": "Gửi",
+      "processing": "Đang xử lý...",
+      "validation": {
+        "emailRequired": "Email không được để trống",
+        "emailFormat": "Email không đúng định dạng. Chắc chắn rằng email bạn nhập có dạng example@email.com",
+        "otpRequired": "OTP không được để trống",
+        "otpLengthError": "OTP phải bao gồm 6 ký tự",
+        "passwordRequired": "Mật khẩu không được để trống",
+        "passwordFormat": "Mật khẩu phải có 8-30 ký tự, bao gồm ít nhất một chữ thường, một chữ hoa, một số và một ký tự đặc biệt (@-_=+.)",
+        "passwordRetypeRequired": "Nhập lại mật khẩu không được để trống",
+        "passwordRetypeNotMatch": "Mật khẩu và Nhập lại mật khẩu không khớp",
+        "passwordInclude": "Mật khẩu phải bao gồm:",
+        "passwordIncludeUppercase": "1 ký tự hoa",
+        "passwordIncludeLowercase": "1 ký tự thường",
+        "passwordIncludeNumber": "1 số",
+        "passwordIncludeSpecial": "1 ký tự đặc biệt (ví dụ: @ - _ = + .)",
+        "passwordLength": "8-30 ký tự"
+      },
+      "login": "Trở về đăng nhập",
+      "dontHaveAccount": "Chua có tài khoản?",
+      "register": "Đăng ký ngay",
+      "otp": {
+        "title": "Xác thực tài khoản",
+        "description": "Chúng tôi đã gửi một mã xác minh đến email của bạn. Vui lòng nhập mã bên dưới để xác nhận địa chỉ email.",
+        "cantReceive": "Không nhận được mã? ",
+        "resend": "Gửi lại",
+        "sending": "Đang gửi mã...",
+        "isResending": "Có thể gửi lại sau {count} giây",
+        "send": "Gửi mã",
+        "resendSuccess": "Chúng tôi đã gửi một mã xác minh mới đến email của bạn. Kiểm tra email của bạn",
+        "submit": "Xác nhận",
+        "processing": "Đang xử lý..."
       }
     },
     "needLogout": "Bạn cần đăng xuất trước",

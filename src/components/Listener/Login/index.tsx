@@ -4,7 +4,6 @@ import {useLocale, useTranslations} from "next-intl";
 import Image from "next/image";
 import {Button, Divider, Form, Input} from "@heroui/react";
 import React, {useEffect, useMemo, useState} from "react";
-import {useBreakpoint} from "@/hooks/useBreakpoint";
 import {Controller, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {LocalLoginData} from "@/types/auth.types";
@@ -16,6 +15,7 @@ import Loader from "@/components/Loader";
 import Link from "next/link";
 import {useAutoRelogin} from "@/hooks/auth/useAutoRelogin";
 import {handleFacebookLogin, handleGoogleLogin} from "@/utils/oAuth2Redirect";
+import {useBreakpoint} from "@/context/breakpoint-auth-context";
 
 export const Login = () => {
   const t = useTranslations("Listener.Login");
