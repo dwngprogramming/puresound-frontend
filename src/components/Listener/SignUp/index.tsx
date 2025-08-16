@@ -6,7 +6,6 @@ import {SignUpData} from "@/types/auth.types";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {createRegisterSchema} from "@/libs/validation/auth.validation";
 import React, {useEffect, useMemo, useState} from "react";
-import {useBreakpoint} from "@/hooks/useBreakpoint";
 import {useAutoRelogin} from "@/hooks/auth/useAutoRelogin";
 import {useRouter} from "next/navigation";
 import Loader from "@/components/Loader";
@@ -29,6 +28,7 @@ import {showErrorNotification} from "@/libs/redux/features/notification/notifica
 import authApi from "@/apis/auth/auth.api";
 import {CircleCheckBig, LockKeyhole} from "lucide-react";
 import CompleteStep from "@/components/Listener/SignUp/CompleteStep";
+import {useBreakpoint} from "@/context/breakpoint-auth-context";
 
 const SignUp = () => {
   const t = useTranslations("Listener.SignUp");
