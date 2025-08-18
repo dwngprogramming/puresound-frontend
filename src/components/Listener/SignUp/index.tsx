@@ -51,7 +51,7 @@ const SignUp = () => {
     defaultValues: {
       username: '',
       email: '',
-      password: '',
+      newPassword: '',
       retypePassword: '',
       firstname: '',
       lastname: '',
@@ -86,7 +86,7 @@ const SignUp = () => {
     const request: SignupRequest = {
       username: data.username,
       email: data.email,
-      password: data.password,
+      newPassword: data.password,
       retypePassword: data.retypePassword,
       firstname: data.firstname,
       lastname: data.lastname,

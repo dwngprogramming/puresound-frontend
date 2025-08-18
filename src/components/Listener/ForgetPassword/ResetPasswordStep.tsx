@@ -17,11 +17,11 @@ interface ResetPasswordStepProps {
 
 const ResetPasswordStep = ({email}: ResetPasswordStepProps) => {
   const {breakpoint} = useBreakpoint();
-  const t = useTranslations("Listener.ResetPassword");
+  const t = useTranslations("Listener.ForgotPassword");
   const [visible, setVisible] = useState(false);
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState({
-    password: false,
+    newPassword: false,
     retypePassword: false
   });
 
@@ -41,12 +41,12 @@ const ResetPasswordStep = ({email}: ResetPasswordStepProps) => {
     mode: "onTouched",
     defaultValues: {
       email: email || "",
-      password: "",
+      newPassword: "",
       retypePassword: "",
     },
   });
 
-  const passwordValue = watch('password');
+  const passwordValue = watch('newPassword');
 
   const conditions = {
     lowercase: {
@@ -81,7 +81,7 @@ const ResetPasswordStep = ({email}: ResetPasswordStepProps) => {
 
     setShowPassword({
       ...showPassword,
-      password: !showPassword.password
+      newPassword: !showPassword.newPassword
     });
   };
 
@@ -103,26 +103,25 @@ const ResetPasswordStep = ({email}: ResetPasswordStepProps) => {
       className={`w-full mb-2 flex flex-col gap-4 transition-all duration-400 ease-in-out ${visible ? 'opacity-100' : 'opacity-0'}`}>
       <Form className="mx-auto gap-4 w-full" onSubmit={handleSubmit(handleResetPassword)}>
         <Input
-          {...register("password", {
+          {...register("newPassword", {
             required: t("validation.passwordRequired"),
             pattern: {
               value: regex.PASSWORD_REGEX,
               message: t("validation.passwordFormat"),
             },
           })}
-          name="password"
-          type={showPassword.password ? 'text' : 'password'}
+          name="newPassword"
+          type={showPassword.newPassword ? 'text' : 'password'}
           size={breakpoint === 'base' ? 'md' : 'lg'}
-          label={t('password')}
+          label={t('newPassword')}
           labelPlacement="outside-top"
           classNames={{
             label: 'text-darkmode text-sm font-bold',
             input: 'w-full',
           }}
-          placeholder={t('placeholderPassword')}
+          placeholder={t('placeholderNewPassword')}
           autoComplete="current-password"
-          isInvalid={!!errors.password}
-          // errorMessage={errors.password?.message}
+          isInvalid={!!errors.newPassword}
           endContent={
             <button
               type="button"
@@ -133,7 +132,7 @@ const ResetPasswordStep = ({email}: ResetPasswordStepProps) => {
               className="text-gray-400 hover:text-blue-400 transition-colors focus:cursor-pointer"
             >
               {
-                showPassword.password ? (
+                showPassword.newPassword ? (
                   <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"
                        xmlns="http://www.w3.org/2000/svg">
                     <path fillRule="evenodd" clipRule="evenodd"
@@ -157,14 +156,14 @@ const ResetPasswordStep = ({email}: ResetPasswordStepProps) => {
         />
 
         <div className="flex flex-col gap-2 mb-2 text-darkmode">
-          <p className="text-sm text-gray-300 font-bold">{t('passwordInclude')}</p>
+          <p className="text-sm text-gray-300 font-bold">{t('validation.passwordInclude')}</p>
 
           {Object.entries(conditions).map(([key, condition]) => (
             <ConditionalItem
               key={key}
               met={condition.met}
               label={condition.label}
-              isInvalid={!!errors.password}
+              isInvalid={!!errors.newPassword}
             />
           ))}
 
@@ -189,7 +188,6 @@ const ResetPasswordStep = ({email}: ResetPasswordStepProps) => {
             errorMessage: 'text-base mt-2 text-sm w-full' // Lớn hơn mặc định
           }}
           placeholder={t('placeholderPasswordConfirm')}
-          autoComplete="current-retypePassword"
           isInvalid={!!errors.retypePassword}
           errorMessage={errors.retypePassword?.message}
           endContent={

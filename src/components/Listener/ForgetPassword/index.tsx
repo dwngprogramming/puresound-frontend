@@ -10,6 +10,7 @@ import Loader from "@/components/Loader";
 import Link from "next/link";
 import OtpStep from "@/components/Listener/ForgetPassword/OtpStep";
 import {useBreakpoint} from "@/context/breakpoint-auth-context";
+import ResetPasswordStep from "@/components/Listener/ForgetPassword/ResetPasswordStep";
 
 const ForgotPassword = () => {
   const t = useTranslations("Listener.ForgotPassword");
@@ -53,12 +54,6 @@ const ForgotPassword = () => {
 
             <div className="text-center flex flex-col gap-2 mt-4">
               <div>
-                <Link href="/login" className="text-blue-400 inline text-sm sm:text-base">
-                  {t('login')}
-                </Link>
-              </div>
-
-              <div>
                 <p className="text-gray-400 inline mr-1">{t('dontHaveAccount')}</p>
                 <Link href="/signup" className="text-blue-400 inline">
                   {t('register')}
@@ -73,6 +68,10 @@ const ForgotPassword = () => {
             email={email}
             handleNextStep={handleNextStep}
           />
+        )}
+
+        {currentStep === 3 && (
+          <ResetPasswordStep email={email} />
         )}
 
         <div className="text-center">

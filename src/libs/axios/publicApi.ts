@@ -65,14 +65,21 @@ export default {
   ): Promise<T> {
     return await publicAxiosInstance.put(endpoint, data, option);
   },
+  async patch<T>(
+    endpoint: string,
+    data?: any,
+    option?: AxiosRequestConfig<never>
+  ): Promise<T> {
+    return await publicAxiosInstance.patch(endpoint, data, option);
+  },
   async delete<T>(
     endpoint: string,
     option?: AxiosRequestConfig<never>
   ): Promise<T> {
-    return publicAxiosInstance.delete(endpoint, option);
+    return await publicAxiosInstance.delete(endpoint, option);
   },
   setDefaultHeader(key: string, data?: string) {
     publicAxiosInstance.defaults.headers.common[key] = data;
     console.log(data);
-  }
+  },
 }

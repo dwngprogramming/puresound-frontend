@@ -28,7 +28,7 @@ const authApi = {
     publicApi.post<ApiResponse<void>>('/v1/auth/otp/send', {email}, options),
 
   resetPassword: (request: ResetPasswordRequest, options?: AxiosRequestConfig<never>)=>
-    publicApi.put<ApiResponse<void>>('/v1/auth/reset-password', request, options),
+    publicApi.patch<ApiResponse<void>>('/v1/auth/reset-password', request, options),
 };
 
 export default authApi;
