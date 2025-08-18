@@ -142,6 +142,10 @@
       "placeholderEmail": "Type your Email",
       "submit": "Submit",
       "processing": "Processing...",
+      "newPassword": "Password",
+      "placeholderNewPassword": "Type your Password",
+      "retypePassword": "Retype Password",
+      "placeholderPasswordConfirm": "Retype your Password",
       "validation": {
         "emailRequired": "Email is required",
         "emailFormat": "Email is invalid. Make sure you enter a email like example@email.com",

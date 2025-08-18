@@ -8,7 +8,7 @@ import {deleteCredentials, setCredentials} from "@/libs/redux/features/auth/auth
 import {getRouter} from "@/libs/singleton/navigation";
 import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
 import {tProvider, getLocale} from "@/libs/singleton/translation";
-import {refreshTokenInstance, verifyAxiosInstance} from "@/libs/axios/axiosInstances";
+import {publicAxiosInstance, refreshTokenInstance, verifyAxiosInstance} from "@/libs/axios/axiosInstances";
 
 // Failed queue request when refresh token
 let isRefreshing = false;
@@ -182,11 +182,18 @@ export default {
   ): Promise<T> {
     return await verifyAxiosInstance.put(endpoint, data, option);
   },
+  async patch<T>(
+    endpoint: string,
+    data?: any,
+    option?: AxiosRequestConfig<never>
+  ): Promise<T> {
+    return await publicAxiosInstance.patch(endpoint, data, option);
+  },
   async delete<T>(
     endpoint: string,
     option?: AxiosRequestConfig<never>
   ): Promise<T> {
-    return verifyAxiosInstance.delete(endpoint, option);
+    return await verifyAxiosInstance.delete(endpoint, option);
   },
   setDefaultHeader(key: string, data?: string) {
     verifyAxiosInstance.defaults.headers.common[key] = data;

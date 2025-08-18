@@ -7,6 +7,7 @@ import authApi from "@/apis/auth/auth.api";
 import {OtpEmailRequest} from "@/models/otp/OtpEmailRequest";
 import {useSendOtp} from "@/hooks/common/useSendOtp";
 import {useBreakpoint} from "@/context/breakpoint-auth-context";
+import {AxiosError} from "axios";
 
 interface OtpStep {
   email: string
@@ -29,6 +30,7 @@ const OtpStep = ({email, handleNextStep}: OtpStep) => {
     register,
     watch,
     setValue,
+    setError,
     handleSubmit,
     formState: {errors, isSubmitting}
   } = useForm<OtpEmailRequest>(
@@ -57,8 +59,15 @@ const OtpStep = ({email, handleNextStep}: OtpStep) => {
   }
 
   const handleVerify = async (data: OtpEmailRequest) => {
-    await verifyCode.mutateAsync(data);
-    handleNextStep();
+    try {
+      await verifyCode.mutateAsync(data);
+      handleNextStep();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message;
+        setError('otp', {message: errorMessage});
+      }
+    }
   }
 
   const handleResendClick = () => {
