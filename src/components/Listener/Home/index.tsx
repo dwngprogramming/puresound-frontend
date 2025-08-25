@@ -85,7 +85,7 @@ const Home = () => {
   return (
     <div>
       <h1>{t('title')}</h1>
-      {principal ? (
+      {principal && (
         <>
           <p>{`${t('name')} ${principal?.fullname}`}</p>
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -95,9 +95,6 @@ const Home = () => {
                   onClick={() => handleLogout()}>Logout
           </button>
         </>
-      ) : (
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => router.push('/login')}>Login</button>
       )}
     </div>
   );

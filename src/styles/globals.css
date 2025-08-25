@@ -5,10 +5,14 @@
 
 @theme {
   --color-primary-50: #C1E8FF;
-  --color-primary-100: #7DA0CA;
-  --color-primary-200: #5483B3;
-  --color-primary-500: #052659;
-  --color-primary-600: #021024;
+  --color-primary-100: #9FB9E6;
+  --color-primary-200: #7D93CD;
+  --color-primary-300: #5B6EB4;
+  --color-primary-400: #39499C;
+  --color-primary-500: #173483;
+  --color-primary-600: #0F2363;
+  --color-primary-700: #091642;
+  --color-primary-800: #040922;
   --color-primary-900: #021024;
 
   --color-premium-50: #FFFDF0;
@@ -64,18 +68,66 @@
 
 @layer utilities {
   .text-foreground {
-    @apply !text-neutral-50;
+    @apply !text-neutral-200;
   }
 
   .text-default-foreground {
-    @apply !text-neutral-50;
+    @apply !text-neutral-200;
   }
 
   .auth-container {
     @apply w-full flex flex-col items-center gap-2
     min-w-[300px] max-w-[450px] sm:w-[600px] sm:max-w-none
-    mx-auto sm:py-8 sm:px-16 sm:bg-gray-900 sm:rounded-xl
+    mx-auto px-8 sm:py-8 sm:px-16 sm:bg-gray-900 sm:rounded-xl
     md:px-24
+  }
+
+  [data-slot="header-wrapper"] {
+    @apply bg-primary-700 px-2;
+  }
+
+  [data-slot="header-wrapper"]::after {
+    @apply bg-primary-700;
+  }
+
+  [data-slot="header-wrapper"] [data-slot="header"] {
+    @apply bg-primary-500;
+  }
+
+  [data-slot="header"] [data-slot="title"] {
+    @apply text-gray-200 text-sm;
+  }
+
+  [data-slot="header"] [data-slot="title"]::first-letter {
+    @apply uppercase
+  }
+
+  [data-slot="grid-header-row"] {
+    @apply bg-primary-700;
+  }
+
+  [data-slot="grid-header-row"] [data-slot="grid-header-cell"] {
+    @apply text-gray-300 font-semibold;
+  }
+
+  [data-slot="picker-highlight"] {
+    @apply bg-gray-200
+  }
+
+  [data-slot="picker-item"][tabindex="0"] {
+    @apply !text-primary-800;
+  }
+
+  [data-slot="picker-item"][tabindex="-1"] {
+    @apply !text-gray-300;
+  }
+
+  [data-slot="cell"] [data-hover="true"] {
+    @apply bg-primary-700;
+  }
+
+  [data-disabled="true"] {
+    @apply opacity-50
   }
 }
 

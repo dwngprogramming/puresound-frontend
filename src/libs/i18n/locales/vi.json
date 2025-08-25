@@ -112,7 +112,8 @@
         "otpRequired": "OTP không được để trống",
         "otpLengthError": "OTP phải bao gồm 6 ký tự",
         "validationMessage": "Dữ liệu không hợp lệ: \n",
-        "emailExists": "Email này đã được sử dụng. Vui lòng sử dụng một email khác"
+        "emailExists": "Email này đã được sử dụng. Vui lòng sử dụng một email khác",
+        "usernameExists": "Tên đăng nhập này đã được sử dụng. Vui lòng chọn tên đăng nhập khác"
       },
       "otp": {
         "title": "Xác thực tài khoản",
@@ -124,7 +125,8 @@
         "send": "Gửi mã",
         "resendSuccess": "Chúng tôi đã gửi một mã xác minh mới đến email của bạn. Kiểm tra email của bạn",
         "submit": "Xác nhận",
-        "processing": "Đang xử lý..."
+        "processing": "Đang xử lý...",
+        "waiting": "Email chứa mã xác thực có thể mất một chút thời gian để đến. Vui lòng đợi trong giây lát"
       },
       "step": {
         "password": "Tạo mật khẩu",
@@ -188,6 +190,22 @@
     "Me": {
       "me": "Tài khoản",
       "unknown": "Không xác định"
+    },
+    "Common": {
+      "searchPlaceholder": "Giai điệu nào cho hôm nay?",
+      "login": "Đăng nhập",
+      "signup": "Đăng ký",
+      "premiumExperience": "Trải nghiệm Premium",
+      "weather": {
+        "mood": {
+          "sunny": "Nắng reo ca",
+          "rainy": "Mưa thì thầm",
+          "snowy": "Tuyết hòa điệu",
+          "cloudy": "Mây ngân khúc"
+        },
+        "playlist": "Khúc nhạc của thời tiết",
+        "click": "Ấn để cảm nhận Playlist Thời Tiết"
+      }
     }
   }
 }

@@ -73,7 +73,7 @@ export const Login = () => {
         className="auth-container">
         <>
           <Image src="/puresound-logo.svg" alt="logo" width={80} height={80}/>
-          <div className="mb-6">
+          <div className="mb-6 text-center sm:text-left">
             <h1
               className={`text-darkmode ${breakpoint === 'base' ? 'text-2xl' : 'text-3xl'} font-bold inline`}>{t('title')}</h1>
             <h1
