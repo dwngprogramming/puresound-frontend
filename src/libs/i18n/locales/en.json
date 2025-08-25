@@ -202,7 +202,11 @@
         },
         "playlist": "Melody of the Weather",
         "click": "Click to feel the Weather Mood Playlist"
-      }
+      },
+      "me": "Account",
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Logout"
     }
   }
 }

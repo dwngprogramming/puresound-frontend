@@ -6,7 +6,7 @@ import {useTranslations} from "next-intl";
 import VerifyEmailStep from "@/components/Listener/ForgetPassword/VerifyEmailStep";
 import {useAutoRelogin} from "@/hooks/auth/useAutoRelogin";
 import {useRouter} from "next/navigation";
-import Loader from "@/components/Loader";
+import ComponentLoader from "@/components/ComponentLoader";
 import Link from "next/link";
 import OtpStep from "@/components/Listener/ForgetPassword/OtpStep";
 import {useBreakpoint} from "@/context/breakpoint-auth-context";
@@ -36,7 +36,7 @@ const ForgotPassword = () => {
 
   const isLoading = isTryingRelogin || !mountedBreakpoint;
 
-  return isLoading ? (<Loader/>) : (
+  return isLoading ? (<ComponentLoader/>) : (
     <div className="auth-container">
       <>
         <Image src="/puresound-logo.svg" alt="logo" width={80} height={80}/>

@@ -1,12 +1,22 @@
-import {Button} from "@heroui/react";
+import {Avatar, Button} from "@heroui/react";
 import {useTranslations} from "next-intl";
 import {useRouter} from "next/navigation";
+import {useAppSelector} from "@/libs/redux/hooks";
+import React, {useEffect, useRef, useState} from "react";
+import ListenerInfo from "@/components/Listener/Common/Header/ListenerInfo";
 
 const RightButton = () => {
   const t = useTranslations('Listener.Common');
   const navigator = useRouter();
+  const authState = useAppSelector(state => state.auth);
+  const [visible, setVisible] = useState(false);
 
-  return (
+  return authState.isAuthenticated ? (
+    <ListenerInfo
+      visible={visible}
+      handleVisible={setVisible}
+    />
+  ) : (
     <>
       <Button
         variant="bordered"
