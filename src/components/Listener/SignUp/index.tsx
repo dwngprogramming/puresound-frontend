@@ -8,7 +8,7 @@ import {createRegisterSchema} from "@/libs/validation/auth.validation";
 import React, {useEffect, useMemo, useState} from "react";
 import {useAutoRelogin} from "@/hooks/auth/useAutoRelogin";
 import {useRouter} from "next/navigation";
-import Loader from "@/components/Loader";
+import ComponentLoader from "@/components/ComponentLoader";
 import Image from "next/image";
 import {Button, Divider, Form, Input} from "@heroui/react";
 import Link from "next/link";
@@ -137,7 +137,7 @@ const SignUp = () => {
 
   const isLoadingPage = isTryingRelogin || !mountedBreakpoint;
 
-  return isLoadingPage ? (<Loader/>) : (
+  return isLoadingPage ? (<ComponentLoader/>) : (
     <div
       className="auth-container">
       <>

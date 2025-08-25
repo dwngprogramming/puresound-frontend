@@ -11,7 +11,7 @@ import {createLoginSchema} from "@/libs/validation/auth.validation";
 import {LoginRequest} from "@/models/auth/LoginRequest";
 import {useLogin} from "@/hooks/auth/useLogin";
 import {useRouter} from "next/navigation";
-import Loader from "@/components/Loader";
+import ComponentLoader from "@/components/ComponentLoader";
 import Link from "next/link";
 import {useAutoRelogin} from "@/hooks/auth/useAutoRelogin";
 import {handleFacebookLogin, handleGoogleLogin} from "@/utils/oAuth2Redirect";
@@ -67,7 +67,7 @@ export const Login = () => {
 
   const isLoadingPage = isTryingRelogin || !mountedBreakpoint;
 
-  return isLoadingPage ? (<Loader/>) :
+  return isLoadingPage ? (<ComponentLoader/>) :
     (
       <div
         className="auth-container">

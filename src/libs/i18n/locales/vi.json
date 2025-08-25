@@ -205,7 +205,11 @@
         },
         "playlist": "Khúc nhạc của thời tiết",
         "click": "Ấn để cảm nhận Playlist Thời Tiết"
-      }
+      },
+      "me": "Tài khoản",
+      "profile": "Hồ sơ",
+      "settings": "Cài đặt",
+      "logout": "Đăng xuất"
     }
   }
 }
