@@ -1,12 +1,12 @@
-import {Button, Form, InputOtp} from "@heroui/react";
+import {Alert, Button, Form, InputOtp} from "@heroui/react";
 import {useForm} from "react-hook-form";
 import React, {useEffect, useState} from "react";
-import {useBreakpoint} from "@/hooks/useBreakpoint";
 import {useTranslations} from "next-intl";
 import {useMutation} from "@tanstack/react-query";
 import authApi from "@/apis/auth/auth.api";
 import {OtpEmailRequest} from "@/models/otp/OtpEmailRequest";
 import {useSendOtp} from "@/hooks/common/useSendOtp";
+import {useBreakpoint} from "@/context/breakpoint-auth-context";
 
 interface VerifyProps {
   email: string
@@ -72,6 +72,7 @@ const VerifyStep = ({email, handleNextStep}: VerifyProps) => {
     <Form className="mx-auto gap-4 w-full" onSubmit={handleSubmit(handleVerify)}>
       <div
         className={`w-full mb-2 flex flex-col items-center gap-4 transition-all duration-300 ease-in-out ${visible ? 'opacity-100' : 'opacity-0'}`}>
+        <Alert classNames={{alertIcon: 'text-blue-200', iconWrapper: 'bg-blue-500/5'}} color="primary" title={t('otp.waiting')} className="w-full bg-blue-400 text-gray-200" />
         <h3 className="text-center">{t('otp.title')}</h3>
         <p className="text-center text-gray-400">{t('otp.description')}</p>
         <InputOtp

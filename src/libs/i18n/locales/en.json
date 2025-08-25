@@ -112,7 +112,8 @@
         "otpRequired": "OTP is required",
         "otpLengthError": "OTP must be 6 characters long",
         "validationMessage": "Invalid request data: \n",
-        "emailExists": "This email has been used. Please use another email"
+        "emailExists": "This email has been used. Please use another email",
+        "usernameExists": "This username has been used. Please use another username"
       },
       "otp": {
         "title": "Verify your account",
@@ -122,7 +123,10 @@
         "sending": "Sending...",
         "isResending": "You can resend the code in {count} seconds",
         "send": "Send code",
-        "resendSuccess": "We have sent a new verification code to your email. Check your email to get the code"
+        "resendSuccess": "We have sent a new verification code to your email. Check your email to get the code",
+        "submit": "Verify",
+        "processing": "Processing...",
+        "waiting": "Your OTP code may take a little time to be delivered. Please wait a moment"
       },
       "step": {
         "password": "Create a Password",
@@ -183,6 +187,22 @@
     },
     "Me": {
       "me": "Account"
+    },
+    "Common": {
+      "searchPlaceholder": "What’s on your vibe today?",
+      "login": "Login",
+      "signup": "Sign up",
+      "premiumExperience": "Premium Experience",
+      "weather": {
+        "mood": {
+          "sunny": "Sunlight sings",
+          "rainy": "Rain whispers",
+          "snowy": "Snow in harmony",
+          "cloudy": "Clouds in chorus"
+        },
+        "playlist": "Melody of the Weather",
+        "click": "Click to feel the Weather Mood Playlist"
+      }
     }
   }
 }

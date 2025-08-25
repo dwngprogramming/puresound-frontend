@@ -4,9 +4,10 @@ import {TokenResponse} from "@/models/auth/TokenResponse";
 import {LoginRequest} from "@/models/auth/LoginRequest";
 import {ApiResponse} from "@/models/ApiResponse";
 import {SignupRequest} from "@/models/auth/SignupRequest";
-import {CheckEmailResponse} from "@/models/auth/CheckEmailResponse";
 import {OtpEmailRequest} from "@/models/otp/OtpEmailRequest";
 import {ResetPasswordRequest} from "@/models/auth/ResetPasswordRequest";
+import {CheckExistsResponse} from "@/models/auth/CheckExistsResponse";
+import {CheckExistsRequest} from "@/models/auth/CheckExistsRequest";
 
 const authApi = {
   login: (request: LoginRequest, options?: AxiosRequestConfig<never>) =>
@@ -18,8 +19,11 @@ const authApi = {
   signup: (request: SignupRequest, options?: AxiosRequestConfig<never>) =>
     publicApi.post<ApiResponse<Record<string, string>>>('/v1/auth/signup', request, options),
 
-  checkEmail: (email: string, options?: AxiosRequestConfig<never>) =>
-    publicApi.post<ApiResponse<CheckEmailResponse>>('/v1/auth/check-email', {email}, options),
+  checkEmail: (request: CheckExistsRequest, options?: AxiosRequestConfig<never>) =>
+    publicApi.post<ApiResponse<CheckExistsResponse>>('/v1/auth/check-email', request, options),
+
+  checkUsername: (request: CheckExistsRequest, options?: AxiosRequestConfig<never>) =>
+    publicApi.post<ApiResponse<CheckExistsResponse>>('/v1/auth/check-username', request, options),
 
   verifyRegister: (request: OtpEmailRequest, options?: AxiosRequestConfig<never>) =>
     publicApi.post<ApiResponse<void>>('/v1/auth/otp/verify', request, options),

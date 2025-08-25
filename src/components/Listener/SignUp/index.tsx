@@ -22,13 +22,11 @@ import InfoStep from "@/components/Listener/SignUp/InfoStep";
 import {getLocalTimeZone, today} from "@internationalized/date";
 import {Gender} from "@/const/Gender";
 import VerifyStep from "@/components/Listener/SignUp/VerifyStep";
-import {AxiosError} from "axios";
-import {useAppDispatch} from "@/libs/redux/hooks";
-import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
 import authApi from "@/apis/auth/auth.api";
 import {CircleCheckBig, LockKeyhole} from "lucide-react";
 import CompleteStep from "@/components/Listener/SignUp/CompleteStep";
 import {useBreakpoint} from "@/context/breakpoint-auth-context";
+import {CheckExistsRequest} from "@/models/auth/CheckExistsRequest";
 
 const SignUp = () => {
   const t = useTranslations("Listener.SignUp");
@@ -43,7 +41,6 @@ const SignUp = () => {
   const [currentStep, setCurrentStep] = useState(0);  // Email tính là step 0
   const totalIndicatorSteps = 4;   // Không tính email step, vì không nằm trong indicator
   const todayDate = useMemo(() => today(getLocalTimeZone()), []);
-  const dispatch = useAppDispatch();
 
   const reactFormMethods = useForm<SignUpData>({
     resolver: yupResolver(registerSchema),
@@ -51,7 +48,7 @@ const SignUp = () => {
     defaultValues: {
       username: '',
       email: '',
-      newPassword: '',
+      password: '',
       retypePassword: '',
       firstname: '',
       lastname: '',
@@ -86,31 +83,31 @@ const SignUp = () => {
     const request: SignupRequest = {
       username: data.username,
       email: data.email,
-      newPassword: data.password,
+      password: data.password,
       retypePassword: data.retypePassword,
       firstname: data.firstname,
       lastname: data.lastname,
       gender: data.gender,
       dob: data.dob.toString()
     };
+    // Chạy tiến trình ngầm (Có gửi OTP)
+    signup.mutate(request);
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    setCurrentStep(prev => prev + 1);
 
-    try {
-      await signup.mutateAsync(request);
-      setCurrentStep(prev => prev + 1);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const data = error.response?.data.data;
-        let message = tValidation('validationMessage');
-        if (data) {
-          const errorList = Object.entries(data)
-            .map(([, value]) => `- ${value}`)
-            .join('\n');
+    /*catch (error) {
+    if (error instanceof AxiosError) {
+      const data = error.response?.data.data;
+      let message = tValidation('validationMessage');
+      if (data) {
+        const errorList = Object.entries(data)
+          .map(([, value]) => `- ${value}`)
+          .join('\n');
 
-          message += errorList;
-          dispatch(showErrorNotification(message));
-        }
+        message += errorList;
+        dispatch(showErrorNotification(message));
       }
-    }
+    }*/
   }
 
   const handleNextStep = async () => {
@@ -119,7 +116,10 @@ const SignUp = () => {
     if (isValid) {
       if (currentStep === 0) {
         const email = watch('email');
-        const response = await authApi.checkEmail(email);
+        const request: CheckExistsRequest = {
+          field: email
+        }
+        const response = await authApi.checkEmail(request);
         if (response.data.exists) {
           setError('email', {
             message: tValidation('emailExists'),
@@ -213,9 +213,9 @@ const SignUp = () => {
                     </svg>
                   </span>
                 ) : currentStep === 3 ? (
-                  <LockKeyhole />
+                  <LockKeyhole/>
                 ) : currentStep === 4 && (
-                  <CircleCheckBig />
+                  <CircleCheckBig/>
                 )}
                 <div className="flex flex-col gap-1">
                   <h6 className="font-bold text-gray-400">Step {currentStep} of {totalIndicatorSteps}</h6>
