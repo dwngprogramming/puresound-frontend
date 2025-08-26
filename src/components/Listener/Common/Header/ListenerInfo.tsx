@@ -1,9 +1,10 @@
-import {Avatar, Button, Divider} from "@heroui/react";
+import {Avatar, Divider} from "@heroui/react";
 import React, {useEffect, useRef} from "react";
 import {useAppSelector} from "@/libs/redux/hooks";
 import {useTranslations} from "next-intl";
 import {useRouter} from "next/navigation";
 import {useLogout} from "@/hooks/auth/useLogout";
+import {BookHeadphones, CircleUserRound, Crown, LogOut, Settings} from "lucide-react";
 
 interface ListenerInfoProps {
   visible: boolean;
@@ -16,6 +17,7 @@ const ListenerInfo = ({visible, handleVisible}: ListenerInfoProps) => {
   const authState = useAppSelector(state => state.auth);
   const navigator = useRouter();
   const logout = useLogout();
+  const premium = false;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
@@ -24,26 +26,35 @@ const ListenerInfo = ({visible, handleVisible}: ListenerInfoProps) => {
       }
     };
 
-    // Chỉ add event listener khi popup đang hiển thị
     if (visible) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
-    // Cleanup
     return (): void => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [visible]);
 
   return (
-    <div className="relative">
+    <div className="relative group">
+      {premium && (
+        <div className={`absolute -top-3 left-8 z-50 transition-all duration-300 ease-in-out pointer-events-none
+    ${visible
+          ? 'opacity-100 scale-100'
+          : 'opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100'
+        }`}
+        >
+          <Crown size={14} className="text-yellow-400 drop-shadow-lg"/>
+        </div>
+      )}
+
       <div
         ref={containerRef}
-        className={`group ml-2 flex items-center py-1 bg-neutral-700/80 rounded-full cursor-pointer
-      transition-all duration-300 ease-in-out overflow-hidden
+        className={`ml-2 flex border-2 ${premium ? "border-yellow-400" : "border-primary-100"} items-center py-1 bg-neutral-700/80 rounded-full cursor-pointer
+      transition-all duration-300 ease-in-out overflow-hidden relative
       ${visible
-          ? 'px-4' // Khi popup hiển thị - giữ expanded
-          : 'px-2 hover:px-4' // Khi popup ẩn - cho phép hover effect
+          ? 'px-4'
+          : 'px-2 hover:px-4'
         }`}
         onClick={() => handleVisible(!visible)}
       >
@@ -55,32 +66,39 @@ const ListenerInfo = ({visible, handleVisible}: ListenerInfoProps) => {
         <div
           className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out
         ${visible
-            ? 'ml-3 max-w-xs opacity-100' // Khi popup hiển thị - luôn expanded
-            : 'ml-0 max-w-0 opacity-0 group-hover:max-w-xs group-hover:opacity-100 group-hover:ml-3' // Khi popup ẩn - hover effect
+            ? 'ml-3 max-w-xs opacity-100'
+            : 'ml-0 max-w-0 opacity-0 group-hover:max-w-xs group-hover:opacity-100 group-hover:ml-3'
           }`}
         >
           <p className="font-semibold text-sm">{authState.principal?.fullname}</p>
           <p className="text-[12px] text-gray-400">dwnq.coding</p>
         </div>
-
-        {visible && (
-          <div
-            className={`absolute lg:min-w-[200px] bg-neutral-700/80 shadow-lg rounded-xl right-0 top-14 z-100 transition-all duration-500 ease-in-out`}
-          >
-            <div className="px-4 py-2 hover:bg-gray-500 rounded-t-xl"
-                 onClick={() => navigator.push("/me")}>
-              {t('me')}
-            </div>
-            <div className="px-4 py-2 hover:bg-gray-500">{t('profile')}</div>
-            <div className="px-4 py-2 hover:bg-gray-500">{t('settings')}</div>
-            <Divider/>
-            <div className="px-4 py-2 hover:bg-gray-500 rounded-b-xl"
-                 onClick={logout}>
-              {t('logout')}
-            </div>
-          </div>
-        )}
       </div>
+      {visible && (
+        <div
+          className={`absolute lg:min-w-[200px] border-1 ${premium ? "border-yellow-400" : "border-neutral-800/70"} bg-neutral-800/70 shadow-lg shadow-gray-800 rounded-xl right-0 top-12.5 z-[100] transition-all duration-500 ease-in-out`}
+        >
+          <div className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer rounded-t-xl"
+               onClick={() => navigator.push("/me")}>
+            <CircleUserRound size={22} className="text-neutral-400"/>
+            <p>{t('me')}</p>
+          </div>
+          <div className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer">
+            <BookHeadphones size={22} className="text-neutral-400"/>
+            <p>{t('profile')}</p>
+          </div>
+          <div className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer">
+            <Settings size={22} className="text-neutral-400"/>
+            <p>{t('settings')}</p>
+          </div>
+          <Divider className="bg-neutral-600"/>
+          <div className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer rounded-b-xl"
+               onClick={logout}>
+            <LogOut size={22} className="text-neutral-400"/>
+            <p>{t('logout')}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
