@@ -40,7 +40,7 @@ const Header = () => {
         {/* User menu bên phải */}
         <div className="flex-shrink-0 flex items-center space-x-2 z-10">
           <Button
-            className="text-darkmode py-5 px-4 rounded-full justify-center items-center font-bold hover:text-darkmode bg-yellow-600 border border-yellow-600
+            className="text-darkmode py-5.5 px-4 rounded-full justify-center items-center font-bold hover:text-darkmode bg-yellow-600 border border-yellow-600
                 hover:border-yellow-700 hover:bg-yellow-700">
             <Crown size={20}/>
             {t('premiumExperience')}

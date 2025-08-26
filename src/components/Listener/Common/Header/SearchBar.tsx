@@ -1,6 +1,6 @@
 import {Input} from "@heroui/react";
 import {PanelBottomClose, Search, X} from "lucide-react";
-import {useLocale, useTranslations} from "next-intl";
+import {useTranslations} from "next-intl";
 import React, {useEffect, useRef, useState} from "react";
 
 const SearchBar = () => {
@@ -42,7 +42,7 @@ const SearchBar = () => {
       <Input
         classNames={{
           input: 'text-base',
-          inputWrapper: 'h-12 rounded-full bg-neutral-900/60'
+          inputWrapper: 'h-13 rounded-full bg-neutral-900/60'
         }}
         onFocus={() => setFocused(true)}
         onBlur={(e) => {
