@@ -210,15 +210,15 @@
         "status": {
           "sunny": "Nắng",
           "rainy": "Mưa",
-          "snowy": "Có tuyết",
-          "cloudy": "Nhiều mây",
-          "clear_night": "Quang đãng"
+          "snowy": "Tuyết",
+          "cloudy": "Mây",
+          "clear_night": "Quang"
         },
         "playlist": "Khúc nhạc của thời tiết",
         "click": "Click để cảm nhận Playlist Thời Tiết",
         "error": {
           "oops": "Oops!",
-          "noData": "Không có dữ liệu",
+          "noData": "Oops! Có lỗi",
           "notFound": "Không tìm thấy dữ liệu thời tiết",
           "description": "Đảm bảo rằng dịch vụ định vị trên thiết bị của bạn đã được bật và thử lại."
         }

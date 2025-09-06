@@ -303,3 +303,22 @@ export const getDropdownBorderClass = (condition: WeatherCondition | undefined, 
       return 'border-gray-500/30';
   }
 };
+
+export const getSkeletonBgClass = (condition: WeatherCondition | undefined, isDay: boolean, premium: boolean) => {
+  if (!premium) return 'bg-gray-700/60';
+
+  switch (condition) {
+    case 'sunny':
+      if (!isDay) return 'bg-gradient-to-br from-indigo-700/35 via-purple-700/30 to-indigo-600/35'; // Clear night skeleton
+      return 'bg-gradient-to-br from-yellow-700/35 via-orange-700/30 to-yellow-600/35';
+    case 'cloudy':
+      return 'bg-gradient-to-br from-gray-600/35 via-slate-500/30 to-gray-500/35';
+    case 'rainy':
+      return 'bg-gradient-to-br from-blue-700/35 via-indigo-700/30 to-blue-600/35';
+    case 'snowy':
+      return 'bg-gradient-to-br from-cyan-700/35 via-blue-700/30 to-cyan-600/35';
+    default:
+      return 'bg-gray-700/60';
+  }
+};
+

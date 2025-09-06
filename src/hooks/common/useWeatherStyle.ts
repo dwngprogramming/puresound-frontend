@@ -11,7 +11,7 @@ import {
   getHighlightLineClass,
   getIconBgColor,
   getPopupBgColor,
-  getPopupBorderColor,
+  getPopupBorderColor, getSkeletonBgClass,
   getWeatherBgClass,
   getWeatherBorderClass,
   getWeatherGlowColor,
@@ -49,6 +49,9 @@ export const useWeatherStyle = (condition: WeatherCondition | undefined, isDay: 
 
     // Interactive States
     buttonHoverClass: getButtonHoverBg(condition, isDay, premium),
+
+    // Skeleton state
+    skeletonBgClass: getSkeletonBgClass(condition, isDay, premium),
 
     // Premium state
     isPremium: premium

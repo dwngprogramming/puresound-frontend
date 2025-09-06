@@ -68,15 +68,10 @@ const WeatherPopup: React.FC<WeatherPopupProps> = ({
       <div className="absolute top-0 left-full w-3 h-full z-999"/>
 
       {/* Main popup */}
-      <div className={`
-      absolute top-0 left-full ml-3 z-1000
-      w-72 px-4 py-3
-      ${popupBgClass}
-      backdrop-blur-xl border ${popupBorderClass}
-      rounded-2xl shadow-2xl shadow-black/30
-      transform transition-all duration-300 ease-out
-      ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2'}
-    `}>
+      <div className={`absolute top-0 left-full ml-3 z-1000 w-72 px-4 py-3 ${popupBgClass}
+      backdrop-blur-xl border ${popupBorderClass} rounded-2xl shadow-2xl shadow-black/30 
+      transform transition-all duration-300 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2'}
+      `}>
 
         {/* Glow effect */}
         <div className={`
