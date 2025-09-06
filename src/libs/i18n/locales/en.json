@@ -209,13 +209,13 @@
           "rainy": "Rainy",
           "snowy": "Snowy",
           "cloudy": "Cloudy",
-          "clear_night": "Clear Night"
+          "clear_night": "Clear"
         },
         "playlist": "Melody of the Weather",
         "click": "Click to feel the Weather Mood Playlist",
         "error": {
           "oops": "Oops!",
-          "noData": "No weather data",
+          "noData": "Oops! Trouble",
           "notFound": "Weather data not found",
           "description": "Ensure that your device's location services are enabled and try again."
         }

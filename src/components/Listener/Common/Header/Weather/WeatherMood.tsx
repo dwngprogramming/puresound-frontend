@@ -10,6 +10,7 @@ import {WeatherResponse} from "@/models/weather/WeatherResponse";
 import currentWeatherApi from "@/apis/main/weather/currentWeather.api";
 import {getCurrentPosition} from "@/utils/getCurrentPosition";
 import {ApiResponse} from "@/models/ApiResponse";
+import {Skeleton} from "@heroui/react";
 
 const WeatherMood = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -19,6 +20,7 @@ const WeatherMood = () => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('Listener.Common.weather');
+  const [loading, setLoading] = useState(true);
 
   const {data: coordinates, isLoading: isGeoLoading} = useQuery({
     queryKey: ['geolocation'],
@@ -30,7 +32,12 @@ const WeatherMood = () => {
     retry: 1
   });
 
-  const {data: currentWeather, isLoading} = useQuery<
+  const {
+    data: currentWeather,
+    isLoading: isLoadingWeather,
+    isFetching: isFetchingWeather,
+    refetch: refetchWeather,
+  } = useQuery<
     ApiResponse<WeatherResponse>,
     Error,
     WeatherResponse
@@ -51,6 +58,10 @@ const WeatherMood = () => {
     retry: 1,
   });
 
+  useEffect(() => {
+    setLoading(isFetchingWeather || isLoadingWeather || isGeoLoading);
+  }, [isFetchingWeather, isLoadingWeather, isGeoLoading]);
+
   const {
     icon,
     iconBgClass,
@@ -59,6 +70,7 @@ const WeatherMood = () => {
     borderClass,
     weatherGlowClass,
     highlightLineClass,
+    skeletonBgClass,
     isPremium
   } = useWeatherStyle(currentWeather?.current?.condition, currentWeather?.current?.isDay ?? false, isHovered || showDropdown);
 
@@ -68,7 +80,8 @@ const WeatherMood = () => {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
-    if (!showDropdown) {
+    // Nếu data đang load thì không hover được
+    if (!loading && !showDropdown) {
       setIsHovered(true);
       setShowPopup(true);
     }
@@ -85,14 +98,16 @@ const WeatherMood = () => {
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowDropdown(!showDropdown);
-    if (!showDropdown) {
+    if (!showDropdown && currentWeather) {
       setShowPopup(false);
       setIsHovered(false);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
       }
+      setShowDropdown(true);
+    } else {
+      setShowDropdown(false);
     }
   };
 
@@ -104,8 +119,9 @@ const WeatherMood = () => {
     setIsDecorativeHovered(false);
   };
 
-  const handleRefreshWeather = () => {
-    console.log('Refreshing weather data');
+  const handleRefreshWeather = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await refetchWeather();
   }
 
   // Close dropdown when clicking outside
@@ -171,60 +187,77 @@ const WeatherMood = () => {
         {/* Content */}
         <div className="relative z-10 flex items-center space-x-4">
           {/* Weather Icon Circle */}
-          <div className={`
-            relative flex-shrink-0 w-8 h-8 rounded-full 
-            ${iconBgClass}
-            flex items-center justify-center
-            shadow-lg
-            transition-all duration-300
-            ${isHovered || showDropdown ? 'shadow-xl' : ''}
-          `}>
-            {icon}
-
-            {/* Icon glow effect */}
+          {loading ?
+            <Skeleton
+              className={`rounded-full w-8 h-8 [&::after]:!bg-transparent dark:[&::after]:!bg-transparent ${skeletonBgClass}`}/> :
             <div className={`
+              relative flex-shrink-0 w-8 h-8 rounded-full 
+              ${iconBgClass}
+              flex items-center justify-center
+              shadow-lg
+              transition-all duration-300
+              ${isHovered || showDropdown ? 'shadow-xl' : ''}
+            `}>
+              {icon}
+
+              {/* Icon glow effect */}
+              <div className={`
               absolute inset-0 rounded-full
               ${iconBgClass}
               opacity-0 group-hover:opacity-30
               blur-md transition-opacity duration-300
               ${showDropdown ? 'opacity-30' : ''}
             `}/>
-          </div>
+            </div>
+          }
 
           {/* Weather Info */}
           <div className="flex-1 min-w-0">
-            {!currentWeather ? <p className="py-3 text-sm text-neutral-400">{t('error.noData')}</p> :
+            {!currentWeather ? <p className="text-[13px] py-3">{t('error.noData')}</p> :
               <>
                 {/* Temperature & Status */}
                 <div className="flex items-baseline space-x-2">
-                  <span className="text-lg font-bold text-white transition-all duration-300">
-                    {currentWeather.current.tempC}°C
-                  </span>
-                  <span className="text-xs font-medium text-gray-300 transition-colors duration-300">
-                    {t(`status.${currentWeather.current.condition}`)}
-                  </span>
+                  {loading ? <Skeleton
+                      className={`rounded-lg w-10 h-5 my-1 [&::after]:!bg-transparent dark:[&::after]:!bg-transparent ${skeletonBgClass}`}/> :
+                    <span className="text-lg font-bold text-white transition-all duration-300">
+                      {currentWeather?.current.tempC}°C
+                    </span>
+                  }
+
+                  {loading ? <Skeleton
+                      className={`rounded-lg w-8.5 h-4 my-1 [&::after]:!bg-transparent dark:[&::after]:!bg-transparent ${skeletonBgClass}`}/> :
+                    <span className="text-xs font-medium text-gray-300 transition-colors duration-300">
+                      {t(`status.${currentWeather?.current.condition}`)}
+                    </span>
+                  }
+
                 </div>
 
                 {/* Location */}
                 <div className="flex items-center space-x-1">
-                  <ReactCountryFlag
-                    countryCode="vn"
-                    svg
-                    style={{
-                      width: '1rem',
-                      height: '1rem',
-                    }}
-                  />
-                  <span className={`
-                text-xs text-gray-400 font-medium
-                transition-colors duration-300
-                ${isHovered || showDropdown ? 'text-gray-300' : ''}
-              `}>
-                {currentWeather.location.district}
-              </span>
+                  {loading ? <Skeleton
+                      className={`w-4 h-3 mb-0.5 [&::after]:!bg-transparent dark:[&::after]:!bg-transparent ${skeletonBgClass}`}/> :
+                    <ReactCountryFlag
+                      countryCode="vn"
+                      svg
+                      style={{
+                        width: '1rem',
+                        height: '1rem',
+                      }}
+                    />
+                  }
+
+                  {loading ? <Skeleton
+                      className={`rounded-lg w-15 h-2.75 mb-0.25 [&::after]:!bg-transparent dark:[&::after]:!bg-transparent ${skeletonBgClass}`}/> :
+                    <span
+                      className={`text-xs text-gray-400 font-medium transition-colors duration-300 ${isHovered || showDropdown ? 'text-gray-300' : ''}`}>
+                      {currentWeather?.location.district}
+                    </span>
+                  }
                 </div>
               </>
             }
+
           </div>
 
           <div
@@ -267,8 +300,8 @@ const WeatherMood = () => {
 
       {!showDropdown && showPopup && (
         <>
-          {/* Invisible bridge để tránh mouse leave */}
           <div className="absolute top-0 left-full w-3 h-full z-999"/>
+          {/* Invisible bridge để tránh mouse leave */}
           <WeatherPopup
             isVisible={showPopup}
             currentWeather={currentWeather}
