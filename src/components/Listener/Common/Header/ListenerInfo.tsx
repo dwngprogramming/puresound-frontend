@@ -78,22 +78,28 @@ const ListenerInfo = ({visible, handleVisible}: ListenerInfoProps) => {
         <div
           className={`absolute lg:min-w-[200px] border-1 ${premium ? "border-yellow-400" : "border-neutral-800/70"} bg-neutral-800/70 shadow-lg shadow-gray-800 rounded-xl right-0 top-12.5 z-[100] transition-all duration-500 ease-in-out`}
         >
-          <div className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer rounded-t-xl"
-               onClick={() => navigator.push("/me")}>
+          <div
+            className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer rounded-t-xl"
+            onClick={() => navigator.push("/me")}>
             <CircleUserRound size={22} className="text-neutral-400"/>
             <p>{t('me')}</p>
           </div>
-          <div className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer">
+          <div
+            className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer">
             <BookHeadphones size={22} className="text-neutral-400"/>
             <p>{t('profile')}</p>
           </div>
-          <div className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer">
+          <div
+            className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer"
+          >
             <Settings size={22} className="text-neutral-400"/>
             <p>{t('settings')}</p>
           </div>
           <Divider className="bg-neutral-600"/>
-          <div className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer rounded-b-xl"
-               onClick={logout}>
+          <div
+            className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer rounded-b-xl"
+            // Dùng onMouseDown để đồng bộ với click outside (cũng dùng onMouseDown)
+            onMouseDown={logout}>
             <LogOut size={22} className="text-neutral-400"/>
             <p>{t('logout')}</p>
           </div>

@@ -1,66 +1,81 @@
 import {useEffect, useRef, useState} from "react";
-import {MapPin} from "lucide-react";
+import {RotateCcw} from "lucide-react";
 import WeatherPopup from "@/components/Listener/Common/Header/Weather/WeatherPopup";
-import {
-  getDecorativeBarClass,
-  getHighlightLineClass,
-  getIconBgColor,
-  getWeatherBgClass,
-  getWeatherBorderClass,
-  getWeatherGlowColor,
-  getWeatherIcon
-} from "@/utils/weatherCssPreset";
 import WeatherDropdown from "@/components/Listener/Common/Header/Weather/WeatherDropdown";
-
-export interface WeatherInfo {
-  condition: 'sunny' | 'cloudy' | 'rainy' | 'snowy';
-  temp: number; // Temperature in Celsius
-  location: string;
-  status: string; // e.g., "Sunny", "Cloudy"
-}
-
-const getKeyMood = (condition: string) => {
-  switch (condition) {
-    case 'sunny':
-      return 'mood.sunny';
-    case 'cloudy':
-      return 'mood.cloudy';
-    case 'rainy':
-      return 'mood.rainy';
-    case 'snowy':
-      return 'mood.snowy';
-    default:
-      return 'mood.sunny';
-  }
-}
+import {useTranslations} from "next-intl";
+import {useWeatherStyle} from "@/hooks/common/useWeatherStyle";
+import ReactCountryFlag from "react-country-flag";
+import {useQuery} from "@tanstack/react-query";
+import {WeatherResponse} from "@/models/weather/WeatherResponse";
+import currentWeatherApi from "@/apis/main/weather/currentWeather.api";
+import {getCurrentPosition} from "@/utils/getCurrentPosition";
+import {ApiResponse} from "@/models/ApiResponse";
 
 const WeatherMood = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isDecorativeHovered, setIsDecorativeHovered] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations('Listener.Common.weather');
 
-  const [weather, setWeather] = useState<WeatherInfo>({
-    condition: 'sunny',
-    temp: 28,
-    location: 'Ho Chi Minh',
-    status: 'Sunny'
+  const {data: coordinates, isLoading: isGeoLoading} = useQuery({
+    queryKey: ['geolocation'],
+    queryFn: getCurrentPosition,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    refetchInterval: 24 * 60 * 60 * 1000, // 1 ngày refetch 1 lần
+    staleTime: 23.9 * 60 * 60 * 1000, // 23.9h thì coi là stale
+    retry: 1
   });
 
-  // Event handlers for popup
+  const {data: currentWeather, isLoading} = useQuery<
+    ApiResponse<WeatherResponse>,
+    Error,
+    WeatherResponse
+  >({
+    queryKey: ['currentWeather', coordinates?.latitude, coordinates?.longitude],
+    queryFn: async () => {
+      if (!coordinates) {
+        return Promise.reject('No coordinates available');
+      }
+      return await currentWeatherApi.getCurrentWeather(coordinates.latitude, coordinates.longitude);
+    },
+    select: (apiResponse) => apiResponse.data,
+    enabled: !!coordinates && !isGeoLoading,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    refetchInterval: 20 * 60 * 1000, // 20 phút tự động refetch
+    staleTime: 19 * 60 * 1000, // 19 phút thì coi là stale
+    retry: 1,
+  });
+
+  const {
+    icon,
+    iconBgClass,
+    bgClass,
+    decorativeBarClass,
+    borderClass,
+    weatherGlowClass,
+    highlightLineClass,
+    isPremium
+  } = useWeatherStyle(currentWeather?.current?.condition, currentWeather?.current?.isDay ?? false, isHovered || showDropdown);
+
+  // Simplified event handlers
   const handleMouseEnter = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
-    if (!showDropdown) { // Chỉ hiện popup khi dropdown không mở
+    if (!showDropdown) {
       setIsHovered(true);
       setShowPopup(true);
     }
   };
 
   const handleMouseLeave = () => {
-    if (!showDropdown) { // Chỉ ẩn popup khi dropdown không mở
+    if (!showDropdown) {
       timeoutRef.current = setTimeout(() => {
         setIsHovered(false);
         setShowPopup(false);
@@ -68,16 +83,30 @@ const WeatherMood = () => {
     }
   };
 
-  // Event handlers for dropdown
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowDropdown(!showDropdown);
-    // Ẩn popup khi mở dropdown
     if (!showDropdown) {
       setShowPopup(false);
       setIsHovered(false);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
     }
   };
+
+  const handleDecorativeMouseEnter = () => {
+    setIsDecorativeHovered(true);
+  };
+
+  const handleDecorativeMouseLeave = () => {
+    setIsDecorativeHovered(false);
+  };
+
+  const handleRefreshWeather = () => {
+    console.log('Refreshing weather data');
+  }
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -96,57 +125,40 @@ const WeatherMood = () => {
     };
   }, [showDropdown]);
 
-  const handleContainerMouseEnter = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    if (!showDropdown) {
-      setIsHovered(true);
-      setShowPopup(true);
-    }
-  };
-
-  const handleContainerMouseLeave = () => {
-    if (!showDropdown) {
-      timeoutRef.current = setTimeout(() => {
-        setIsHovered(false);
-        setShowPopup(false);
-      }, 100);
-    }
-  };
-
-  const handlePopupClose = () => {
-    setShowPopup(false);
-    setIsHovered(false);
-  };
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div
       ref={dropdownRef}
       className="relative"
-      onMouseEnter={handleContainerMouseEnter}
-      onMouseLeave={handleContainerMouseLeave}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
+      {/* Main Weather Component */}
       <div
         className={`
-          relative group cursor-pointer
-          ${getWeatherBgClass(weather.condition, isHovered || showDropdown)}
-          backdrop-blur-xl border ${getWeatherBorderClass(weather.condition, isHovered || showDropdown)}
+          relative group cursor-pointer w-[210px]
+          ${bgClass}
+          backdrop-blur-xl border ${borderClass}
           rounded-full px-4 py-0.5
           shadow-2xl shadow-black/50
           transition-all duration-300 ease-out
           hover:shadow-3xl
           ${showDropdown ? 'ring-2 ring-white/10' : ''}
         `}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onClick={handleClick}
+        onClick={isPremium ? handleClick : undefined}
       >
-
         {/* Weather-specific glowing effect on hover */}
         <div className={`
-          absolute inset-0 rounded-full 
-          bg-gradient-to-r ${getWeatherGlowColor(weather.condition)}
+          absolute inset-0 rounded-full
+          bg-gradient-to-r ${weatherGlowClass}
           opacity-0 group-hover:opacity-100
           blur-xl transition-opacity duration-300
           -z-10
@@ -158,22 +170,21 @@ const WeatherMood = () => {
 
         {/* Content */}
         <div className="relative z-10 flex items-center space-x-4">
-
           {/* Weather Icon Circle */}
           <div className={`
             relative flex-shrink-0 w-8 h-8 rounded-full 
-            ${getIconBgColor(weather.condition)}
+            ${iconBgClass}
             flex items-center justify-center
             shadow-lg
             transition-all duration-300
             ${isHovered || showDropdown ? 'shadow-xl' : ''}
           `}>
-            {getWeatherIcon(weather.condition)}
+            {icon}
 
             {/* Icon glow effect */}
             <div className={`
               absolute inset-0 rounded-full
-              ${getIconBgColor(weather.condition)}
+              ${iconBgClass}
               opacity-0 group-hover:opacity-30
               blur-md transition-opacity duration-300
               ${showDropdown ? 'opacity-30' : ''}
@@ -182,67 +193,88 @@ const WeatherMood = () => {
 
           {/* Weather Info */}
           <div className="flex-1 min-w-0">
+            {!currentWeather ? <p className="py-3 text-sm text-neutral-400">{t('error.noData')}</p> :
+              <>
+                {/* Temperature & Status */}
+                <div className="flex items-baseline space-x-2">
+                  <span className="text-lg font-bold text-white transition-all duration-300">
+                    {currentWeather.current.tempC}°C
+                  </span>
+                  <span className="text-xs font-medium text-gray-300 transition-colors duration-300">
+                    {t(`status.${currentWeather.current.condition}`)}
+                  </span>
+                </div>
 
-            {/* Temperature & Status */}
-            <div className="flex items-baseline space-x-3">
-              <span className="text-lg font-bold text-white transition-all duration-300">
-                {weather.temp}°C
-              </span>
-              <span className="text-xs font-medium text-gray-300 transition-colors duration-300">
-                {weather.status}
-              </span>
-            </div>
-
-            {/* Location */}
-            <div className="flex items-center space-x-1">
-              <MapPin className={`
-                w-3 h-3 text-gray-400
-                transition-colors duration-300
-                ${isHovered || showDropdown ? 'text-gray-300' : ''}
-              `}/>
-              <span className={`
+                {/* Location */}
+                <div className="flex items-center space-x-1">
+                  <ReactCountryFlag
+                    countryCode="vn"
+                    svg
+                    style={{
+                      width: '1rem',
+                      height: '1rem',
+                    }}
+                  />
+                  <span className={`
                 text-xs text-gray-400 font-medium
                 transition-colors duration-300
                 ${isHovered || showDropdown ? 'text-gray-300' : ''}
               `}>
-                {weather.location}
+                {currentWeather.location.district}
               </span>
-            </div>
+                </div>
+              </>
+            }
           </div>
 
-          {/* Decorative element with weather color */}
-          <div className={`
-            w-2 h-8 rounded-full ml-2
-            ${getDecorativeBarClass(weather.condition)}
-            transition-all duration-300
-            ${isHovered || showDropdown ? 'opacity-80' : ''}
-          `}/>
+          <div
+            className="relative w-6 h-8 flex items-center justify-center"
+            onMouseEnter={handleDecorativeMouseEnter}
+            onMouseLeave={handleDecorativeMouseLeave}
+          >
+            {/* Decorative bar với fade + scale */}
+            <div className={`
+               absolute w-2 h-8 rounded-full
+               ${decorativeBarClass}
+               transition-all duration-300 cubic-bezier(0.4, 0, 0.2, 1)
+               ${isDecorativeHovered ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}
+             `}/>
+
+            <RotateCcw
+              size={24}
+              className={`absolute text-white/80 transition-all duration-300 cubic-bezier(0.4, 0, 0.2, 1) cursor-pointer 
+                  ${isDecorativeHovered ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-90 -rotate-45'}`}
+              onClick={handleRefreshWeather}
+            />
+          </div>
         </div>
 
         {/* Bottom highlight line with weather color */}
         <div className={`
           absolute bottom-0 left-4 right-4 h-px
-          ${getHighlightLineClass(weather.condition)}
+          ${highlightLineClass}
           transition-all duration-500
           ${isHovered || showDropdown ? 'opacity-100' : 'opacity-70'}
         `}/>
       </div>
 
+      {/* Weather Dropdown */}
       <WeatherDropdown
-        weather={weather}
+        currentWeather={currentWeather}
         showDropdown={showDropdown}
         handleShowDropdown={setShowDropdown}
       />
 
-      {/* Weather Popup - chỉ hiện khi không có dropdown */}
-      {!showDropdown && (
-        <WeatherPopup
-          isVisible={showPopup}
-          weatherCondition={weather.condition}
-          onClose={handlePopupClose}
-          icon={getWeatherIcon(weather.condition)}
-          getKeyMood={getKeyMood}
-        />
+      {!showDropdown && showPopup && (
+        <>
+          {/* Invisible bridge để tránh mouse leave */}
+          <div className="absolute top-0 left-full w-3 h-full z-999"/>
+          <WeatherPopup
+            isVisible={showPopup}
+            currentWeather={currentWeather}
+            icon={icon}
+          />
+        </>
       )}
     </div>
   );

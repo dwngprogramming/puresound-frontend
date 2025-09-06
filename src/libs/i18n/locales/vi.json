@@ -24,6 +24,10 @@
       "forgotPassword": {
         "title": "Quên mật khẩu - PureSound",
         "description": "Trang khôi phục mật khẩu của PureSound - Tinh hoa âm nhạc thuần khiết"
+      },
+      "authFailure": {
+        "title": "Oops - PureSound",
+        "description": "Xác thực thất bại"
       }
     }
   },
@@ -195,16 +199,43 @@
       "searchPlaceholder": "Giai điệu nào cho hôm nay?",
       "login": "Đăng nhập",
       "signup": "Đăng ký",
-      "premiumExperience": "Trải nghiệm Premium",
       "weather": {
         "mood": {
           "sunny": "Nắng reo ca",
           "rainy": "Mưa thì thầm",
           "snowy": "Tuyết hòa điệu",
-          "cloudy": "Mây ngân khúc"
+          "cloudy": "Mây ngân khúc",
+          "clear_night": "Đêm dạ khúc"
+        },
+        "status": {
+          "sunny": "Nắng",
+          "rainy": "Mưa",
+          "snowy": "Có tuyết",
+          "cloudy": "Nhiều mây",
+          "clear_night": "Quang đãng"
         },
         "playlist": "Khúc nhạc của thời tiết",
-        "click": "Ấn để cảm nhận Playlist Thời Tiết"
+        "click": "Click để cảm nhận Playlist Thời Tiết",
+        "error": {
+          "oops": "Oops!",
+          "noData": "Không có dữ liệu",
+          "notFound": "Không tìm thấy dữ liệu thời tiết",
+          "description": "Đảm bảo rằng dịch vụ định vị trên thiết bị của bạn đã được bật và thử lại."
+        }
+      },
+      "freemium": {
+        "weatherPopup": "Nâng cấp lên Premium để trải nghiệm Playlist Thời Tiết",
+        "subscription": "Khám phá Premium",
+        "upgrade": "Nâng cấp lên Premium"
+      },
+      "premium": {
+        "tag": {
+          "sunny": "☀️ Ấm áp",
+          "rainy": "🌧️ Suy tư",
+          "snowy": "🌨️ Nhẹ nhàng",
+          "cloudy": "⛅ Mơ mộng",
+          "clear_night": "🌙 Thanh bình"
+        }
       },
       "me": "Tài khoản",
       "profile": "Hồ sơ",

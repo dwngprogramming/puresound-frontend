@@ -7,6 +7,7 @@ export const useLogout = () => {
   const dispatch = useAppDispatch();
 
   return useCallback(async () => {
+    console.log("Logging out...");
     await authApi.logout();
     dispatch(deleteCredentials());
   }, []);
