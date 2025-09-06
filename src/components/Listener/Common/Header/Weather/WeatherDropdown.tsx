@@ -1,26 +1,20 @@
-import {
-  getAccentColor,
-  getButtonHoverBg,
-  getDropdownBgClass,
-  getDropdownBorderClass,
-  getWeatherGlowColor
-} from "@/utils/weatherCssPreset";
-import {WeatherInfo} from "@/components/Listener/Common/Header/Weather/WeatherMood";
 import {Music, RefreshCw, Settings} from "lucide-react";
+import {useWeatherStyle} from "@/hooks/common/useWeatherStyle";
+import {WeatherResponse} from "@/models/weather/WeatherResponse";
 
 interface WeatherDropdownProps {
-  weather: WeatherInfo;
+  currentWeather: WeatherResponse | undefined;
   showDropdown: boolean;
   handleShowDropdown: (show: boolean) => void;
 }
 
-const WeatherDropdown = ({weather, showDropdown, handleShowDropdown}: WeatherDropdownProps) => {
+const WeatherDropdown = ({currentWeather, showDropdown, handleShowDropdown}: WeatherDropdownProps) => {
   const dropdownItems = [
     {
       icon: <Music className="w-4 h-4" />,
       label: 'Generate Playlist',
       action: () => {
-        console.log('Generate playlist for weather:', weather.condition);
+        console.log('Generate playlist for weather:', currentWeather?.current.condition);
         handleShowDropdown(false);
       }
     },
@@ -42,11 +36,19 @@ const WeatherDropdown = ({weather, showDropdown, handleShowDropdown}: WeatherDro
     }
   ];
 
+  const {
+    accentColor,
+    buttonHoverClass,
+    dropdownBgClass,
+    dropdownBorderClass,
+    weatherGlowClass
+  } = useWeatherStyle(currentWeather?.current.condition, currentWeather?.current.isDay ?? false, false);
+
   return (
     <div className={`
         absolute top-full left-0 right-0 mt-2 z-50
-        ${getDropdownBgClass(weather.condition)}
-        backdrop-blur-xl border ${getDropdownBorderClass(weather.condition)}
+        ${dropdownBgClass}
+        backdrop-blur-xl border ${dropdownBorderClass}
         rounded-2xl shadow-2xl shadow-black/30
         overflow-hidden
         transform transition-all duration-300 ease-out origin-top
@@ -59,7 +61,7 @@ const WeatherDropdown = ({weather, showDropdown, handleShowDropdown}: WeatherDro
       {/* Dropdown glow effect */}
       <div className={`
           absolute inset-0 rounded-2xl 
-          bg-gradient-to-r ${getWeatherGlowColor(weather.condition)}
+          bg-gradient-to-r ${weatherGlowClass}
           blur-xl -z-10
         `}/>
 
@@ -73,14 +75,14 @@ const WeatherDropdown = ({weather, showDropdown, handleShowDropdown}: WeatherDro
                 w-full flex items-center space-x-3
                 px-4 py-3 rounded-xl
                 text-white text-sm font-medium
-                ${getButtonHoverBg(weather.condition)}
+                ${buttonHoverClass}
                 border border-transparent hover:border-white/10
                 transition-all duration-200
                 group
               `}
           >
               <span className={`
-                ${getAccentColor(weather.condition)} 
+                ${accentColor}
                 group-hover:scale-110 transition-transform duration-200
               `}>
                 {item.icon}
@@ -91,8 +93,10 @@ const WeatherDropdown = ({weather, showDropdown, handleShowDropdown}: WeatherDro
       </div>
 
       {/* Bottom decoration line */}
-      <div
-        className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"/>
+      <div className={`
+        absolute bottom-0 left-4 right-4 h-px 
+        bg-gradient-to-r from-transparent via-white/20 to-transparent
+      `}/>
     </div>
   )
 }

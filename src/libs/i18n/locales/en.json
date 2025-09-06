@@ -24,6 +24,10 @@
       "forgotPassword": {
         "title": "Forgot Password - PureSound",
         "description": "Password recovery page of PureSound - Pure Music Essence"
+      },
+      "authFailure": {
+        "title": "Oops - PureSound",
+        "description": "Authentication failure"
       }
     }
   },
@@ -192,16 +196,43 @@
       "searchPlaceholder": "What’s on your vibe today?",
       "login": "Login",
       "signup": "Sign up",
-      "premiumExperience": "Premium Experience",
       "weather": {
         "mood": {
           "sunny": "Sunlight sings",
           "rainy": "Rain whispers",
           "snowy": "Snow in harmony",
-          "cloudy": "Clouds in chorus"
+          "cloudy": "Clouds in chorus",
+          "clear_night": "Clear night serenade"
+        },
+        "status": {
+          "sunny": "Sunny",
+          "rainy": "Rainy",
+          "snowy": "Snowy",
+          "cloudy": "Cloudy",
+          "clear_night": "Clear Night"
         },
         "playlist": "Melody of the Weather",
-        "click": "Click to feel the Weather Mood Playlist"
+        "click": "Click to feel the Weather Mood Playlist",
+        "error": {
+          "oops": "Oops!",
+          "noData": "No weather data",
+          "notFound": "Weather data not found",
+          "description": "Ensure that your device's location services are enabled and try again."
+        }
+      },
+      "freemium": {
+        "weatherPopup": "Upgrade Premium to enjoy Weather Mood Playlists",
+        "subscription": "Explore Premium",
+        "upgrade": "Upgrade Premium Now"
+      },
+      "premium": {
+        "tag": {
+          "sunny": "☀️ Warm",
+          "rainy": "🌧️ Meditative",
+          "snowy": "🌨️ Gentle",
+          "cloudy": "⛅ Dreamy",
+          "clear_night": "🌙 Calm"
+        }
       },
       "me": "Account",
       "profile": "Profile",
