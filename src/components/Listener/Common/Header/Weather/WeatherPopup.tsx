@@ -4,6 +4,7 @@ import {useWeatherStyle} from "@/hooks/common/useWeatherStyle";
 import {Crown} from "lucide-react";
 import {Button} from "@heroui/react";
 import {WeatherResponse} from "@/models/weather/WeatherResponse";
+import {useUserInfo} from "@/hooks/user/useUserInfo";
 
 interface WeatherPopupProps {
   isVisible: boolean;
@@ -50,9 +51,9 @@ const WeatherPopup: React.FC<WeatherPopupProps> = ({
     weatherGlowClass,
     arrowBorderClass,
     headerBgClass,
-    accentColor,
-    isPremium
+    accentColor
   } = useWeatherStyle(currentWeather?.current.condition, currentWeather?.current.isDay ?? false);
+  const {isPremium} = useUserInfo();
 
   const handlePlaylistGenerate = () => {
     console.log('Generate playlist for weather:', currentWeather?.current.condition);

@@ -11,6 +11,7 @@ import currentWeatherApi from "@/apis/main/weather/currentWeather.api";
 import {getCurrentPosition} from "@/utils/getCurrentPosition";
 import {ApiResponse} from "@/models/ApiResponse";
 import {Skeleton} from "@heroui/react";
+import {useUserInfo} from "@/hooks/user/useUserInfo";
 
 const WeatherMood = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -21,21 +22,21 @@ const WeatherMood = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('Listener.Common.weather');
   const [loading, setLoading] = useState(true);
+  const {isPremium} = useUserInfo();
 
-  const {data: coordinates, isLoading: isGeoLoading} = useQuery({
+  const {data: coordinates, isLoading: isLoadingGeo} = useQuery({
     queryKey: ['geolocation'],
     queryFn: getCurrentPosition,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
-    refetchInterval: 24 * 60 * 60 * 1000, // 1 ngày refetch 1 lần
-    staleTime: 23.9 * 60 * 60 * 1000, // 23.9h thì coi là stale
+    staleTime: 24 * 60 * 60 * 1000,
+    gcTime: 30 * 60 * 60 * 1000,
     retry: 1
   });
 
   const {
     data: currentWeather,
     isLoading: isLoadingWeather,
-    isFetching: isFetchingWeather,
     refetch: refetchWeather,
   } = useQuery<
     ApiResponse<WeatherResponse>,
@@ -50,17 +51,17 @@ const WeatherMood = () => {
       return await currentWeatherApi.getCurrentWeather(coordinates.latitude, coordinates.longitude);
     },
     select: (apiResponse) => apiResponse.data,
-    enabled: !!coordinates && !isGeoLoading,
+    enabled: !!coordinates && !isLoadingGeo,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
-    refetchInterval: 20 * 60 * 1000, // 20 phút tự động refetch
-    staleTime: 19 * 60 * 1000, // 19 phút thì coi là stale
+    staleTime: 20 * 60 * 1000, // 20 phút thì coi là stale
+    gcTime: 30 * 60 * 1000, // 30 phút thì xoá cache
     retry: 1,
   });
 
   useEffect(() => {
-    setLoading(isFetchingWeather || isLoadingWeather || isGeoLoading);
-  }, [isFetchingWeather, isLoadingWeather, isGeoLoading]);
+    setLoading(isLoadingWeather || isLoadingGeo);
+  }, [isLoadingWeather, isLoadingGeo]);
 
   const {
     icon,
@@ -70,8 +71,7 @@ const WeatherMood = () => {
     borderClass,
     weatherGlowClass,
     highlightLineClass,
-    skeletonBgClass,
-    isPremium
+    skeletonBgClass
   } = useWeatherStyle(currentWeather?.current?.condition, currentWeather?.current?.isDay ?? false, isHovered || showDropdown);
 
   // Simplified event handlers
@@ -213,7 +213,7 @@ const WeatherMood = () => {
 
           {/* Weather Info */}
           <div className="flex-1 min-w-0">
-            {!currentWeather ? <p className="text-[13px] py-3">{t('error.noData')}</p> :
+            {!currentWeather && !loading ? <p className="text-[13px] py-3">{t('error.noData')}</p> :
               <>
                 {/* Temperature & Status */}
                 <div className="flex items-baseline space-x-2">
