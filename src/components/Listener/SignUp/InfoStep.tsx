@@ -4,7 +4,7 @@ import {Controller, useFormContext} from "react-hook-form";
 import {SignUpData} from "@/types/auth.types";
 import {DatePicker, Input, Select, SelectItem, Spinner} from "@heroui/react";
 import ErrorMessageCustom from "@/components/Utility/ErrorMessageCustom";
-import {Gender} from "@/const/Gender";
+import {Gender} from "@/const/user/Gender";
 import {Check, Mars, Users, Venus, X} from "lucide-react";
 import {I18nProvider} from "@react-aria/i18n";
 import {debounce} from "lodash";

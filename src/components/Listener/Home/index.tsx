@@ -6,44 +6,46 @@ import {useEffect} from "react";
 import {useMutation} from "@tanstack/react-query";
 import tokenApi from "@/apis/auth/token.api";
 import {useAppDispatch, useAppSelector} from "@/libs/redux/hooks";
-import {setCredentials} from "@/libs/redux/features/auth/authSlice";
-import {CustomJwtPayload} from "@/models/auth/CustomJwtPayload";
-import {jwtDecode} from "jwt-decode";
-import {UserPrincipal} from "@/models/auth/UserPrincipal";
 import Cookies from 'js-cookie';
 import {showInfoNotification} from "@/libs/redux/features/notification/notificationAction";
+import {UserType} from "@/const/user/UserType";
+import {setSubscription} from "@/libs/redux/features/subscription/subscriptionSlice";
+import meApi from "@/apis/main/listener/me.api";
+import {useSavePrincipal} from "@/hooks/auth/useSavePrincipal";
 
 const Home = () => {
   const t = useTranslations("Listener.Home");
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const savePrincipal = useSavePrincipal();
   const principal = useAppSelector(state => state.auth.principal);
 
   const exchangeTokenMutation = useMutation({
     mutationFn: (code: string) => tokenApi.exchangeToken(code),
-    onSuccess: (response) => {
-      const accessToken = response.data.accessToken;
-      const payload: CustomJwtPayload = jwtDecode(accessToken);
-      const principal: UserPrincipal = {
-        id: payload.sub,
-        fullname: payload.fullname,
-        userType: payload.userType,
-        authorities: payload.authorities,
-      };
-
-      dispatch(setCredentials({
-        principal: principal,
-        token: accessToken
-      }));
-
-      handleFacebookHash();
-      handleLinkedOAuth2();
-    },
-    onError: () => {
-      Cookies.remove('linkedProvider');
-      router.push('/login');
-    }
   });
+
+  const handleSubscriptionInfo = async (userType: UserType) => {
+    const apiFunction = chooseApiEndpoint(userType);
+    if (!apiFunction) {
+      return;
+    }
+
+    const response = await apiFunction();
+    if (response) {
+      const subscriptionInfo = response.data;
+      // Lưu thông tin subscription vào Redux store
+      dispatch(setSubscription(subscriptionInfo));
+    }
+  }
+
+  const chooseApiEndpoint = (userType: UserType) => {
+    switch (userType) {
+      case UserType.LISTENER:
+        return meApi.getBasicSubscription;
+      default:
+        return null;
+    }
+  }
 
   const handleLinkedOAuth2 = () => {
     const provider = Cookies.get('linkedProvider');
@@ -67,14 +69,34 @@ const Home = () => {
     }
   }
 
-  // Using for OAuth 2. Exchange code -> access token
+  // Sử dụng với OAuth 2
   useEffect(() => {
-    const code = Cookies.get('exchangeCode');
+    const exchangeCode = async () => {
+      const code = Cookies.get('exchangeCode');
 
-    if (code) {
-      exchangeTokenMutation.mutate(code);
-    }
+      if (code) {
+        try {
+          const response = await exchangeTokenMutation.mutateAsync(code);
+          savePrincipal(response.data); // Dispatch to Redux
+
+          handleFacebookHash();
+          handleLinkedOAuth2();
+
+        } catch (error) {
+          Cookies.remove('linkedProvider');
+          router.push('/login');
+        }
+      }
+    };
+
+    exchangeCode();
   }, []);
+
+  useEffect(() => {
+    if (principal) {
+      handleSubscriptionInfo(principal.userType);
+    }
+  }, [principal]);
 
   return (
     <div>

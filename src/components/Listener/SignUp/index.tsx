@@ -20,7 +20,7 @@ import StepIndicator from "@/components/Listener/SignUp/StepIndicator";
 import PasswordStep from "@/components/Listener/SignUp/PasswordStep";
 import InfoStep from "@/components/Listener/SignUp/InfoStep";
 import {getLocalTimeZone, today} from "@internationalized/date";
-import {Gender} from "@/const/Gender";
+import {Gender} from "@/const/user/Gender";
 import VerifyStep from "@/components/Listener/SignUp/VerifyStep";
 import authApi from "@/apis/auth/auth.api";
 import {CircleCheckBig, LockKeyhole} from "lucide-react";

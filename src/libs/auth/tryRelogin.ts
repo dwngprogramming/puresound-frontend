@@ -4,6 +4,7 @@ import {UserPrincipal} from "@/models/auth/UserPrincipal";
 import {store} from "@/libs/redux/store";
 import {CustomJwtPayload} from "@/models/auth/CustomJwtPayload";
 import {reloginInstance} from "@/libs/axios/axiosInstances";
+import {UserType} from "@/const/user/UserType";
 
 export const tryRelogin = async (): Promise<boolean> => {
   const dispatch = store.dispatch;
@@ -20,7 +21,7 @@ export const tryRelogin = async (): Promise<boolean> => {
     const principal: UserPrincipal = {
       id: payload.sub,
       fullname: payload.fullname,
-      userType: payload.userType,
+      userType: payload.userType as UserType,
       authorities: payload.authorities,
     };
 

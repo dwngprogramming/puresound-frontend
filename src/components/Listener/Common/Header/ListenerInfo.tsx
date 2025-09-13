@@ -5,6 +5,7 @@ import {useTranslations} from "next-intl";
 import {useRouter} from "next/navigation";
 import {useLogout} from "@/hooks/auth/useLogout";
 import {BookHeadphones, CircleUserRound, Crown, LogOut, Settings} from "lucide-react";
+import {useUserInfo} from "@/hooks/user/useUserInfo";
 
 interface ListenerInfoProps {
   visible: boolean;
@@ -17,7 +18,7 @@ const ListenerInfo = ({visible, handleVisible}: ListenerInfoProps) => {
   const authState = useAppSelector(state => state.auth);
   const navigator = useRouter();
   const logout = useLogout();
-  const premium = false;
+  const {isPremium} = useUserInfo();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
@@ -37,7 +38,7 @@ const ListenerInfo = ({visible, handleVisible}: ListenerInfoProps) => {
 
   return (
     <div className="relative group">
-      {premium && (
+      {isPremium && (
         <div className={`absolute -top-3 left-8 z-50 transition-all duration-300 ease-in-out pointer-events-none
     ${visible
           ? 'opacity-100 scale-100'
@@ -50,7 +51,7 @@ const ListenerInfo = ({visible, handleVisible}: ListenerInfoProps) => {
 
       <div
         ref={containerRef}
-        className={`ml-2 flex border-2 ${premium ? "border-yellow-400" : "border-primary-100"} items-center py-1 bg-neutral-700/80 rounded-full cursor-pointer
+        className={`ml-2 flex border-2 ${isPremium ? "border-yellow-400" : "border-primary-100"} items-center py-1 bg-neutral-700/80 rounded-full cursor-pointer
       transition-all duration-300 ease-in-out overflow-hidden relative
       ${visible
           ? 'px-4'
@@ -76,7 +77,7 @@ const ListenerInfo = ({visible, handleVisible}: ListenerInfoProps) => {
       </div>
       {visible && (
         <div
-          className={`absolute lg:min-w-[200px] border-1 ${premium ? "border-yellow-400" : "border-neutral-800/70"} bg-neutral-800/70 shadow-lg shadow-gray-800 rounded-xl right-0 top-12.5 z-[100] transition-all duration-500 ease-in-out`}
+          className={`absolute lg:min-w-[200px] border-1 ${isPremium ? "border-yellow-400" : "border-neutral-800/70"} bg-neutral-800/70 shadow-lg shadow-gray-800 rounded-xl right-0 top-12.5 z-[100] transition-all duration-500 ease-in-out`}
         >
           <div
             className="flex items-center space-x-2 px-4 py-2.5 text-sm hover:bg-neutral-600 transition-all duration-300 cursor-pointer rounded-t-xl"

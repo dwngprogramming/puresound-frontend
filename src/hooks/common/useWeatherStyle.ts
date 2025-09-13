@@ -17,43 +17,42 @@ import {
   getWeatherGlowColor,
   getWeatherIcon
 } from '@/utils/weatherCssPreset';
+import {useUserInfo} from "@/hooks/user/useUserInfo";
 
 export const useWeatherStyle = (condition: WeatherCondition | undefined, isDay: boolean, isHovered = false) => {
-  const premium = true; // Demo purpose, replace with actual state if needed
+  const {isPremium} = useUserInfo();
 
   return {
     // Icon & Visual Elements
     icon: getWeatherIcon(condition, isDay),
-    iconBgClass: getIconBgColor(condition, isDay, premium),
-    accentColor: getAccentColor(condition, isDay, premium),
+    iconBgClass: getIconBgColor(condition, isDay, isPremium),
+    accentColor: getAccentColor(condition, isDay, isPremium),
 
     // Background Classes
-    bgClass: getWeatherBgClass(condition, isDay, isHovered, premium),
-    popupBgClass: getPopupBgColor(condition, isDay, premium),
-    headerBgClass: getHeaderBg(condition, isDay, premium),
-    dropdownBgClass: getDropdownBgClass(condition, isDay, premium),
+    bgClass: getWeatherBgClass(condition, isDay, isHovered, isPremium),
+    popupBgClass: getPopupBgColor(condition, isDay, isPremium),
+    headerBgClass: getHeaderBg(condition, isDay, isPremium),
+    dropdownBgClass: getDropdownBgClass(condition, isDay, isPremium),
 
     // Border Classes
-    borderClass: getWeatherBorderClass(condition, isDay, isHovered, premium),
-    popupBorderClass: getPopupBorderColor(condition, isDay, premium),
-    dropdownBorderClass: getDropdownBorderClass(condition, isDay, premium),
-    arrowBorderClass: getArrowBorderColor(condition, isDay, premium),
+    borderClass: getWeatherBorderClass(condition, isDay, isHovered, isPremium),
+    popupBorderClass: getPopupBorderColor(condition, isDay, isPremium),
+    dropdownBorderClass: getDropdownBorderClass(condition, isDay, isPremium),
+    arrowBorderClass: getArrowBorderColor(condition, isDay, isPremium),
 
     // Glow & Effects
-    glowClass: getGlowColor(condition, isDay, premium),
-    weatherGlowClass: getWeatherGlowColor(condition, isDay, premium),
+    glowClass: getGlowColor(condition, isDay, isPremium),
+    weatherGlowClass: getWeatherGlowColor(condition, isDay, isPremium),
 
     // Decorative Elements
-    decorativeBarClass: getDecorativeBarClass(condition, isDay, premium),
-    highlightLineClass: getHighlightLineClass(condition, isDay, premium),
+    decorativeBarClass: getDecorativeBarClass(condition, isDay, isPremium),
+    highlightLineClass: getHighlightLineClass(condition, isDay, isPremium),
 
     // Interactive States
-    buttonHoverClass: getButtonHoverBg(condition, isDay, premium),
+    buttonHoverClass: getButtonHoverBg(condition, isDay, isPremium),
 
     // Skeleton state
-    skeletonBgClass: getSkeletonBgClass(condition, isDay, premium),
+    skeletonBgClass: getSkeletonBgClass(condition, isDay, isPremium),
 
-    // Premium state
-    isPremium: premium
   };
 };

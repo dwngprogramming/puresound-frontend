@@ -42,7 +42,7 @@ const VerifyEmailStep = ({handleSetEmail, handleNextStep}: VerifyEmailStepProps)
   });
 
   const handleCheckEmail = async (data: CheckEmailRequest) => {
-    const response = await checkEmail.mutateAsync(data.email.trim());
+    const response = await checkEmail.mutateAsync({field: data.email.trim()});
     if (response.data.exists) {
       await sendOtp.mutateAsync(emailValue)
       handleSetEmail(data.email.trim())
