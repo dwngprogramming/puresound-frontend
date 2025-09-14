@@ -13,9 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const LoginPage = () => {
   return (
-    <div>
-      <Login />
-    </div>
+    <Login/>
   )
 }
 

@@ -1,9 +1,6 @@
 import React from "react";
-import InitialLoadListener from "@/components/Listener/Me/InitialLoadListener";
+import ClientRenderLayout from "@/components/Listener/Common/ClientRenderLayout";
 
 export default function ListenerLayout({children,}: { children: React.ReactNode; }) {
-  return <>
-    <InitialLoadListener/>
-    {children}
-  </>
+  return <ClientRenderLayout children={children}/>
 }
