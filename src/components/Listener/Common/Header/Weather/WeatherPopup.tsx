@@ -111,7 +111,7 @@ const WeatherPopup: React.FC<WeatherPopupProps> = ({
                   t('weather.error.oops')
                 }
               </h3>
-              <p className="text-gray-400 text-xs">
+              <p className="text-gray-200 text-xs">
                 {currentWeather ?
                   t('weather.playlist') :
                   t('weather.error.notFound')
