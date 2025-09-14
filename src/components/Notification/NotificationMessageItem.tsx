@@ -16,7 +16,7 @@ const NotificationMessageItem = ({notification, onClose}: NotificationItemProps)
     switch (type) {
       case 'success':
         return {
-          bgColor: 'bg-green-100 border-green-500',
+          bgColor: 'bg-green-200/80',
           textColor: 'text-green-700',
           icon: (
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -28,8 +28,8 @@ const NotificationMessageItem = ({notification, onClose}: NotificationItemProps)
         };
       case 'error':
         return {
-          bgColor: 'bg-red-100 border-red-500',
-          textColor: 'text-red',
+          bgColor: 'bg-red-200/80',
+          textColor: 'text-red-700',
           icon: (
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd"
@@ -40,7 +40,7 @@ const NotificationMessageItem = ({notification, onClose}: NotificationItemProps)
         };
       case 'warning':
         return {
-          bgColor: 'bg-yellow-100 border-yellow-500',
+          bgColor: 'bg-yellow-200/80',
           textColor: 'text-yellow-700',
           icon: (
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -53,7 +53,7 @@ const NotificationMessageItem = ({notification, onClose}: NotificationItemProps)
       case 'info':
       default:
         return {
-          bgColor: 'bg-blue-100 border-blue-500',
+          bgColor: 'bg-blue-200/80',
           textColor: 'text-blue-700',
           icon: (
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -78,12 +78,12 @@ const NotificationMessageItem = ({notification, onClose}: NotificationItemProps)
           {icon}
         </div>
         <div className="ml-2">
-          <p className="font-medium">{message}</p>
+          <p className="whitespace-pre-line font-medium">{message}</p>
         </div>
       </div>
       <button
         onClick={onClose}
-        className="ml-4 text-gray-500 hover:text-gray-700 focus:outline-none"
+        className={`ml-4 ${textColor} focus:outline-none`}
         aria-label="Close notification"
       >
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">

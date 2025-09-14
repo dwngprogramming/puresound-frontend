@@ -8,7 +8,10 @@ import {deleteCredentials, setCredentials} from "@/libs/redux/features/auth/auth
 import {getRouter} from "@/libs/singleton/navigation";
 import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
 import {tProvider, getLocale} from "@/libs/singleton/translation";
-import {refreshTokenInstance, verifyAxiosInstance} from "@/libs/axios/axiosInstances";
+import {publicAxiosInstance, refreshTokenInstance, verifyAxiosInstance} from "@/libs/axios/axiosInstances";
+import {BaseSubscription} from "@/models/listener/BaseSubscription";
+import {removeSubscription, setSubscription} from "@/libs/redux/features/subscription/subscriptionSlice";
+import {UserType} from "@/const/user/UserType";
 
 // Failed queue request when refresh token
 let isRefreshing = false;
@@ -35,13 +38,21 @@ const handleAuthState = (accessToken: string) => {
   const principal: UserPrincipal = {
     id: payload.sub,
     fullname: payload.fullname,
-    userType: payload.userType,
+    userType: payload.userType as UserType,
     authorities: payload.authorities,
   };
   store.dispatch(setCredentials({
     principal: principal,
     token: accessToken
   }));
+}
+
+const handleSetSubscription = (subscription: BaseSubscription) => {
+  store.dispatch(setSubscription(subscription));
+}
+
+const handleRemoveSubscription = () => {
+  store.dispatch(removeSubscription());
 }
 
 const handleLogout = () => {
@@ -137,6 +148,15 @@ verifyAxiosInstance.interceptors.response.use(
         const accessToken: string = response.data.data.accessToken;
         handleAuthState(accessToken);
 
+        // Nếu có AT mới, cập nhật subscription
+        if (accessToken) {
+          const subRes = await refreshTokenInstance.get<ApiResponse<BaseSubscription>>('/v1/listener/me/subscription/base', {
+            headers: {"Authorization": `Bearer ${accessToken}`}
+          });
+          const subscription = subRes.data.data;
+          handleSetSubscription(subscription);
+        }
+
         // Xử lý queue với success
         processQueue(null, accessToken);
 
@@ -147,6 +167,7 @@ verifyAxiosInstance.interceptors.response.use(
       } catch (refreshError) {
         // Refresh thất bại
         processQueue(refreshError, null);
+        handleRemoveSubscription();
         handleLogout();
         throw refreshError;
 
@@ -182,11 +203,18 @@ export default {
   ): Promise<T> {
     return await verifyAxiosInstance.put(endpoint, data, option);
   },
+  async patch<T>(
+    endpoint: string,
+    data?: any,
+    option?: AxiosRequestConfig<never>
+  ): Promise<T> {
+    return await publicAxiosInstance.patch(endpoint, data, option);
+  },
   async delete<T>(
     endpoint: string,
     option?: AxiosRequestConfig<never>
   ): Promise<T> {
-    return verifyAxiosInstance.delete(endpoint, option);
+    return await verifyAxiosInstance.delete(endpoint, option);
   },
   setDefaultHeader(key: string, data?: string) {
     verifyAxiosInstance.defaults.headers.common[key] = data;
