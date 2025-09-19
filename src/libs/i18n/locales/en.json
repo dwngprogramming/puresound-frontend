@@ -28,6 +28,10 @@
       "authFailure": {
         "title": "Oops - PureSound",
         "description": "Authentication failure"
+      },
+      "subscription": {
+        "title": "Premium Subscription - PureSound",
+        "description": "Premium subscription page of PureSound - Pure Music Essence"
       }
     }
   },
