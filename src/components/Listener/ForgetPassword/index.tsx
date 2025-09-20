@@ -5,7 +5,6 @@ import React, {useEffect, useState} from "react";
 import {useTranslations} from "next-intl";
 import VerifyEmailStep from "@/components/Listener/ForgetPassword/VerifyEmailStep";
 import {useAutoRelogin} from "@/hooks/auth/useAutoRelogin";
-import {useRouter} from "next/navigation";
 import ComponentLoader from "@/components/ComponentLoader";
 import Link from "next/link";
 import OtpStep from "@/components/Listener/ForgetPassword/OtpStep";
@@ -15,9 +14,8 @@ import ResetPasswordStep from "@/components/Listener/ForgetPassword/ResetPasswor
 const ForgotPassword = () => {
   const t = useTranslations("Listener.ForgotPassword");
   const {breakpoint, mountedBreakpoint} = useBreakpoint();
-  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
-  const {relogin, isTryingRelogin} = useAutoRelogin(router);
+  const {relogin, isTryingRelogin} = useAutoRelogin();
   const [email, setEmail] = useState<string>("");
 
   useEffect(() => {

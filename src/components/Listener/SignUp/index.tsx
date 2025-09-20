@@ -7,7 +7,6 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {createRegisterSchema} from "@/libs/validation/auth.validation";
 import React, {useEffect, useMemo, useState} from "react";
 import {useAutoRelogin} from "@/hooks/auth/useAutoRelogin";
-import {useRouter} from "next/navigation";
 import ComponentLoader from "@/components/ComponentLoader";
 import Image from "next/image";
 import {Button, Divider, Form, Input} from "@heroui/react";
@@ -33,10 +32,9 @@ const SignUp = () => {
   const tValidation = useTranslations("Listener.SignUp.validation");
   const registerSchema = useMemo(() =>
     createRegisterSchema(tValidation), [tValidation]);
-  const router = useRouter();
   const locale = useLocale();
   const {breakpoint, mountedBreakpoint} = useBreakpoint();
-  const {relogin, isTryingRelogin} = useAutoRelogin(router);
+  const {relogin, isTryingRelogin} = useAutoRelogin();
   const signup = useSignUp();
   const [currentStep, setCurrentStep] = useState(0);  // Email tính là step 0
   const totalIndicatorSteps = 4;   // Không tính email step, vì không nằm trong indicator

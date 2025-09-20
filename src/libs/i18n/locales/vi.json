@@ -28,6 +28,10 @@
       "authFailure": {
         "title": "Oops - PureSound",
         "description": "Xác thực thất bại"
+      },
+      "subscription": {
+        "title": "Khám phá Premium - PureSound",
+        "description": "Khám phá tính năng Premium của PureSound - Tinh hoa âm nhạc thuần khiết"
       }
     }
   },

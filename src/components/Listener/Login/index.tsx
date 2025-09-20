@@ -27,7 +27,7 @@ export const Login = () => {
   const login = useLogin();
   const router = useRouter();
   const locale = useLocale();
-  const {relogin, isTryingRelogin} = useAutoRelogin(router);
+  const {relogin, isTryingRelogin} = useAutoRelogin();
 
   // React Hook Form setup
   const {
@@ -67,7 +67,7 @@ export const Login = () => {
 
   const isLoadingPage = isTryingRelogin || !mountedBreakpoint;
 
-  return isLoadingPage ? (<ComponentLoader/>) :
+  return isLoadingPage ? (< ComponentLoader/>) :
     (
       <div
         className="auth-container">
