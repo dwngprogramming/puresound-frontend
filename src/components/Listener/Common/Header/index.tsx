@@ -9,6 +9,7 @@ import {Crown} from "lucide-react";
 import {useTranslations} from "next-intl";
 import WeatherMood from "@/components/Listener/Common/Header/Weather/WeatherMood";
 import {useUserInfo} from "@/hooks/user/useUserInfo";
+import PuresoundLogo from "@/components/Utility/PuresoundLogo";
 
 const Header = () => {
   const t = useTranslations('Listener.Common');
@@ -22,13 +23,8 @@ const Header = () => {
         <div className="flex-shrink-0 z-10">
           <div className="flex items-center space-x-25">
             <div className="flex items-center space-x-2 cursor-pointer" onClick={() => router.push("/")}>
-              <Image src="puresound-logo.svg" alt="PureSound Logo" width={50} height={50}/>
-              <div>
-                <h4 className="text-blue-300 font-semibold inline">Pure</h4>
-                <h4 className="text-gray-400 font-semibold inline">Sound</h4>
-              </div>
+              <PuresoundLogo size={50}/>
             </div>
-
             <WeatherMood/>
           </div>
         </div>
@@ -44,7 +40,9 @@ const Header = () => {
           {!isPremium && (
             <Button
               className="text-darkmod font-bold py-5.5 px-4 rounded-full justify-center items-center hover:text-darkmode bg-yellow-600 border border-yellow-600
-                hover:border-yellow-700 hover:bg-yellow-700">
+                hover:border-yellow-700 hover:bg-yellow-700"
+              onPress={() => router.push("/premium")}
+            >
               <Crown size={20}/>
               {t('freemium.subscription')}
             </Button>

@@ -28,6 +28,10 @@
       "authFailure": {
         "title": "Oops - PureSound",
         "description": "Xác thực thất bại"
+      },
+      "premium": {
+        "title": "Khám phá Premium - PureSound",
+        "description": "Khám phá các gói Premium trong PureSound - Tinh hoa âm nhạc thuần khiết"
       }
     }
   },
@@ -37,7 +41,8 @@
       "system": "Lỗi hệ thống",
       "network": "Lỗi kết nối mạng",
       "server": "Lỗi mạng hoặc máy chủ không phản hồi"
-    }
+    },
+    "processing": "Đang xử lý..."
   },
   "Listener": {
     "Login": {
@@ -240,7 +245,113 @@
       "me": "Tài khoản",
       "profile": "Hồ sơ",
       "settings": "Cài đặt",
-      "logout": "Đăng xuất"
+      "logout": "Đăng xuất",
+      "appDescription": "Thưởng thức giai điệu chân thực, không tạp âm, chỉ còn âm nhạc và bạn.",
+      "link": {
+        "quickLinks": "Liên kết nhanh",
+        "support": "Hỗ trợ"
+      }
+    },
+    "Premium": {
+      "title": "Đăng ký PureSound Premium",
+      "description": "Trải nghiệm âm nhạc không giới hạn với PureSound Premium. Lựa chọn gói phù hợp nhất với bạn.",
+      "benefits": {
+        "title": "Lợi ích với Premium",
+        "description": "Tận hưởng trải nghiệm âm nhạc tốt nhất với các tính năng độc quyền. Tất cả tính năng được bao gồm trong tất cả các gói.",
+        "adFree": {
+          "title": "Nghe nhạc không quảng cáo",
+          "description": "Trải nghiệm âm nhạc liền mạch mà không bị gián đoạn."
+        },
+        "weatherPlaylist": {
+          "title": "Playlist thời tiết",
+          "description": "Cảm nhận âm nhạc phù hợp với thời tiết xung quanh bạn."
+        },
+        "offline": {
+          "title": "Nghe nhạc ngoại tuyến",
+          "description": "Tải xuống bài hát và nghe chúng mọi lúc, mọi nơi."
+        },
+        "highQuality": {
+          "title": "Âm thanh chất lượng cao",
+          "description": "Thưởng thức âm nhạc với chất lượng âm thanh vượt trội. Bao gồm Hi-res bitrate."
+        }
+      },
+      "plans": {
+        "type": {
+          "individual": "Gói Individual",
+          "student": "Gói Student"
+        },
+        "basePolicy": {
+          "subscription": "Gia hạn hoặc thanh toán 1 lần",
+          "cancel": "Hủy bất cứ lúc nào",
+          "vat": "Đã bao gồm VAT",
+          "student": {
+            "verify": "Cần xác minh sinh viên",
+            "oneTimePayment": "Thanh toán 1 lần"
+          }
+        },
+        "monthly": {
+          "individual": {
+            "title": "Gói hàng tháng",
+            "price": "{price}/tháng",
+            "description": "Tận hưởng gói Individual Premium với thanh toán hàng tháng. Hủy bất cứ lúc nào."
+          },
+          "student": {
+            "title": "Student 1 tháng",
+            "price": "{price}/tháng",
+            "description": "Tận hưởng gói Student Premium với thanh toán 1 tháng. Hủy bất cứ lúc nào."
+          }
+        },
+        "quarterly": {
+          "individual": {
+            "title": "Gói 3 tháng",
+            "price": "{price}/tháng",
+            "description": "Tận hưởng gói Individual Premium với thanh toán 3 tháng. Tiết kiệm 10% với gói 3 tháng."
+          },
+          "student": {
+            "title": "Student 3 tháng",
+            "price": "{price}/tháng",
+            "description": "Tận hưởng gói Student Premium với thanh toán 3 tháng. Tiết kiệm 10% với gói 3 tháng."
+          }
+        },
+        "biannually": {
+          "individual": {
+            "title": "Gói 6 tháng",
+            "price": "{price}/tháng",
+            "description": "Tận hưởng gói Individual Premium với thanh toán 6 tháng. Tiết kiệm 15% với gói 6 tháng."
+          }
+        },
+        "annually": {
+          "individual": {
+            "title": "Gói hàng năm",
+            "price": "{price}/tháng",
+            "description": "Tận hưởng gói Individual Premium với thanh toán 1 năm. Tiết kiệm 20% với gói hàng năm."
+          }
+        },
+        "popular": "Phổ biến"
+      },
+      "subscribe": "Đăng ký",
+      "currentPlan": {
+        "title": "Gói hiện tại của bạn",
+        "none": "Bạn hiện không có gói Premium nào.",
+        "plan": "{plan} - Hết hạn vào {expiryDate}",
+        "renew": "Gia hạn ngay"
+      },
+      "restorePurchase": {
+        "button": "Khôi phục mua hàng",
+        "success": "Mua hàng đã được khôi phục thành công!",
+        "failure": "Không tìm thấy mua hàng để khôi phục."
+      },
+      "terms": "Bằng cách đăng ký, bạn đồng ý với {terms} và {privacy}.",
+      "termsLink": "Điều khoản dịch vụ",
+      "privacyLink": "Chính sách bảo mật",
+      "cancel": {
+        "title": "Hủy đăng ký Premium",
+        "description": "Bạn có chắc chắn muốn hủy đăng ký Premium không? Bạn sẽ mất quyền truy cập vào các tính năng Premium khi kết thúc chu kỳ thanh toán hiện tại.",
+        "no": "Không, giữ lại",
+        "yes": "Có, hủy đăng ký",
+        "success": "Đăng ký Premium của bạn đã bị hủy. Bạn sẽ mất quyền truy cập vào các tính năng Premium khi kết thúc chu kỳ thanh toán hiện tại.",
+        "failure": "Không thể hủy đăng ký vào lúc này. Vui lòng thử lại sau."
+      }
     }
   }
 }
