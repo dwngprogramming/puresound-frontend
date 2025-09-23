@@ -5,7 +5,7 @@ import BottomMusicController from "@/components/Listener/Common/BottomMusicContr
 import MobileOverlay from "@/components/Listener/Common/MobileOverlay";
 import LeftSidebar from "@/components/Listener/Common/LeftSidebar";
 import Header from "@/components/Listener/Common/Header";
-import InitialLoadListener from "@/components/Listener/Me/InitialLoadListener";
+import InitialLoadListener from "@/components/Listener/Common/ClientRenderLayout/InitialLoadListener";
 import PageLoader from "@/components/PageLoader";
 import Footer from "@/components/Listener/Common/Footer";
 
@@ -27,7 +27,7 @@ const ClientRenderLayout = ({children}: ClientRenderLayoutProps) => {
   return (
     <>
       {isLoading && <PageLoader/>}
-      <div className={`bg-primary-700 h-screen flex flex-col ${isLoading ? 'invisible' : 'visible'}`}>
+      <div className={`bg-primary-700 h-screen flex flex-col ${isLoading ? 'hidden' : 'block'}`}>
         <InitialLoadListener/>
         <Header/>
         <LeftSidebar/>
