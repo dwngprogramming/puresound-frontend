@@ -192,7 +192,7 @@ export const getAccentColor = (condition: WeatherCondition | undefined, isDay: b
       if (!isDay) return 'text-indigo-400'; // Clear night
       return 'text-yellow-400';
     case 'cloudy':
-      return 'text-gray-400';
+      return 'text-gray-200';
     case 'rainy':
       return 'text-blue-400';
     case 'snowy':

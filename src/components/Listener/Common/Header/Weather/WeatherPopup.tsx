@@ -5,6 +5,7 @@ import {Crown} from "lucide-react";
 import {Button} from "@heroui/react";
 import {WeatherResponse} from "@/models/weather/WeatherResponse";
 import {useUserInfo} from "@/hooks/user/useUserInfo";
+import {useRouter} from "next/navigation";
 
 interface WeatherPopupProps {
   isVisible: boolean;
@@ -54,6 +55,7 @@ const WeatherPopup: React.FC<WeatherPopupProps> = ({
     accentColor
   } = useWeatherStyle(currentWeather?.current.condition, currentWeather?.current.isDay ?? false);
   const {isPremium} = useUserInfo();
+  const router = useRouter();
 
   const handlePlaylistGenerate = () => {
     console.log('Generate playlist for weather:', currentWeather?.current.condition);
@@ -111,7 +113,7 @@ const WeatherPopup: React.FC<WeatherPopupProps> = ({
                   t('weather.error.oops')
                 }
               </h3>
-              <p className="text-gray-400 text-xs">
+              <p className="text-gray-200 text-xs">
                 {currentWeather ?
                   t('weather.playlist') :
                   t('weather.error.notFound')
@@ -133,7 +135,10 @@ const WeatherPopup: React.FC<WeatherPopupProps> = ({
           {/* Update to Premium button */}
           {currentWeather && !isPremium && (
             <div>
-              <Button className={`w-full bg-yellow-600 border border-yellow-600`}>
+              <Button
+                className={`w-full bg-yellow-600 border border-yellow-600`}
+                onPress={() => router.push("/premium")}
+              >
                 {t('freemium.upgrade')}
               </Button>
             </div>

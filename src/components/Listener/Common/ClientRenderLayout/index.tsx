@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, {useEffect, useState} from "react";
 import BottomMusicController from "@/components/Listener/Common/BottomMusicController";
@@ -7,6 +7,7 @@ import LeftSidebar from "@/components/Listener/Common/LeftSidebar";
 import Header from "@/components/Listener/Common/Header";
 import InitialLoadListener from "@/components/Listener/Me/InitialLoadListener";
 import PageLoader from "@/components/PageLoader";
+import Footer from "@/components/Listener/Common/Footer";
 
 interface ClientRenderLayoutProps {
   children: React.ReactNode;
@@ -33,9 +34,12 @@ const ClientRenderLayout = ({children}: ClientRenderLayoutProps) => {
         <MobileOverlay/>
 
         {/* Content wrapper */}
-        <div className="flex-1 flex mt-20 mb-20">
-          <main className="flex-1 ml-4 lg:ml-68 mr-2 p-4 lg:p-6 rounded-2xl bg-neutral-900/60 overflow-y-auto">
+        {/* flex-1 + h-0 => Tạo ra area content có thể scroll bên trong */}
+        <div className="flex-1 flex mt-20 mb-20 h-0">
+          <main className="flex-1 ml-4 lg:ml-68 mr-2 p-6 lg:p-8 rounded-2xl bg-neutral-900/60 overflow-y-auto">
             {children}
+
+            <Footer/>
           </main>
         </div>
 
