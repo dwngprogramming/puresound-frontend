@@ -29,9 +29,9 @@
         "title": "Oops - PureSound",
         "description": "Authentication failure"
       },
-      "subscription": {
-        "title": "Premium Subscription - PureSound",
-        "description": "Premium subscription page of PureSound - Pure Music Essence"
+      "premium": {
+        "title": "Explore Premium Subscription - PureSound",
+        "description": "Explore Premium Subscription in PureSound - Pure Music Essence"
       }
     }
   },
@@ -41,7 +41,8 @@
       "system": "System error",
       "network": "Network error",
       "server": "Network error or server not response"
-    }
+    },
+    "processing": "Processing..."
   },
   "Listener": {
     "Login": {
@@ -241,7 +242,122 @@
       "me": "Account",
       "profile": "Profile",
       "settings": "Settings",
-      "logout": "Logout"
+      "logout": "Logout",
+      "appDescription": "Enjoy authentic melodies without distractions – just the music and you.",
+      "link": {
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "support": "Support"
+      }
+    },
+    "Premium": {
+      "title": "PureSound Premium Subscription",
+      "description": "Experience the unlimited music with PureSound Premium. Choose the plan that suits you best.",
+      "benefits": {
+        "title": "Premium Benefits",
+        "description": "Enjoy a superior music experience with PureSound Premium. All benefits included in every plan.",
+        "adFree": {
+          "title": "Ad-free listening",
+          "description": "Enjoy uninterrupted music without ads."
+        },
+        "weatherPlaylist": {
+          "title": "Weather mood playlists",
+          "description": "Get personalized playlists based on your local weather."
+        },
+        "offline": {
+          "title": "Offline listening",
+          "description": "Download your favorite tracks and listen offline."
+        },
+        "highQuality": {
+          "title": "High-quality audio",
+          "description": "Experience superior sound quality. Contains Hi-res bitrate."
+        },
+        "exclusiveInterface": {
+          "title": "Exclusive interface themes",
+          "description": "Access exclusive and special themes for Premium listener."
+        },
+        "earlyAccess": {
+          "title": "Early access to new contents",
+          "description": "Be the first to try out demo/release of your favorite artist."
+        }
+      },
+      "plans": {
+        "type": {
+          "individual": "Individual Plan",
+          "student": "Student Plan"
+        },
+        "basePolicy": {
+          "subscription": "Subscription or One-time payment",
+          "cancel": "Cancel anytime",
+          "vat": "Prices include VAT",
+          "student": {
+            "verify": "Student verification required",
+            "oneTimePayment": "One-time payment"
+          }
+        },
+        "monthly": {
+          "individual": {
+            "title": "Monthly Plan",
+            "price": "{price}/month",
+            "description": "Enjoy the Individual Premium plan with monthly billing. Cancel anytime."
+          },
+          "student": {
+            "title": "Monthly Plan",
+            "price": "{price}/month",
+            "description": "Enjoy the Student Premium plan with 1 month billing. Cancel anytime."
+          }
+        },
+        "quarterly": {
+          "individual": {
+            "title": "3 Months Plan",
+            "price": "{price}/month",
+            "description": "Enjoy the Individual Premium plan with 3 months billing. Save 10% with 3 months billing."
+          },
+          "student": {
+            "title": "Monthly Plan",
+            "price": "{price}/month",
+            "description": "Enjoy the Student Premium plan with 3 months billing. Save 10% with 3 months billing."
+          }
+        },
+        "biannually": {
+          "individual": {
+            "title": "6 Months Plan",
+            "price": "{price}/month",
+            "description": "Enjoy the Individual Premium plan with 3 months billing. Save 15% with 6 months billing."
+          }
+        },
+        "annually": {
+          "individual": {
+            "title": "Annually Plan",
+            "price": "{price}/month",
+            "description": "Enjoy the Individual Premium plan with 3 months billing. Save 20% with annual billing."
+          }
+        },
+        "popular": "Popular"
+      },
+      "subscribe": "Choose Plan",
+      "currentPlan": {
+        "title": "Your Current Plan",
+        "planType": "Plan: {plan}",
+        "renewalDate": "Renewal Date: {date}",
+        "manageSubscription": "Manage Subscription"
+      },
+      "restorePurchase": {
+        "button": "Restore Purchase",
+        "success": "Purchase restored successfully",
+        "failure": "No previous purchase found"
+      },
+      "terms": "By subscribing, you agree to our {terms} and {privacy}.",
+      "termsLink": "Terms of Service",
+      "privacyLink": "Privacy Policy",
+      "cancel": {
+        "title": "Cancel Subscription",
+        "description": "Are you sure you want to cancel your subscription? You will lose access to premium features at the end of your billing cycle.",
+        "confirm": "Yes, Cancel",
+        "dismiss": "No, Keep it",
+        "success": "Your subscription has been cancelled. You will retain access to premium features until the end of your billing cycle.",
+        "failure": "Failed to cancel subscription. Please try again later."
+      }
     }
   }
 }
