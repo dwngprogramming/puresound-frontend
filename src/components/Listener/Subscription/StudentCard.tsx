@@ -18,7 +18,7 @@ const StudentCard = ({plan}: { plan: PlanResponse }) => {
           <PuresoundLogo size={36}/>
           <p className="text-[14px] font-bold text-premium-500">Premium</p>
         </div>
-        <p className="font-bold text-2xl">{t('plans.monthly.student.title')}</p>
+        <p className="font-bold text-2xl">{t(`plans.${formattedBillingCycle}.student.title`)}</p>
         <p className="text-zinc-400 text-sm">{t(`plans.${formattedBillingCycle}.student.description`)}</p>
       </CardHeader>
       <CardBody className="flex flex-col gap-2">
