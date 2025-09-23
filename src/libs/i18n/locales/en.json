@@ -243,7 +243,12 @@
       "profile": "Profile",
       "settings": "Settings",
       "logout": "Logout",
-      "appDescription": "Enjoy authentic melodies without distractions – just the music and you."
+      "appDescription": "Enjoy authentic melodies without distractions – just the music and you.",
+      "link": {
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "support": "Support"
+      }
     },
     "Premium": {
       "title": "PureSound Premium Subscription",
@@ -266,6 +271,14 @@
         "highQuality": {
           "title": "High-quality audio",
           "description": "Experience superior sound quality. Contains Hi-res bitrate."
+        },
+        "exclusiveInterface": {
+          "title": "Exclusive interface themes",
+          "description": "Access exclusive and special themes for Premium listener."
+        },
+        "earlyAccess": {
+          "title": "Early access to new contents",
+          "description": "Be the first to try out demo/release of your favorite artist."
         }
       },
       "plans": {

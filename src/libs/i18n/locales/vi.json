@@ -248,8 +248,9 @@
       "logout": "Đăng xuất",
       "appDescription": "Thưởng thức giai điệu chân thực, không tạp âm, chỉ còn âm nhạc và bạn.",
       "link": {
-        "quickLinks": "Liên kết nhanh",
-        "support": "Hỗ trợ"
+        "privacy": "Chính sách bảo mật",
+        "terms": "Điều khoản dịch vụ",
+        "support": "Liên hệ hỗ trợ"
       }
     },
     "Premium": {
@@ -273,6 +274,14 @@
         "highQuality": {
           "title": "Âm thanh chất lượng cao",
           "description": "Thưởng thức âm nhạc với chất lượng âm thanh vượt trội. Bao gồm Hi-res bitrate."
+        },
+        "exclusiveInterface": {
+          "title": "Giao diện độc quyền",
+          "description": "Truy cập giao diện và chủ đề đặc biệt chỉ dành cho người dùng Premium."
+        },
+        "earlyAccess": {
+          "title": "Truy cập nội dung sớm",
+          "description": "Truy cập sớm vào các demo/release của nghệ sĩ bạn yêu thích."
         }
       },
       "plans": {

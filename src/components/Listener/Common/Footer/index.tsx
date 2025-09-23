@@ -30,8 +30,9 @@ const Footer = () => {
         </div>
         {/* Legal Links */}
         <div className="flex flex-wrap justify-center space-x-6 text-sm text-gray-400">
-          <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-gray-300 transition-colors">Terms of Service</a>
+          <a href="#" className="hover:text-gray-300 transition-colors">{t('link.privacy')}</a>
+          <a href="#" className="hover:text-gray-300 transition-colors">{t('link.terms')}</a>
+          <a href="#" className="hover:text-gray-300 transition-colors">{t('link.support')}</a>
         </div>
       </div>
 
