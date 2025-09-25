@@ -4,7 +4,6 @@ import StudentCard from "@/components/Listener/Subscription/StudentCard";
 
 const StudentSubscription = ({plans, isLoading}: { plans: PlanResponse[], isLoading: boolean }) => {
   const t = useTranslations("Listener.Premium");
-  console.log(plans, isLoading);
 
   return (
     <div className="flex flex-col gap-6">

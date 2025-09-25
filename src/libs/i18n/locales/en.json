@@ -358,6 +358,16 @@
         "success": "Your subscription has been cancelled. You will retain access to premium features until the end of your billing cycle.",
         "failure": "Failed to cancel subscription. Please try again later."
       }
+    },
+    "MyLibrary": {
+      "title": "My Library",
+      "playlist": "Playlists",
+      "album": "Albums",
+      "artist": "Artists",
+      "liked": "Liked Songs",
+      "local": "Local Files",
+      "noResult": "No {type} found in your library.",
+      "empty": "You haven't added any {type} to your library yet. Start exploring and add your favorite {type} here!"
     }
   }
 }

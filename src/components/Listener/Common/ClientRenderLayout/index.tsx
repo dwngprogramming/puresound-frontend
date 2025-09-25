@@ -3,11 +3,11 @@
 import React, {useEffect, useState} from "react";
 import BottomMusicController from "@/components/Listener/Common/BottomMusicController";
 import MobileOverlay from "@/components/Listener/Common/MobileOverlay";
-import LeftSidebar from "@/components/Listener/Common/LeftSidebar";
 import Header from "@/components/Listener/Common/Header";
 import InitialLoadListener from "@/components/Listener/Common/ClientRenderLayout/InitialLoadListener";
 import PageLoader from "@/components/PageLoader";
 import Footer from "@/components/Listener/Common/Footer";
+import MyLibrary from "@/components/Listener/Common/Library";
 
 interface ClientRenderLayoutProps {
   children: React.ReactNode;
@@ -30,13 +30,13 @@ const ClientRenderLayout = ({children}: ClientRenderLayoutProps) => {
       <div className={`bg-primary-700 h-screen flex flex-col ${isLoading ? 'hidden' : 'block'}`}>
         <InitialLoadListener/>
         <Header/>
-        <LeftSidebar/>
+        <MyLibrary/>
         <MobileOverlay/>
 
         {/* Content wrapper */}
         {/* flex-1 + h-0 => Tạo ra area content có thể scroll bên trong */}
         <div className="flex-1 flex mt-20 mb-20 h-0">
-          <main className="flex-1 ml-4 lg:ml-68 mr-2 p-6 lg:p-8 rounded-2xl bg-neutral-900/60 overflow-y-auto">
+          <main className="flex-1 ml-4 lg:ml-80 mr-2 px-4 py-2 lg:px-6 lg:py-4 rounded-2xl bg-neutral-900/60 overflow-y-auto vertical-scrollbar">
             {children}
 
             <Footer/>
