@@ -363,14 +363,37 @@
       }
     },
     "MyLibrary": {
-      "title": "Thư viện của tôi",
+      "title": "Thư viện",
       "playlist": "Playlist",
       "album": "Album",
       "artist": "Nghệ sĩ",
       "liked": "Bài hát yêu thích",
       "local": "Nhạc trên máy",
       "noResult": "Không tìm thấy {type} nào",
-      "empty": "Không tìm thấy {type} nào trong thư viện của bạn. Hãy khám phá và thêm {type} yêu thích vào thư viện của bạn!"
+      "empty": "Không tìm thấy {type} nào trong thư viện của bạn. Hãy khám phá và thêm {type} yêu thích vào thư viện của bạn!",
+      "create": {
+        "title": "Tạo",
+        "playlist": {
+          "label": "Tạo playlist mới",
+          "description": "Tạo danh sách phát bao gồm các bài hát yêu thích của bạn."
+        }
+      },
+      "sortOptions": {
+        "sortBy": {
+          "label": "Sắp xếp theo",
+          "recentlyPlayed": "Mới phát gần đây",
+          "recentlyAdded": "Mới thêm gần đây",
+          "alphabetical": "Thứ tự chữ cái",
+          "creator": "Người sáng tạo"
+        },
+        "viewAs": {
+          "label": "Xem dưới dạng",
+          "compactList": "Danh sách compact",
+          "defaultList": "Danh sách mặc định",
+          "compactGrid": "Lưới compact",
+          "defaultGrid": "Lưới mặc định"
+        }
+      }
     }
   }
 }

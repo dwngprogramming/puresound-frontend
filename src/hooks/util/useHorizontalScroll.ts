@@ -1,7 +1,7 @@
 import {useRef, useEffect, useState, RefObject} from 'react';
 
 interface UseHorizontalScrollReturn {
-  containerRef: RefObject<HTMLDivElement>;
+  containerRef: RefObject<HTMLDivElement | null>;
   showLeftButton: boolean;
   showRightButton: boolean;
   scrollToStart: () => void;

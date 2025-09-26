@@ -367,7 +367,30 @@
       "liked": "Liked Songs",
       "local": "Local Files",
       "noResult": "No {type} found in your library.",
-      "empty": "You haven't added any {type} to your library yet. Start exploring and add your favorite {type} here!"
+      "empty": "You haven't added any {type} to your library yet. Start exploring and add your favorite {type} here!",
+      "create": {
+        "title": "Create",
+        "playlist": {
+          "label": "Create Playlist",
+          "description": "Create a new playlist to organize your favorite songs."
+        }
+      },
+      "sortOptions": {
+        "sortBy": {
+          "label": "Sort by",
+          "recentlyPlayed": "Recently played",
+          "recentlyAdded": "Recently added",
+          "alphabetical": "Alphabetical",
+          "creator": "Creator"
+        },
+        "viewAs": {
+          "label": "View as",
+          "compactList": "Compact list",
+          "defaultList": "Default list",
+          "compactGrid": "Compact grid",
+          "defaultGrid": "Default grid"
+        }
+      }
     }
   }
 }
