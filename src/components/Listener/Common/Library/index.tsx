@@ -4,7 +4,18 @@ import {useTranslations} from "next-intl";
 import LibraryFilter from "@/components/Listener/Common/Library/LibraryFilter";
 import React, {useState} from "react";
 import {Button, Divider, Tooltip} from "@heroui/react";
-import {AlignJustify, ArrowDown, ArrowUp, Grip, LayoutGrid, List, ListCheck, Plus, Search} from "lucide-react";
+import {
+  AlignJustify,
+  ArrowDown,
+  ArrowUp,
+  Grip,
+  LayoutGrid,
+  List,
+  ListCheck,
+  ListMusic,
+  Plus,
+  Search
+} from "lucide-react";
 import useClickOutside from "@/hooks/util/useClickOutside";
 
 interface SortProps {
@@ -24,6 +35,7 @@ const MyLibrary = () => {
     viewAs: 'defaultList'
   });
   const sortDropdownRef = useClickOutside(() => setIsSorting(false), isSorting);
+  const createDropdownRef = useClickOutside(() => setIsCreating(false), isCreating);
 
   const sortByOptions = [
     {key: 'recentlyPlayed', value: t('sortOptions.sortBy.recentlyPlayed')},
@@ -82,17 +94,33 @@ const MyLibrary = () => {
                             transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
       <div className="flex items-center justify-between">
         <p className="font-bold text-lg">{t('title')}</p>
-        <Button
-          size="sm"
-          className="rounded-full font-bold text-[14px] py-1 px-5 bg-blue-500/70 hover:bg-blue-500"
-          onPress={handleCreate}
-        >
-          <Plus
-            size={16}
-            className={`transition-transform duration-300 ${isCreating ? 'rotate-45' : 'rotate-0'}`}
-          />
-          {t('create.title')}
-        </Button>
+        <div className="relative">
+          <Button
+            size="sm"
+            className="relative rounded-full font-bold text-[14px] py-1 px-5 bg-blue-500/70 hover:bg-blue-500"
+            onPress={handleCreate}
+          >
+            <Plus
+              size={16}
+              className={`transition-transform duration-300 ${isCreating ? 'rotate-45' : 'rotate-0'}`}
+            />
+            {t('create.title')}
+          </Button>
+
+          <div
+            ref={createDropdownRef}
+            className={`absolute flex flex-col w-max p-1 top-9 left-0 z-50 bg-primary-600 rounded-md transition ease-in-out duration-300
+             ${isCreating ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+            <div
+              className="flex items-center gap-4 px-3 py-2 cursor-pointer hover:bg-blue-400/40 rounded-md transition ease-in-out duration-300">
+              <ListMusic/>
+              <div className="flex flex-col mr-4">
+                <p className="font-bold">{t('create.playlist.label')}</p>
+                <p className="text-neutral-400 text-sm">{t('create.playlist.description')}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <LibraryFilter
