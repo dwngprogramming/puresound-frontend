@@ -35,7 +35,7 @@ const ClientRenderLayout = ({children}: ClientRenderLayoutProps) => {
 
         {/* Content wrapper */}
         {/* flex-1 + h-0 => Tạo ra area content có thể scroll bên trong */}
-        <div className="flex-1 flex mt-20 mb-20 h-0">
+        <div className="flex-1 flex mt-20 mb-22 h-0">
           <main className="flex-1 ml-4 lg:ml-80 mr-2 px-4 py-3 lg:px-6 lg:py-5 rounded-2xl bg-neutral-900/60 overflow-y-auto vertical-scrollbar">
             {children}
 
