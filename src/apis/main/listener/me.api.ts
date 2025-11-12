@@ -1,7 +1,7 @@
 import {AxiosRequestConfig} from "axios";
 import verifyApi from "@/libs/axios/verifyApi";
 import {ApiResponse} from "@/models/ApiResponse";
-import {BaseSubscription} from "@/models/listener/BaseSubscription";
+import {BaseSubscription} from "@/models/listener/subscription/BaseSubscription";
 
 const meApi = {
   getMe: (options?: AxiosRequestConfig<never>) =>

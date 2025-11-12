@@ -1,5 +1,5 @@
 import {useTranslations} from "next-intl";
-import {PlanResponse} from "@/models/listener/PlanResponse";
+import {PlanResponse} from "@/models/listener/subscription/PlanResponse";
 import StudentCard from "@/components/Listener/Subscription/StudentCard";
 
 const StudentSubscription = ({plans, isLoading}: { plans: PlanResponse[], isLoading: boolean }) => {

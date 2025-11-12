@@ -1,6 +1,6 @@
 import {AxiosRequestConfig} from "axios";
 import {ApiResponse} from "@/models/ApiResponse";
-import {PlanResponse} from "@/models/listener/PlanResponse";
+import {PlanResponse} from "@/models/listener/subscription/PlanResponse";
 import publicApi from "@/libs/axios/publicApi";
 
 const listenerPublicApi = {
