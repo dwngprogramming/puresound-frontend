@@ -1,10 +1,10 @@
-import publicApi from "@/libs/axios/publicApi";
+import publicApiClient from "@/libs/axios/publicApiClient";
 import {WeatherResponse} from "@/models/weather/WeatherResponse";
 import {ApiResponse} from "@/models/ApiResponse";
 
 const currentWeatherApi = {
   getCurrentWeather: (latitude: number, longitude: number) =>
-    publicApi.get<ApiResponse<WeatherResponse>>('/v1/weather/current', {
+    publicApiClient.get<ApiResponse<WeatherResponse>>('/v1/weather/current', {
       params: {latitude: latitude, longitude: longitude}
     }),
 }

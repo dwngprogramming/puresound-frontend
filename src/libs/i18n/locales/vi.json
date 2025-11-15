@@ -395,5 +395,13 @@
         }
       }
     }
+  },
+  "Streaming": {
+    "Success": {
+
+    },
+    "Error": {
+      "system": "Đã xảy ra lỗi hệ thống trong quá trình phát nhạc"
+    }
   }
 }

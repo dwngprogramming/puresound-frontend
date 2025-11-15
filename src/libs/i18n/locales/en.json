@@ -392,5 +392,13 @@
         }
       }
     }
+  },
+  "Streaming": {
+    "Success": {
+
+    },
+    "Error": {
+      "system": "Error occurred while streaming."
+    }
   }
 }
