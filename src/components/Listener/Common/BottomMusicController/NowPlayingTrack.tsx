@@ -11,7 +11,7 @@ const NowPlayingTrack = ({saved, handleSaved}: {saved: boolean, handleSaved: () 
         isBlurred={isPremium}
         alt="Track Artwork"
         src="https://i.scdn.co/image/ab67616d00001e02e9ba8c0c593400e0ed676089"
-        width={54}
+        width={60}
         className="rounded-lg"
       />
       <div>

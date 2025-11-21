@@ -42,7 +42,8 @@
       "network": "Lỗi kết nối mạng",
       "server": "Lỗi mạng hoặc máy chủ không phản hồi"
     },
-    "processing": "Đang xử lý..."
+    "processing": "Đang xử lý...",
+    "comingSoon": "Sắp ra mắt"
   },
   "Listener": {
     "Login": {
@@ -398,10 +399,32 @@
   },
   "Streaming": {
     "Success": {
-
     },
     "Error": {
       "system": "Đã xảy ra lỗi hệ thống trong quá trình phát nhạc"
+    }
+  },
+  "Components": {
+    "MusicPlayer": {
+      "play": "Phát nhạc",
+      "pause": "Tạm dừng",
+      "next": "Tiếp theo",
+      "previous": "Trước đó",
+      "shuffleOn": "Bật trộn bài",
+      "shuffleOff": "Tắt trộn bài",
+      "repeatAll": "Lặp lại toàn bộ",
+      "repeatOne": "Lặp lại một bài",
+      "repeatOff": "Tắt lặp lại"
+    },
+    "MusicOption": {
+      "nowPlayingView": "Hiện tại đang phát",
+      "lyrics": "Lời bài hát",
+      "queue": "Hàng đợi",
+      "connect": "Kết nối với thiết bị",
+      "mute": "Tắt âm",
+      "unmute": "Bật âm",
+      "fullscreen": "Toàn màn hình",
+      "exitFullscreen": "Thoát toàn màn hình"
     }
   }
 }

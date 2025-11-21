@@ -5,30 +5,17 @@ import {useAppDispatch} from "@/libs/redux/hooks";
 import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
 import {useTranslations} from "next-intl";
 import streamApi from "@/apis/main/stream/stream.api";
-
-export interface PlayerControl {
-  streamUrl: string
-  trackId: string
-  duration: number
-  current: number
-  bitrate: number
-  loopMode: LoopMode
-  shuffle: boolean
-  playing: boolean
-  volume: number
-}
+import {PlayerControl} from "@/libs/redux/features/player_control/playerControlsSlice";
+import {CustomHlsConfig, HlsTokenRefreshLoader} from "@/components/Utility/HlsTokenRefreshLoader";
 
 export const usePlayerControls = () => {
   const t = useTranslations("Streaming.Error");
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const hlsRef = useRef<Hls | null>(null);
   const dispatch = useAppDispatch();
   const [saved, setSaved] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
 
   const [playerControl, setPlayerControl] = useState<PlayerControl>({
-    streamUrl: "https://stream.puresound.space/192/01K8NFN35729A5PHCQ7FNYG8BH/m3u8?token_=exp=1763141470~hmac=bdc23183e9127b66ed20fbbc4927da4e195204a83aeef287c358b4a8a6912f69",
-    trackId: "01K8NFN35729A5PHCQ7FNYG8BH",
+    trackId: null,
     duration: 0,
     current: 0,
     bitrate: 192,
@@ -37,6 +24,12 @@ export const usePlayerControls = () => {
     playing: false,
     volume: 15
   });
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const hlsRef = useRef<Hls | null>(null);
+  const streamUrlRef = useRef<string | null>(null);
+  const isRefreshingRef = useRef(false);
+  const tokenParamRef = useRef<string | null>(null);
 
   // Sync Volume state -> Audio Element
   useEffect(() => {
@@ -56,24 +49,32 @@ export const usePlayerControls = () => {
     bitrateRef.current = playerControl.bitrate;
   }, [playerControl.trackId, playerControl.bitrate]);
 
-  const handleTokenExpired = useCallback(async () => {
+  const handleNewTokenWhenExpired = useCallback(async () => {
+    if (isRefreshingRef.current) return null; // Avoid multiple refresh
+    isRefreshingRef.current = true;
+
     const currentTrackId = trackIdRef.current;
     const currentBitrate = bitrateRef.current;
 
-    if (!currentTrackId) return;
+    if (!currentTrackId) return null;
 
     try {
       const response = await streamApi.streamTrack(currentBitrate, currentTrackId);
-      if (response?.data?.url) {
-        setPlayerControl(prev => ({...prev, streamUrl: response.data.url}));
+      if (response?.data && streamUrlRef.current) {
+        streamUrlRef.current = response.data.streamUrl;
+        tokenParamRef.current = response.data.tokenParam;
+        return response.data.tokenParam;
       } else {
         dispatch(showErrorNotification(t("system")));
       }
     } catch (error) {
       console.error("Error refresh stream url:", error);
       dispatch(showErrorNotification(t("system")));
+    } finally {
+      isRefreshingRef.current = false;
     }
-  }, [dispatch, t]); // Bỏ dependency playerControl để tránh re-create function
+    return null;
+  }, [dispatch, t]);
 
   // Event Handlers
   const handleLoadMetadata = useCallback(() => {
@@ -116,20 +117,25 @@ export const usePlayerControls = () => {
 
   // Setup HLS
   useEffect(() => {
-    const {streamUrl} = playerControl;
-    if (!streamUrl || !audioRef.current) return;
+    const {trackId} = playerControl;
+    if (!trackId || !streamUrlRef.current || !audioRef.current) return;
 
+    const streamUrl = streamUrlRef.current;
     const audio = audioRef.current;
-    let tokenQueryString = "";
-    try {
-      tokenQueryString = new URL(streamUrl).search;
-    } catch (e) {
-    }
 
-    const hlsConfig = {
+    const hlsConfig: Partial<CustomHlsConfig> = {
+      maxBufferLength: 30,
+
+      fLoader: HlsTokenRefreshLoader as any,    // For .ts files
+      pLoader: HlsTokenRefreshLoader as any,
+
+      handleNewTokenWhenExpired: handleNewTokenWhenExpired,
+
+      // Đây là setup cho các segment .ts và m3u8 lần đầu (luôn đảm bảo rằng các request đều có token mới nhất)
       xhrSetup: (xhr: XMLHttpRequest, url: string) => {
-        if (url.includes('.ts')) {
-          xhr.open('GET', url.split('?')[0] + tokenQueryString, true);
+        if (url.includes('.ts') || url.includes('m3u8')) {
+          const baseUrl = url.split('?')[0];
+          xhr.open('GET', `${baseUrl}?${tokenParamRef.current}`, true);
         }
       }
     };
@@ -138,35 +144,61 @@ export const usePlayerControls = () => {
 
     const initHls = () => {
       if (Hls.isSupported()) {
+        if (hlsRef.current) {
+          hlsRef.current.destroy();
+        }
+
         hls = new Hls(hlsConfig);
         hlsRef.current = hls;
+
         hls.loadSource(streamUrl);
         hls.attachMedia(audio);
+
+        hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
+          // data.details.totalduration chứa tổng thời gian chính xác từ file m3u8
+          const durationFromManifest = data.details.totalduration;
+
+          setPlayerControl(prev => {
+            // Chỉ update nếu duration khác giá trị cũ để tránh render thừa
+            if (prev.duration !== durationFromManifest) {
+              return {...prev, duration: durationFromManifest};
+            }
+            return prev;
+          });
+        });
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           // Resume logic: Chỉ resume nếu currentTimeRef > 0 (tức là refresh token/link)
           // Nếu là bài mới (loadTrack set current=0) thì nó sẽ chạy từ 0
           if (currentTimeRef.current > 0.5) {
             audio.currentTime = currentTimeRef.current;
+            audio.play().catch(e => console.warn("Autoplay blocked", e));
           }
-          audio.play().catch(e => console.warn("Autoplay blocked", e));
         });
 
-        hls.on(Hls.Events.ERROR, (event, data) => {
-          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-            // Check 401/403 logic
-            if (data.response?.code === 401 || data.response?.code === 403) {
-              // Catch token expired and refresh URL
-              handleTokenExpired();
-            }
-            if (data.fatal) {
-              hls.startLoad();
+        hls.on(Hls.Events.ERROR, async (event, data) => {
+          if (data.fatal) {
+            console.error("HLS fatal error:", data);
+            switch (data.type) {
+              case Hls.ErrorTypes.NETWORK_ERROR:
+                const httpCode = data.response?.code;
+                // Nếu Loader (đã setup trong HlsConfig)s đã bó tay với 401/403 hoặc file không tồn tại (404)
+                if (httpCode === 401 || httpCode === 403 || httpCode === 404) {
+                  hls.destroy();
+                  dispatch(showErrorNotification(t("system")));
+                  return;
+                }
+                break;
+              case Hls.ErrorTypes.MEDIA_ERROR:
+                console.log("Fatal media error encountered, trying to recover...");
+                hls.recoverMediaError();
+                break;
+              default:
+                hls.destroy();
+                break;
             }
           }
         });
-      } else if (audio.canPlayType("application/vnd.apple.mpegurl")) {
-        audio.src = streamUrl;
-        audio.play();
       }
     };
 
@@ -175,8 +207,7 @@ export const usePlayerControls = () => {
     return () => {
       if (hlsRef.current) hlsRef.current.destroy();
     }
-  }, [playerControl.streamUrl, handleTokenExpired]);
-
+  }, [playerControl.trackId, handleNewTokenWhenExpired]);
 
   // Setup Event Listeners
   useEffect(() => {
@@ -251,23 +282,26 @@ export const usePlayerControls = () => {
   }, []);
 
   const loadTrack = useCallback(async (track: { trackId: string, bitrate: number }) => {
-    setPlayerControl(prev => ({
-      ...prev,
-      trackId: track.trackId,
-      bitrate: track.bitrate,
-      current: 0, // Important: Reset current = 0 to HLS Effect know it's a new track
-      duration: 0,
-    }));
+    try {
+      const response = await streamApi.streamTrack(track.bitrate, track.trackId);
 
-    const response = await streamApi.streamTrack(track.bitrate, track.trackId);
-    if (response?.data?.url) {
-      setPlayerControl(prev => ({
-        ...prev,
-        streamUrl: response.data.url,
-        playing: true
-      }));
+      if (response?.data) {
+        streamUrlRef.current = "https://stream.puresound.space/192/01K8NFBYSAR65S5X2C4XT31J1N/m3u8?token_=exp=1763716002~hmac=2eed7601e7014eacd5859d645dcc0ac2d56a8541f492713cf66c194d9765a041";
+        tokenParamRef.current = response.data.tokenParam;
+
+        setPlayerControl(prev => ({
+          ...prev,
+          trackId: track.trackId,
+          bitrate: track.bitrate,
+          current: 0,
+          duration: 0,
+        }));
+      }
+    } catch (error) {
+      console.error("Load track failed", error);
+      dispatch(showErrorNotification(t("system")));
     }
-  }, []);
+  }, [dispatch, t]);
 
   return {
     playerControl,

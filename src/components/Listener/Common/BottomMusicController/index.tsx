@@ -4,6 +4,7 @@ import NowPlayingTrack from "@/components/Listener/Common/BottomMusicController/
 import PlayerControls from "@/components/Listener/Common/BottomMusicController/PlayerControls";
 import PlayerOptions from "@/components/Listener/Common/BottomMusicController/PlayerOptions";
 import {usePlayerControls} from "@/hooks/common/usePlayerControls";
+import {useEffect} from "react";
 
 const BottomMusicController = () => {
   const {
@@ -13,8 +14,15 @@ const BottomMusicController = () => {
     handleSaved,
     handleLoop,
     handleShuffle,
-    handlePlayTrack
+    handlePlayTrack,
+    handleSeekTrack,
+    handleSeekComplete,
+    loadTrack
   } = usePlayerControls();
+
+  useEffect(() => {
+    loadTrack({trackId: '01K8NFBYSAR65S5X2C4XT31J1N', bitrate: 192});
+  }, []);
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-22 bg-primary-700 z-50 flex items-center justify-between px-4">
@@ -28,6 +36,8 @@ const BottomMusicController = () => {
         handleLoopMode={handleLoop}
         handleShuffle={handleShuffle}
         handlePlayTrack={handlePlayTrack}
+        handleSeekTrack={handleSeekTrack}
+        handleSeekComplete={handleSeekComplete}
       />
       <PlayerOptions/>
     </div>

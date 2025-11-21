@@ -2,12 +2,14 @@ import {configureStore} from "@reduxjs/toolkit";
 import authReducer from "@/libs/redux/features/auth/authSlice";
 import notificationReducer from "@/libs/redux/features/notification/notificationSlice";
 import subscriptionReducer from "@/libs/redux/features/subscription/subscriptionSlice";
+import playerControlsReducer from "@/libs/redux/features/player_control/playerControlsSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     notification: notificationReducer,
-    subscription: subscriptionReducer
+    subscription: subscriptionReducer,
+    playerControls: playerControlsReducer,
   },
 });
 

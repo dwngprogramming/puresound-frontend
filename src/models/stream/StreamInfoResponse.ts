@@ -1,4 +1,6 @@
 export interface StreamInfoResponse {
-  url: string
+  baseUrl: string
+  streamUrl: string,
+  tokenParam: string
   exp: number
 }
