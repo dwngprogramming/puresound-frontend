@@ -17,6 +17,7 @@ const BottomMusicController = () => {
     handlePlayTrack,
     handleSeekTrack,
     handleSeekComplete,
+    handleNextTrack,
     loadTrack
   } = usePlayerControls();
 
@@ -38,6 +39,7 @@ const BottomMusicController = () => {
         handlePlayTrack={handlePlayTrack}
         handleSeekTrack={handleSeekTrack}
         handleSeekComplete={handleSeekComplete}
+        handleNextTrack={handleNextTrack}
       />
       <PlayerOptions/>
     </div>

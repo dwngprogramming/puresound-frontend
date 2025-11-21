@@ -63,6 +63,8 @@ streamInstance.interceptors.response.use(
         return streamInstance(originalRequest);
       } catch (err) {
 
+      } finally {
+        isRefreshing = false;
       }
     }
   }

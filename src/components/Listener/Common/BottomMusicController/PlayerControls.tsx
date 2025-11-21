@@ -14,6 +14,7 @@ interface PlayerControlsProps {
   handlePlayTrack: () => void
   handleSeekTrack: (value: number) => void,
   handleSeekComplete: (value: number) => void
+  handleNextTrack: () => void
 }
 
 const PlayerControls = ({
@@ -22,7 +23,8 @@ const PlayerControls = ({
                           handleShuffle,
                           handlePlayTrack,
                           handleSeekTrack,
-                          handleSeekComplete
+                          handleSeekComplete,
+                          handleNextTrack
                         }: PlayerControlsProps) => {
   const tPlayer = useTranslations("Components.MusicPlayer");
 
@@ -114,7 +116,10 @@ const PlayerControls = ({
           closeDelay={0}
           placement="top"
         >
-          <div className="select-none">
+          <div
+            className="select-none"
+            onClick={handleNextTrack}
+          >
             <FontAwesomeIcon
               size="lg"
               icon={faForwardStep}

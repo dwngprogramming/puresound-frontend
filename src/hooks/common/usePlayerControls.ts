@@ -172,8 +172,8 @@ export const usePlayerControls = () => {
           // Nếu là bài mới (loadTrack set current=0) thì nó sẽ chạy từ 0
           if (currentTimeRef.current > 0.5) {
             audio.currentTime = currentTimeRef.current;
-            audio.play().catch(e => console.warn("Autoplay blocked", e));
           }
+          audio.play().catch(e => console.warn("Autoplay blocked", e));
         });
 
         hls.on(Hls.Events.ERROR, async (event, data) => {
@@ -286,7 +286,7 @@ export const usePlayerControls = () => {
       const response = await streamApi.streamTrack(track.bitrate, track.trackId);
 
       if (response?.data) {
-        streamUrlRef.current = "https://stream.puresound.space/192/01K8NFBYSAR65S5X2C4XT31J1N/m3u8?token_=exp=1763716002~hmac=2eed7601e7014eacd5859d645dcc0ac2d56a8541f492713cf66c194d9765a041";
+        streamUrlRef.current = response.data.streamUrl;
         tokenParamRef.current = response.data.tokenParam;
 
         setPlayerControl(prev => ({
@@ -303,6 +303,14 @@ export const usePlayerControls = () => {
     }
   }, [dispatch, t]);
 
+  const handleNextTrack = useCallback(async () => {
+    await loadTrack({trackId: '01K8NFTF9WWMVN4V38ZXE84K1Z', bitrate: 192});
+    setPlayerControl(prev => ({
+      ...prev,
+      playing: true
+    }));
+  }, [loadTrack]);
+
   return {
     playerControl,
     audioRef,
@@ -314,6 +322,7 @@ export const usePlayerControls = () => {
     handleSeekTrack,
     handleSeekComplete,
     handleVolume,
+    handleNextTrack,
     loadTrack
   };
 }
