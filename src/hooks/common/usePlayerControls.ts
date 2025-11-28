@@ -5,14 +5,25 @@ import {useAppDispatch} from "@/libs/redux/hooks";
 import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
 import {useTranslations} from "next-intl";
 import streamApi from "@/apis/main/stream/stream.api";
-import {PlayerControl} from "@/libs/redux/features/player_control/playerControlsSlice";
 import {CustomHlsConfig, HlsTokenRefreshLoader} from "@/components/Utility/HlsTokenRefreshLoader";
+
+export interface PlayerControl {
+  trackId: string | null
+  duration: number
+  current: number
+  bitrate: number
+  loopMode: LoopMode
+  shuffle: boolean
+  playing: boolean
+  volume: number
+}
 
 export const usePlayerControls = () => {
   const t = useTranslations("Streaming.Error");
   const dispatch = useAppDispatch();
   const [saved, setSaved] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
 
   const [playerControl, setPlayerControl] = useState<PlayerControl>({
     trackId: null,
@@ -280,6 +291,13 @@ export const usePlayerControls = () => {
     const vol = Math.min(Math.max(volume, 0), 100);
     setPlayerControl(prev => ({...prev, volume: vol}));
   }, []);
+  
+  const handleMuted = useCallback(() => {
+    setIsMuted(prev => !prev);
+    if (audioRef.current) {
+      audioRef.current.muted = isMuted;
+    }
+  }, []);
 
   const loadTrack = useCallback(async (track: { trackId: string, bitrate: number }) => {
     try {
@@ -288,7 +306,7 @@ export const usePlayerControls = () => {
       if (response?.data) {
         streamUrlRef.current = response.data.streamUrl;
         tokenParamRef.current = response.data.tokenParam;
-
+        
         setPlayerControl(prev => ({
           ...prev,
           trackId: track.trackId,
@@ -322,6 +340,7 @@ export const usePlayerControls = () => {
     handleSeekTrack,
     handleSeekComplete,
     handleVolume,
+    handleMuted,
     handleNextTrack,
     loadTrack
   };

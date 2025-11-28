@@ -25,7 +25,7 @@ const OptionButton = ({icon: Icon, label, isEnabled, size = 20}: ControlButtonPr
       closeDelay={0}
       placement="top"
     >
-      <div className={`group py-1 px-2.5 ${isEnabled ? "cursor-pointer" : "cursor-not-allowed"}`}>
+      <div className={`group py-1 px-2 ${isEnabled ? "cursor-pointer" : "cursor-not-allowed"}`}>
         <Icon
           size={size}
           className={`${

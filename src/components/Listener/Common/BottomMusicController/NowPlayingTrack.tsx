@@ -1,10 +1,12 @@
 import {Check, Plus} from "lucide-react";
 import {Image} from "@heroui/react";
 import {useUserInfo} from "@/hooks/user/useUserInfo";
+import {usePlayerContext} from "@/context/player-control-context";
 
-const NowPlayingTrack = ({saved, handleSaved}: {saved: boolean, handleSaved: () => void }) => {
+const NowPlayingTrack = () => {
   const {isPremium} = useUserInfo();
-
+  const {saved, handleSaved} = usePlayerContext();
+  
   return (
     <div className="flex items-center space-x-4">
       <Image
