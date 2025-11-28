@@ -7,11 +7,25 @@ interface ControlButtonProps {
   label: string;
   isEnabled: boolean;
   size?: number;
+  onClick?: () => void;
+  iconClassname?: string;
 }
 
-const OptionButton = ({icon: Icon, label, isEnabled, size = 20}: ControlButtonProps) => {
+const OptionButton = ({
+                        icon: Icon,
+                        label,
+                        isEnabled,
+                        size = 20,
+                        onClick,
+                      }: ControlButtonProps) => {
   const tGeneral = useTranslations("General");
-
+  
+  const handleClick = () => {
+    if (isEnabled && onClick) {
+      onClick();
+    }
+  };
+  
   return (
     <Tooltip
       classNames={{content: "bg-gray-800 text-xs"}}
@@ -33,6 +47,7 @@ const OptionButton = ({icon: Icon, label, isEnabled, size = 20}: ControlButtonPr
               ? "text-gray-400 group-hover:scale-105 group-hover:text-white transition ease-in-out duration-300"
               : "text-gray-500"
           }`}
+          onClick={handleClick}
         />
       </div>
     </Tooltip>
