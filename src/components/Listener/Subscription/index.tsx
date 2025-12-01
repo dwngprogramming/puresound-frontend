@@ -8,7 +8,7 @@ import {useQuery} from "@tanstack/react-query";
 import listenerPublicApi from "@/apis/main/listener/listenerPublic.api";
 import {useAppSelector} from "@/libs/redux/hooks";
 import {useEffect, useState} from "react";
-import {PlanResponse} from "@/models/listener/PlanResponse";
+import {PlanResponse} from "@/models/listener/subscription/PlanResponse";
 import {SubscriptionType} from "@/const/subscription/SubscriptionType";
 
 const Subscription = () => {

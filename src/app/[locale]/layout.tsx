@@ -11,6 +11,7 @@ import {ReduxProvider} from "@/context/redux-provider";
 import NavigationProvider from "@/context/navigation-provider";
 import NotificationMessageContainer from "@/components/Notification/NotificationMessageContainer";
 import I18nProvider from "@/context/i18n-provider";
+import StreamSessionProvider from "@/context/stream-session-provider";
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -40,10 +41,11 @@ export default async function LocaleLayout({
     >
     <ReduxProvider>
       <NextIntlClientProvider messages={messages}>
-        <I18nProvider />
+        <I18nProvider/>
         <ReactQueryProvider>
           <HeroUILibProviders>
             <NavigationProvider/>
+            <StreamSessionProvider/>
             {children}
             <NotificationMessageContainer/>
           </HeroUILibProviders>

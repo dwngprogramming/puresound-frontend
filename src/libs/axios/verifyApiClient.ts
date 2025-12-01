@@ -9,7 +9,7 @@ import {getRouter} from "@/libs/singleton/navigation";
 import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
 import {tProvider, getLocale} from "@/libs/singleton/translation";
 import {publicAxiosInstance, refreshTokenInstance, verifyAxiosInstance} from "@/libs/axios/axiosInstances";
-import {BaseSubscription} from "@/models/listener/BaseSubscription";
+import {BaseSubscription} from "@/models/listener/subscription/BaseSubscription";
 import {removeSubscription, setSubscription} from "@/libs/redux/features/subscription/subscriptionSlice";
 import {UserType} from "@/const/user/UserType";
 
