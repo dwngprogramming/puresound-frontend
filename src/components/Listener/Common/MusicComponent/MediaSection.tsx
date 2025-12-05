@@ -5,6 +5,7 @@ import {SimplifiedTrackResponse} from "@/models/metadata/track/SimplifiedTrackRe
 import {AlbumType} from "@/const/metadata/AlbumType";
 import {ChevronLeft, ChevronRight} from "lucide-react";
 import {useMediaHorizontalScroll} from "@/hooks/util/useMediaHorizontalScroll";
+import {useEffect, useState} from "react";
 
 interface SectionInfo {
   title: string;
@@ -13,358 +14,7 @@ interface SectionInfo {
 
 const MediaSection = ({title, numOfItems}: SectionInfo) => {
   const t = useTranslations('Listener.Home.media');
-  const tracks: SimplifiedTrackResponse[] = [
-    {
-      id: "1",
-      title: "Sample Track 1",
-      explicit: false,
-      artists: [
-        {
-          id: "a1",
-          stageName: "Sample Artist 1"
-        },
-        {
-          id: "a2",
-          stageName: "Sample Artist 2"
-        },
-        {
-          id: "a3",
-          stageName: "Sample Artist 3"
-        },
-        {
-          id: "a4",
-          stageName: "Sample Artist 4"
-        }
-      ],
-      album: {
-        id: "al1",
-        name: "Sample Album",
-        albumType: AlbumType.ALBUM,
-        releaseDate: "2024-01-01",
-        artists: [
-          {
-            id: "a1",
-            stageName: "Sample Artist"
-          }
-        ],
-      }
-    },
-    {
-      id: "2",
-      title: "Sample Track 2",
-      explicit: false,
-      artists: [
-        {
-          id: "a1",
-          stageName: "Sample Artist 1"
-        },
-        {
-          id: "a2",
-          stageName: "Sample Artist 2"
-        },
-        {
-          id: "a3",
-          stageName: "Sample Artist 3"
-        },
-        {
-          id: "a4",
-          stageName: "Sample Artist 4"
-        }
-      ],
-      album: {
-        id: "al1",
-        name: "Sample Album",
-        albumType: AlbumType.ALBUM,
-        releaseDate: "2024-01-01",
-        artists: [
-          {
-            id: "a1",
-            stageName: "Sample Artist"
-          }
-        ],
-      }
-    },
-    {
-      id: "3",
-      title: "Sample Track 3",
-      explicit: false,
-      artists: [
-        {
-          id: "a1",
-          stageName: "Sample Artist 1"
-        },
-        {
-          id: "a2",
-          stageName: "Sample Artist 2"
-        },
-        {
-          id: "a3",
-          stageName: "Sample Artist 3"
-        },
-        {
-          id: "a4",
-          stageName: "Sample Artist 4"
-        }
-      ],
-      album: {
-        id: "al1",
-        name: "Sample Album",
-        albumType: AlbumType.ALBUM,
-        releaseDate: "2024-01-01",
-        artists: [
-          {
-            id: "a1",
-            stageName: "Sample Artist"
-          }
-        ],
-      }
-    },
-    {
-      id: "4",
-      title: "Sample Track 4",
-      explicit: false,
-      artists: [
-        {
-          id: "a1",
-          stageName: "Sample Artist 1"
-        },
-        {
-          id: "a2",
-          stageName: "Sample Artist 2"
-        },
-        {
-          id: "a3",
-          stageName: "Sample Artist 3"
-        },
-        {
-          id: "a4",
-          stageName: "Sample Artist 4"
-        }
-      ],
-      album: {
-        id: "al1",
-        name: "Sample Album",
-        albumType: AlbumType.ALBUM,
-        releaseDate: "2024-01-01",
-        artists: [
-          {
-            id: "a1",
-            stageName: "Sample Artist"
-          }
-        ],
-      }
-    },
-    {
-      id: "5",
-      title: "Sample Track ",
-      explicit: false,
-      artists: [
-        {
-          id: "a1",
-          stageName: "Sample Artist 1"
-        },
-        {
-          id: "a2",
-          stageName: "Sample Artist 2"
-        },
-        {
-          id: "a3",
-          stageName: "Sample Artist 3"
-        },
-        {
-          id: "a4",
-          stageName: "Sample Artist 4"
-        }
-      ],
-      album: {
-        id: "al1",
-        name: "Sample Album",
-        albumType: AlbumType.ALBUM,
-        releaseDate: "2024-01-01",
-        artists: [
-          {
-            id: "a1",
-            stageName: "Sample Artist"
-          }
-        ],
-      }
-    },
-    {
-      id: "6",
-      title: "Sample Track 6",
-      explicit: false,
-      artists: [
-        {
-          id: "a1",
-          stageName: "Sample Artist 1"
-        },
-        {
-          id: "a2",
-          stageName: "Sample Artist 2"
-        },
-        {
-          id: "a3",
-          stageName: "Sample Artist 3"
-        },
-        {
-          id: "a4",
-          stageName: "Sample Artist 4"
-        }
-      ],
-      album: {
-        id: "al1",
-        name: "Sample Album",
-        albumType: AlbumType.ALBUM,
-        releaseDate: "2024-01-01",
-        artists: [
-          {
-            id: "a1",
-            stageName: "Sample Artist"
-          }
-        ],
-      }
-    },
-    {
-      id: "7",
-      title: "Sample Track 7",
-      explicit: false,
-      artists: [
-        {
-          id: "a1",
-          stageName: "Sample Artist 1"
-        },
-        {
-          id: "a2",
-          stageName: "Sample Artist 2"
-        },
-        {
-          id: "a3",
-          stageName: "Sample Artist 3"
-        },
-        {
-          id: "a4",
-          stageName: "Sample Artist 4"
-        }
-      ],
-      album: {
-        id: "al1",
-        name: "Sample Album",
-        albumType: AlbumType.ALBUM,
-        releaseDate: "2024-01-01",
-        artists: [
-          {
-            id: "a1",
-            stageName: "Sample Artist"
-          }
-        ],
-      }
-    },
-    {
-      id: "8",
-      title: "Sample Track 8",
-      explicit: false,
-      artists: [
-        {
-          id: "a1",
-          stageName: "Sample Artist 1"
-        },
-        {
-          id: "a2",
-          stageName: "Sample Artist 2"
-        },
-        {
-          id: "a3",
-          stageName: "Sample Artist 3"
-        },
-        {
-          id: "a4",
-          stageName: "Sample Artist 4"
-        }
-      ],
-      album: {
-        id: "al1",
-        name: "Sample Album",
-        albumType: AlbumType.ALBUM,
-        releaseDate: "2024-01-01",
-        artists: [
-          {
-            id: "a1",
-            stageName: "Sample Artist"
-          }
-        ],
-      }
-    },
-    {
-      id: "9",
-      title: "Sample Track 9",
-      explicit: false,
-      artists: [
-        {
-          id: "a1",
-          stageName: "Sample Artist 1"
-        },
-        {
-          id: "a2",
-          stageName: "Sample Artist 2"
-        },
-        {
-          id: "a3",
-          stageName: "Sample Artist 3"
-        },
-        {
-          id: "a4",
-          stageName: "Sample Artist 4"
-        }
-      ],
-      album: {
-        id: "al1",
-        name: "Sample Album",
-        albumType: AlbumType.ALBUM,
-        releaseDate: "2024-01-01",
-        artists: [
-          {
-            id: "a1",
-            stageName: "Sample Artist"
-          }
-        ],
-      }
-    },
-    {
-      id: "10",
-      title: "Sample Track 10",
-      explicit: false,
-      artists: [
-        {
-          id: "a1",
-          stageName: "Sample Artist 1"
-        },
-        {
-          id: "a2",
-          stageName: "Sample Artist 2"
-        },
-        {
-          id: "a3",
-          stageName: "Sample Artist 3"
-        },
-        {
-          id: "a4",
-          stageName: "Sample Artist 4"
-        }
-      ],
-      album: {
-        id: "al1",
-        name: "Sample Album",
-        albumType: AlbumType.ALBUM,
-        releaseDate: "2024-01-01",
-        artists: [
-          {
-            id: "a1",
-            stageName: "Sample Artist"
-          }
-        ],
-      }
-    }
-  ];
+  const [tracks, setTracks] = useState<SimplifiedTrackResponse[]>([]);
   const {
     scrollRef,
     showLeft,
@@ -372,6 +22,368 @@ const MediaSection = ({title, numOfItems}: SectionInfo) => {
     scrollLeft,
     scrollRight
   } = useMediaHorizontalScroll([tracks]);
+  
+  useEffect(() => {
+    // Giả lập fetch dữ liệu track
+    const fetchTracks = async () => {
+      // Thay thế đoạn này bằng API thực tế để lấy dữ liệu track
+      const trackTest: SimplifiedTrackResponse[] = [
+        {
+          id: "1",
+          title: "Sample Track 1",
+          explicit: false,
+          artists: [
+            {
+              id: "a1",
+              stageName: "Sample Artist 1"
+            },
+            {
+              id: "a2",
+              stageName: "Sample Artist 2"
+            },
+            {
+              id: "a3",
+              stageName: "Sample Artist 3"
+            },
+            {
+              id: "a4",
+              stageName: "Sample Artist 4"
+            }
+          ],
+          album: {
+            id: "al1",
+            name: "Sample Album",
+            albumType: AlbumType.ALBUM,
+            releaseDate: "2024-01-01",
+            artists: [
+              {
+                id: "a1",
+                stageName: "Sample Artist"
+              }
+            ],
+          }
+        },
+        {
+          id: "2",
+          title: "Sample Track 2",
+          explicit: false,
+          artists: [
+            {
+              id: "a1",
+              stageName: "Sample Artist 1"
+            },
+            {
+              id: "a2",
+              stageName: "Sample Artist 2"
+            },
+            {
+              id: "a3",
+              stageName: "Sample Artist 3"
+            },
+            {
+              id: "a4",
+              stageName: "Sample Artist 4"
+            }
+          ],
+          album: {
+            id: "al1",
+            name: "Sample Album",
+            albumType: AlbumType.ALBUM,
+            releaseDate: "2024-01-01",
+            artists: [
+              {
+                id: "a1",
+                stageName: "Sample Artist"
+              }
+            ],
+          }
+        },
+        {
+          id: "3",
+          title: "Sample Track 3",
+          explicit: false,
+          artists: [
+            {
+              id: "a1",
+              stageName: "Sample Artist 1"
+            },
+            {
+              id: "a2",
+              stageName: "Sample Artist 2"
+            },
+            {
+              id: "a3",
+              stageName: "Sample Artist 3"
+            },
+            {
+              id: "a4",
+              stageName: "Sample Artist 4"
+            }
+          ],
+          album: {
+            id: "al1",
+            name: "Sample Album",
+            albumType: AlbumType.ALBUM,
+            releaseDate: "2024-01-01",
+            artists: [
+              {
+                id: "a1",
+                stageName: "Sample Artist"
+              }
+            ],
+          }
+        },
+        {
+          id: "4",
+          title: "Sample Track 4",
+          explicit: false,
+          artists: [
+            {
+              id: "a1",
+              stageName: "Sample Artist 1"
+            },
+            {
+              id: "a2",
+              stageName: "Sample Artist 2"
+            },
+            {
+              id: "a3",
+              stageName: "Sample Artist 3"
+            },
+            {
+              id: "a4",
+              stageName: "Sample Artist 4"
+            }
+          ],
+          album: {
+            id: "al1",
+            name: "Sample Album",
+            albumType: AlbumType.ALBUM,
+            releaseDate: "2024-01-01",
+            artists: [
+              {
+                id: "a1",
+                stageName: "Sample Artist"
+              }
+            ],
+          }
+        },
+        {
+          id: "5",
+          title: "Sample Track ",
+          explicit: false,
+          artists: [
+            {
+              id: "a1",
+              stageName: "Sample Artist 1"
+            },
+            {
+              id: "a2",
+              stageName: "Sample Artist 2"
+            },
+            {
+              id: "a3",
+              stageName: "Sample Artist 3"
+            },
+            {
+              id: "a4",
+              stageName: "Sample Artist 4"
+            }
+          ],
+          album: {
+            id: "al1",
+            name: "Sample Album",
+            albumType: AlbumType.ALBUM,
+            releaseDate: "2024-01-01",
+            artists: [
+              {
+                id: "a1",
+                stageName: "Sample Artist"
+              }
+            ],
+          }
+        },
+        {
+          id: "6",
+          title: "Sample Track 6",
+          explicit: false,
+          artists: [
+            {
+              id: "a1",
+              stageName: "Sample Artist 1"
+            },
+            {
+              id: "a2",
+              stageName: "Sample Artist 2"
+            },
+            {
+              id: "a3",
+              stageName: "Sample Artist 3"
+            },
+            {
+              id: "a4",
+              stageName: "Sample Artist 4"
+            }
+          ],
+          album: {
+            id: "al1",
+            name: "Sample Album",
+            albumType: AlbumType.ALBUM,
+            releaseDate: "2024-01-01",
+            artists: [
+              {
+                id: "a1",
+                stageName: "Sample Artist"
+              }
+            ],
+          }
+        },
+        {
+          id: "7",
+          title: "Sample Track 7",
+          explicit: false,
+          artists: [
+            {
+              id: "a1",
+              stageName: "Sample Artist 1"
+            },
+            {
+              id: "a2",
+              stageName: "Sample Artist 2"
+            },
+            {
+              id: "a3",
+              stageName: "Sample Artist 3"
+            },
+            {
+              id: "a4",
+              stageName: "Sample Artist 4"
+            }
+          ],
+          album: {
+            id: "al1",
+            name: "Sample Album",
+            albumType: AlbumType.ALBUM,
+            releaseDate: "2024-01-01",
+            artists: [
+              {
+                id: "a1",
+                stageName: "Sample Artist"
+              }
+            ],
+          }
+        },
+        {
+          id: "8",
+          title: "Sample Track 8",
+          explicit: false,
+          artists: [
+            {
+              id: "a1",
+              stageName: "Sample Artist 1"
+            },
+            {
+              id: "a2",
+              stageName: "Sample Artist 2"
+            },
+            {
+              id: "a3",
+              stageName: "Sample Artist 3"
+            },
+            {
+              id: "a4",
+              stageName: "Sample Artist 4"
+            }
+          ],
+          album: {
+            id: "al1",
+            name: "Sample Album",
+            albumType: AlbumType.ALBUM,
+            releaseDate: "2024-01-01",
+            artists: [
+              {
+                id: "a1",
+                stageName: "Sample Artist"
+              }
+            ],
+          }
+        },
+        {
+          id: "9",
+          title: "Sample Track 9",
+          explicit: false,
+          artists: [
+            {
+              id: "a1",
+              stageName: "Sample Artist 1"
+            },
+            {
+              id: "a2",
+              stageName: "Sample Artist 2"
+            },
+            {
+              id: "a3",
+              stageName: "Sample Artist 3"
+            },
+            {
+              id: "a4",
+              stageName: "Sample Artist 4"
+            }
+          ],
+          album: {
+            id: "al1",
+            name: "Sample Album",
+            albumType: AlbumType.ALBUM,
+            releaseDate: "2024-01-01",
+            artists: [
+              {
+                id: "a1",
+                stageName: "Sample Artist"
+              }
+            ],
+          }
+        },
+        {
+          id: "10",
+          title: "Sample Track 10",
+          explicit: false,
+          artists: [
+            {
+              id: "a1",
+              stageName: "Sample Artist 1"
+            },
+            {
+              id: "a2",
+              stageName: "Sample Artist 2"
+            },
+            {
+              id: "a3",
+              stageName: "Sample Artist 3"
+            },
+            {
+              id: "a4",
+              stageName: "Sample Artist 4"
+            }
+          ],
+          album: {
+            id: "al1",
+            name: "Sample Album",
+            albumType: AlbumType.ALBUM,
+            releaseDate: "2024-01-01",
+            artists: [
+              {
+                id: "a1",
+                stageName: "Sample Artist"
+              }
+            ],
+          }
+        }
+      ];
+      setTracks(trackTest);
+    };
+    
+    fetchTracks();
+  }, []);
   
   return (
     <div className="w-full flex flex-col gap-2">
