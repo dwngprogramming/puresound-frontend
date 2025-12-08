@@ -19,7 +19,7 @@ const VerifyStep = ({email, handleNextStep}: VerifyProps) => {
   const t = useTranslations("Listener.SignUp");
   const tValidation = useTranslations("Listener.SignUp.validation");
   const verifyCode = useMutation({
-    mutationFn: authApi.verifyRegister
+    mutationFn: (request: OtpEmailRequest) => authApi.verifyRegister(request),
   })
   const {countdown, isActive, isPending, handleSendOtp} = useSendOtp({
     email,
