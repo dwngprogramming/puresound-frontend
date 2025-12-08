@@ -1,4 +1,4 @@
-import {BaseSubscription} from "@/models/listener/BaseSubscription";
+import {BaseSubscription} from "@/models/listener/subscription/BaseSubscription";
 import {createSlice} from "@reduxjs/toolkit";
 
 const initState: BaseSubscription = {
