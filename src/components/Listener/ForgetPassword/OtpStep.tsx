@@ -19,7 +19,7 @@ const OtpStep = ({email, handleNextStep}: OtpStep) => {
   const {breakpoint} = useBreakpoint();
   const t = useTranslations("Listener.ForgotPassword");
   const verifyCode = useMutation({
-    mutationFn: authApi.verifyRegister
+    mutationFn: (request: OtpEmailRequest) => authApi.verifyRegister(request)
   })
   const {countdown, isActive, isPending, handleSendOtp} = useSendOtp({
     email,
