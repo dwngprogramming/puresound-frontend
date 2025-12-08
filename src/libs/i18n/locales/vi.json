@@ -194,8 +194,17 @@
     },
     "needLogout": "Bạn cần đăng xuất trước",
     "Home": {
-      "title": "Trang chủ",
-      "name": "Xin chào,"
+      "greeting": {
+        "morning": "Chào buổi sáng!",
+        "afternoon": "Chào buổi chiều!",
+        "evening": "Chào buổi tối!",
+        "night": "Chào buổi đêm!"
+      },
+      "media": {
+        "seeMore": "Xem thêm",
+        "popularTracks": "Bài hát phổ biến",
+        "featuredArtists": "Nghệ sĩ nổi bật"
+      }
     },
     "Me": {
       "me": "Tài khoản",

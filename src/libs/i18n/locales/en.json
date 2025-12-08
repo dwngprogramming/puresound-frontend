@@ -192,8 +192,17 @@
     },
     "needLogout": "You need to log out first",
     "Home": {
-      "title": "Home",
-      "name": "Welcome,"
+      "greeting": {
+        "morning": "Good morning!",
+        "afternoon": "Good afternoon!",
+        "evening": "Good evening!",
+        "night": "Good night!"
+      },
+      "media": {
+        "seeMore": "See More",
+        "popularTracks": "Popular Tracks",
+        "featuredArtists": "Featured Artists"
+      }
     },
     "Me": {
       "me": "Account"
