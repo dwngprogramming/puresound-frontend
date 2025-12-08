@@ -7,7 +7,7 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     notification: notificationReducer,
-    subscription: subscriptionReducer,
+    subscription: subscriptionReducer
   },
 });
 
