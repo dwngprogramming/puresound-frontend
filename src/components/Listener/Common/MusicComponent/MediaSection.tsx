@@ -398,10 +398,10 @@ const MediaSection = ({title, numOfItems}: SectionInfo) => {
           <div
             className="absolute left-0 top-0 z-100 w-30 h-full bg-gradient-to-r from-blue-900/20 to-transparent flex items-center justify-start">
             <button
-              className="rounded-full p-1 ml-3 transition ease-in-out duration-300 bg-neutral-800 hover:bg-neutral-500 cursor-pointer"
+              className="rounded-full p-1 ml-3 transition ease-in-out duration-300 bg-blue-900/90 hover:bg-neutral-500 cursor-pointer"
               onClick={scrollLeft}
             >
-              <ChevronLeft size={20}/>
+              <ChevronLeft size={24}/>
             </button>
           </div>
         )}
@@ -422,10 +422,10 @@ const MediaSection = ({title, numOfItems}: SectionInfo) => {
           <div
             className="absolute right-0 top-0 z-100 w-30 h-full bg-gradient-to-r from-transparent to-blue-900/20 flex items-center justify-end">
             <button
-              className="rounded-full p-1 mr-3 transition ease-in-out duration-300 bg-neutral-800 hover:bg-neutral-500 cursor-pointer"
+              className="rounded-full p-1 mr-3 transition ease-in-out duration-300 bg-blue-900/90 hover:bg-neutral-500 cursor-pointer"
               onClick={scrollRight}
             >
-              <ChevronRight size={20}/>
+              <ChevronRight size={24}/>
             </button>
           </div>
         )}

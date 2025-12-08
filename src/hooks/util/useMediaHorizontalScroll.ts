@@ -1,54 +1,81 @@
-import {useRef, useState, useEffect, useCallback} from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 export const useMediaHorizontalScroll = (dependencies: any = []) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeft, setShowLeft] = useState(false);
   const [showRight, setShowRight] = useState(false);
   
-  // Hàm kiểm tra vị trí để ẩn/hiện nút
+  // Main logic to determine visibility of scroll buttons
   const checkScrollPosition = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
     
-    const {scrollLeft, scrollWidth, clientWidth} = el;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
     
-    // Hiện nút trái nếu đã scroll được > 0
+    // Hide both buttons if content fits perfectly (no scrolling needed)
+    if (scrollWidth <= clientWidth) {
+      setShowLeft(false);
+      setShowRight(false);
+      return;
+    }
+    
+    // Show left button if we are not at the start
     setShowLeft(scrollLeft > 0);
     
-    // Hiện nút phải nếu chưa scroll hết (dùng sai số 1px cho chắc chắn)
-    setShowRight(Math.ceil(scrollLeft + clientWidth) < scrollWidth);
+    // Show right button if we are not at the end
+    // Using Math.ceil and -1 to accommodate fractional pixel values on high-DPI screens
+    setShowRight(Math.ceil(scrollLeft + clientWidth) < scrollWidth - 1);
   }, []);
   
-  // Hàm xử lý scroll
+  // Handler for button click scrolling
   const scroll = (direction: 'left' | 'right') => {
     const el = scrollRef.current;
     if (!el) return;
     
-    // Tính toán khoảng cách scroll:
-    // Lấy 45% chiều rộng container
-    // Điều này tốt hơn fix cứng px vì nó responsive theo màn hình
+    // Scroll amount set to 45% of the visible container width
     const scrollAmount = el.clientWidth * 0.45;
-    
     el.scrollBy({
       left: direction === 'left' ? -scrollAmount : scrollAmount,
       behavior: 'smooth',
     });
   };
   
+  // Effect 1: Attach native scroll listener to sync state during manual scrolling
   useEffect(() => {
     const el = scrollRef.current;
-    if (el) {
-      // Kiểm tra ngay khi mount và khi resize
+    if (!el) return;
+    
+    el.addEventListener('scroll', checkScrollPosition);
+    checkScrollPosition(); // Initial check
+    
+    return () => el.removeEventListener('scroll', checkScrollPosition);
+  }, [checkScrollPosition]);
+  
+  // Effect 2: Handle layout changes (ResizeObserver) and data updates
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    
+    // Use ResizeObserver to detect container size changes (better than window 'resize')
+    const resizeObserver = new ResizeObserver(() => {
       checkScrollPosition();
-      el.addEventListener('scroll', checkScrollPosition);
-      window.addEventListener('resize', checkScrollPosition);
-    }
+    });
+    
+    resizeObserver.observe(el);
+    checkScrollPosition();
+    
+    // Check multiple times to handle dynamic content rendering (e.g., images loading)
+    const timeoutIds: NodeJS.Timeout[] = [];
+    [50, 150, 300].forEach(ms => {
+      const id = setTimeout(checkScrollPosition, ms);
+      timeoutIds.push(id);
+    });
     
     return () => {
-      if (el) el.removeEventListener('scroll', checkScrollPosition);
-      window.removeEventListener('resize', checkScrollPosition);
+      resizeObserver.disconnect();
+      timeoutIds.forEach(clearTimeout);
     };
-  }, [checkScrollPosition, ...dependencies]); // Re-run khi data thay đổi
+  }, [checkScrollPosition, ...dependencies]);
   
   return {
     scrollRef,
