@@ -14,7 +14,6 @@ interface SectionInfo {
 const MediaSection = ({title, numOfItems}: SectionInfo) => {
   const t = useTranslations('Listener.Home.media');
   const {data: tracks, isLoading} = usePopularTracks();
-  console.log('Popular tracks:', tracks);
   const {
     scrollRef,
     showLeft,
