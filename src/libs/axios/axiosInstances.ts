@@ -22,14 +22,7 @@ export const refreshTokenInstance = axios.create({
 
 // Instance for relogin
 export const reloginInstance = axios.create({
-  baseURL: BASE_API_URL,
-  timeout: 30000,
-  withCredentials: true
-});
-
-// Instance for streaming service
-export const streamInstance = axios.create({
-  baseURL: BASE_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 30000,
   withCredentials: true
 });

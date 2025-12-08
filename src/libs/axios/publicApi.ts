@@ -7,7 +7,6 @@ import { publicAxiosInstance } from "@/libs/axios/axiosInstances";
 publicAxiosInstance.interceptors.request.use(
   (config) => {
     const locale = getLocale();
-
     if (locale) {
       config.headers['Accept-Language'] = locale;
     }
