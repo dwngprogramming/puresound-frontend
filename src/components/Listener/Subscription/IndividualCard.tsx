@@ -1,4 +1,4 @@
-import {PlanResponse} from "@/models/listener/subscription/PlanResponse";
+import {PlanResponse} from "@/models/listener/PlanResponse";
 import {Button, Card, CardBody, CardFooter, CardHeader, Chip} from "@heroui/react";
 import PuresoundLogo from "@/components/Utility/PuresoundLogo";
 import {Check} from "lucide-react";

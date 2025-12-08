@@ -1,4 +1,4 @@
-import publicApi from "@/libs/axios/publicApiClient";
+import publicApi from "@/libs/axios/publicApi";
 import {AxiosRequestConfig} from "axios";
 import {ApiResponse} from "@/models/ApiResponse";
 import {TokenResponse} from "@/models/auth/TokenResponse";
