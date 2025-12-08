@@ -6,6 +6,7 @@ import {useMutation} from "@tanstack/react-query";
 import authApi from "@/apis/auth/auth.api";
 import regex from "@/const/regex";
 import {useBreakpoint} from "@/context/breakpoint-auth-context";
+import {CheckExistsRequest} from "@/models/auth/CheckExistsRequest";
 
 interface VerifyEmailStepProps {
   handleSetEmail: (email: string) => void;
@@ -20,7 +21,7 @@ const VerifyEmailStep = ({handleSetEmail, handleNextStep}: VerifyEmailStepProps)
   const t = useTranslations("Listener.ForgotPassword");
   const {breakpoint} = useBreakpoint();
   const checkEmail = useMutation({
-    mutationFn: authApi.checkEmail,
+    mutationFn: (request: CheckExistsRequest) => authApi.checkEmail(request),
   })
   const {
     register,

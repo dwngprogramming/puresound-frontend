@@ -26,7 +26,7 @@ const ResetPasswordStep = ({email}: ResetPasswordStepProps) => {
   });
 
   const resetPassword = useMutation({
-    mutationFn: authApi.resetPassword,
+    mutationFn: (request: ResetPasswordRequest) =>  authApi.resetPassword(request),
     onSuccess: (response) => {
       dispatch(showSuccessNotification(response.message));
     }
