@@ -261,7 +261,10 @@
         "privacy": "Chính sách bảo mật",
         "terms": "Điều khoản dịch vụ",
         "support": "Liên hệ hỗ trợ"
-      }
+      },
+      "artist": "Nghệ sĩ",
+      "album": "Album",
+      "track": "Bài hát"
     },
     "Premium": {
       "title": "Đăng ký PureSound Premium",

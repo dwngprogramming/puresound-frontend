@@ -31,7 +31,7 @@ const Home = () => {
   const principal = useAppSelector(state => state.auth.principal);
   
   // Fetch homepage data
-  const {data: tracks, isLoading} = usePopularTracks();
+  const {data: tracks} = usePopularTracks();
   const items: SimplifiedItemResponse[] = [
     {
       id: '1',
