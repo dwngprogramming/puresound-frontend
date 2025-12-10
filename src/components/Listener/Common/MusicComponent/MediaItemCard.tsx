@@ -28,11 +28,11 @@ const MediaItemCard = ({item}: { item: SimplifiedItemResponse }) => {
             group-hover:opacity-100 group-hover:translate-y-0
             pointer-events-auto
             transition-all duration-300 ease-in-out
-            p-3 rounded-full bg-blue-400 hover:bg-blue-300 hover:scale-105 shadow-xl shadow-black/50">
+            p-3 rounded-full bg-blue-400 hover:scale-105 shadow-xl shadow-black/50">
           <FontAwesomeIcon
             size="lg"
             icon={faPlay}
-            className="text-black"
+            className="text-white"
           />
         </button>
       </div>
