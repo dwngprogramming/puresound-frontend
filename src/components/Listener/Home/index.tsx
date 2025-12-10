@@ -2,7 +2,7 @@
 
 import {useTranslations} from "next-intl";
 import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useMutation} from "@tanstack/react-query";
 import tokenApi from "@/apis/auth/token.api";
 import {useAppDispatch, useAppSelector} from "@/libs/redux/hooks";
@@ -12,14 +12,16 @@ import {UserType} from "@/const/user/UserType";
 import {setSubscription} from "@/libs/redux/features/subscription/subscriptionSlice";
 import meApi from "@/apis/main/listener/me.api";
 import {useSavePrincipal} from "@/hooks/auth/useSavePrincipal";
-import MediaSection from "@/components/Listener/Common/MusicComponent/MediaSection";
+import MediaSection, {SimplifiedItemResponse} from "@/components/Listener/Common/MusicComponent/MediaSection";
+import {usePopularTracks} from "@/hooks/metadata/useTrackMetadata";
+import {AlbumType} from "@/const/metadata/AlbumType";
 
-const homeMediaStructure = [
-  {
-    title: 'media.popularTracks',
-    numOfItems: 10
-  }
-]
+interface HomeMediaStructure {
+  title: string
+  numOfItems: number
+  items: SimplifiedItemResponse[]
+}
+
 const Home = () => {
   const t = useTranslations("Listener.Home");
   const [timeOfDay, setTimeOfDay] = useState<'morning' | 'afternoon' | 'evening' | 'night'>('morning');
@@ -27,6 +29,55 @@ const Home = () => {
   const router = useRouter();
   const savePrincipal = useSavePrincipal();
   const principal = useAppSelector(state => state.auth.principal);
+  
+  // Fetch homepage data
+  const {data: tracks, isLoading} = usePopularTracks();
+  const items: SimplifiedItemResponse[] = [
+    {
+      id: '1',
+      stageName: 'Artist 1',
+    },
+    {
+      id: '2',
+      stageName: 'Artist 2',
+    },
+    {
+      id: '3',
+      title: 'Track 1',
+      artists: [
+        {
+          id: 'a1',
+          stageName: 'Artist A',
+        }
+      ],
+      explicit: false,
+      album: {
+        id: 'al1',
+        name: 'Album 1',
+        albumType: AlbumType.ALBUM,
+        artists: [
+          {
+            id: 'a1',
+            stageName: 'Artist A',
+          }
+        ],
+        releaseDate: '2023-01-01',
+      },
+    },
+  ];
+  
+  const homeMediaStructure: HomeMediaStructure[] = [
+    {
+      title: 'media.popularTracks',
+      numOfItems: 10,
+      items: tracks || [],
+    },
+    {
+      title: 'media.featuredArtists',
+      numOfItems: 10,
+      items: items || [],
+    }
+  ]
   
   const exchangeTokenMutation = useMutation({
     mutationFn: (code: string) => tokenApi.exchangeToken(code),
@@ -127,6 +178,7 @@ const Home = () => {
           key={index}
           title={t(section.title)}
           numOfItems={section.numOfItems}
+          items={section.items}
         />
       ))}
     </div>
