@@ -46,11 +46,11 @@
   }
 
   h2 {
-    @apply text-3xl font-semibold;
+    @apply text-3xl font-bold;
   }
 
   h3 {
-    @apply text-2xl font-semibold;
+    @apply text-2xl font-bold;
   }
 
   h4 {
@@ -67,6 +67,34 @@
 }
 
 @layer utilities {
+  .vertical-scrollbar::-webkit-scrollbar {
+    @apply w-4 h-4;
+  }
+
+  .vertical-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .vertical-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-blue-700/50;
+    border-radius: 8px;
+    z-index: -1;
+    @apply transition ease-in-out duration-300;
+  }
+
+  .vertical-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-blue-700/70;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE và Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
   .text-foreground {
     @apply !text-neutral-200;
   }

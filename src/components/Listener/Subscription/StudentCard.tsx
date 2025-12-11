@@ -1,4 +1,4 @@
-import {PlanResponse} from "@/models/listener/PlanResponse";
+import {PlanResponse} from "@/models/listener/subscription/PlanResponse";
 import {useLocale, useTranslations} from "next-intl";
 import {formattedPriceByCurrency} from "@/utils/formattedPriceByCurrency";
 import {Button, Card, CardBody, CardFooter, CardHeader} from "@heroui/react";

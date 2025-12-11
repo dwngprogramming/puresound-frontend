@@ -42,7 +42,8 @@
       "network": "Network error",
       "server": "Network error or server not response"
     },
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "comingSoon": "Coming Soon"
   },
   "Listener": {
     "Login": {
@@ -191,8 +192,17 @@
     },
     "needLogout": "You need to log out first",
     "Home": {
-      "title": "Home",
-      "name": "Welcome,"
+      "greeting": {
+        "morning": "Good morning!",
+        "afternoon": "Good afternoon!",
+        "evening": "Good evening!",
+        "night": "Good night!"
+      },
+      "media": {
+        "seeMore": "See More",
+        "popularTracks": "Popular Tracks",
+        "featuredArtists": "Featured Artists"
+      }
     },
     "Me": {
       "me": "Account"
@@ -361,6 +371,69 @@
         "success": "Your subscription has been cancelled. You will retain access to premium features until the end of your billing cycle.",
         "failure": "Failed to cancel subscription. Please try again later."
       }
+    },
+    "MyLibrary": {
+      "title": "My Library",
+      "playlist": "Playlists",
+      "album": "Albums",
+      "artist": "Artists",
+      "liked": "Liked Songs",
+      "local": "Local Files",
+      "noResult": "No {type} found in your library.",
+      "empty": "You haven't added any {type} to your library yet. Start exploring and add your favorite {type} here!",
+      "create": {
+        "title": "Create",
+        "playlist": {
+          "label": "Create Playlist",
+          "description": "Create a new playlist to organize your favorite songs."
+        }
+      },
+      "sortOptions": {
+        "sortBy": {
+          "label": "Sort by",
+          "recentlyPlayed": "Recently played",
+          "recentlyAdded": "Recently added",
+          "alphabetical": "Alphabetical",
+          "creator": "Creator"
+        },
+        "viewAs": {
+          "label": "View as",
+          "compactList": "Compact list",
+          "defaultList": "Default list",
+          "compactGrid": "Compact grid",
+          "defaultGrid": "Default grid"
+        }
+      }
+    }
+  },
+  "Streaming": {
+    "Success": {
+    },
+    "Error": {
+      "system": "Error occurred while streaming."
+    }
+  },
+  "Components": {
+    "MusicPlayer": {
+      "play": "Play",
+      "pause": "Pause",
+      "next": "Next",
+      "previous": "Previous",
+      "shuffleOn": "Enable shuffle",
+      "shuffleOff": "Disable shuffle",
+      "repeatOne": "Enable repeat one",
+      "repeatAll": "Enable repeat all",
+      "repeatOff": "Disable repeat"
+    },
+    "MusicOption": {
+      "nowPlayingView": "Now Playing View",
+      "lyrics": "Lyrics",
+      "queue": "Queue",
+      "connect": "Connect to Device",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "fullscreen": "Fullscreen",
+      "exitFullscreen": "Exit Fullscreen"
     }
   }
 }
