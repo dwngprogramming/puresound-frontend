@@ -14,7 +14,7 @@ import meApi from "@/apis/main/listener/me.api";
 import {useSavePrincipal} from "@/hooks/auth/useSavePrincipal";
 import MediaSection, {SimplifiedItemResponse} from "@/components/Listener/Common/MusicComponent/MediaSection";
 import {usePopularTracks} from "@/hooks/metadata/useTrackMetadata";
-import {AlbumType} from "@/const/metadata/AlbumType";
+import {useFeaturedArtists} from "@/hooks/metadata/useArtistMetadata";
 
 interface HomeMediaStructure {
   title: string
@@ -32,39 +32,7 @@ const Home = () => {
   
   // Fetch homepage data
   const {data: tracks} = usePopularTracks();
-  const items: SimplifiedItemResponse[] = [
-    {
-      id: '1',
-      stageName: 'Artist 1',
-    },
-    {
-      id: '2',
-      stageName: 'Artist 2',
-    },
-    {
-      id: '3',
-      title: 'Track 1',
-      artists: [
-        {
-          id: 'a1',
-          stageName: 'Artist A',
-        }
-      ],
-      explicit: false,
-      album: {
-        id: 'al1',
-        name: 'Album 1',
-        albumType: AlbumType.ALBUM,
-        artists: [
-          {
-            id: 'a1',
-            stageName: 'Artist A',
-          }
-        ],
-        releaseDate: '2023-01-01',
-      },
-    },
-  ];
+  const {data: artists} = useFeaturedArtists();
   
   const homeMediaStructure: HomeMediaStructure[] = [
     {
@@ -75,7 +43,7 @@ const Home = () => {
     {
       title: 'media.featuredArtists',
       numOfItems: 10,
-      items: items || [],
+      items: artists || [],
     }
   ]
   
