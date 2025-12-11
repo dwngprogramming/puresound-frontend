@@ -42,7 +42,8 @@
       "network": "Lỗi kết nối mạng",
       "server": "Lỗi mạng hoặc máy chủ không phản hồi"
     },
-    "processing": "Đang xử lý..."
+    "processing": "Đang xử lý...",
+    "comingSoon": "Sắp ra mắt"
   },
   "Listener": {
     "Login": {
@@ -193,8 +194,17 @@
     },
     "needLogout": "Bạn cần đăng xuất trước",
     "Home": {
-      "title": "Trang chủ",
-      "name": "Xin chào,"
+      "greeting": {
+        "morning": "Chào buổi sáng!",
+        "afternoon": "Chào buổi chiều!",
+        "evening": "Chào buổi tối!",
+        "night": "Chào buổi đêm!"
+      },
+      "media": {
+        "seeMore": "Xem thêm",
+        "popularTracks": "Bài hát phổ biến",
+        "featuredArtists": "Nghệ sĩ nổi bật"
+      }
     },
     "Me": {
       "me": "Tài khoản",
@@ -364,6 +374,69 @@
         "success": "Đăng ký Premium của bạn đã bị hủy. Bạn sẽ mất quyền truy cập vào các tính năng Premium khi kết thúc chu kỳ thanh toán hiện tại.",
         "failure": "Không thể hủy đăng ký vào lúc này. Vui lòng thử lại sau."
       }
+    },
+    "MyLibrary": {
+      "title": "Thư viện",
+      "playlist": "Playlist",
+      "album": "Album",
+      "artist": "Nghệ sĩ",
+      "liked": "Bài hát yêu thích",
+      "local": "Nhạc trên máy",
+      "noResult": "Không tìm thấy {type} nào",
+      "empty": "Không tìm thấy {type} nào trong thư viện của bạn. Hãy khám phá và thêm {type} yêu thích vào thư viện của bạn!",
+      "create": {
+        "title": "Tạo",
+        "playlist": {
+          "label": "Tạo playlist mới",
+          "description": "Tạo danh sách phát bao gồm các bài hát yêu thích của bạn."
+        }
+      },
+      "sortOptions": {
+        "sortBy": {
+          "label": "Sắp xếp theo",
+          "recentlyPlayed": "Mới phát gần đây",
+          "recentlyAdded": "Mới thêm gần đây",
+          "alphabetical": "Thứ tự chữ cái",
+          "creator": "Người sáng tạo"
+        },
+        "viewAs": {
+          "label": "Xem dưới dạng",
+          "compactList": "Danh sách compact",
+          "defaultList": "Danh sách mặc định",
+          "compactGrid": "Lưới compact",
+          "defaultGrid": "Lưới mặc định"
+        }
+      }
+    }
+  },
+  "Streaming": {
+    "Success": {
+    },
+    "Error": {
+      "system": "Đã xảy ra lỗi hệ thống trong quá trình phát nhạc"
+    }
+  },
+  "Components": {
+    "MusicPlayer": {
+      "play": "Phát nhạc",
+      "pause": "Tạm dừng",
+      "next": "Tiếp theo",
+      "previous": "Trước đó",
+      "shuffleOn": "Bật trộn bài",
+      "shuffleOff": "Tắt trộn bài",
+      "repeatAll": "Lặp lại toàn bộ",
+      "repeatOne": "Lặp lại một bài",
+      "repeatOff": "Tắt lặp lại"
+    },
+    "MusicOption": {
+      "nowPlayingView": "Hiện tại đang phát",
+      "lyrics": "Lời bài hát",
+      "queue": "Hàng đợi",
+      "connect": "Kết nối với thiết bị",
+      "mute": "Tắt âm",
+      "unmute": "Bật âm",
+      "fullscreen": "Toàn màn hình",
+      "exitFullscreen": "Thoát toàn màn hình"
     }
   }
 }

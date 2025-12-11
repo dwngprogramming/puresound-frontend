@@ -1,14 +1,14 @@
 import {AxiosRequestConfig} from "axios";
-import verifyApi from "@/libs/axios/verifyApi";
+import verifyApiClient from "@/libs/axios/verifyApiClient";
 import {ApiResponse} from "@/models/ApiResponse";
-import {BaseSubscription} from "@/models/listener/BaseSubscription";
+import {BaseSubscription} from "@/models/listener/subscription/BaseSubscription";
 
 const meApi = {
   getMe: (options?: AxiosRequestConfig<never>) =>
-    verifyApi.get<string>('/v1/listener/me', options),
+    verifyApiClient.get<string>('/v1/listener/me', options),
 
   getBasicSubscription: (options?: AxiosRequestConfig<never>) =>
-    verifyApi.get<ApiResponse<BaseSubscription>>('/v1/listener/subscription/base', options)
+    verifyApiClient.get<ApiResponse<BaseSubscription>>('/v1/listener/subscription/base', options)
 }
 
 export default meApi;
