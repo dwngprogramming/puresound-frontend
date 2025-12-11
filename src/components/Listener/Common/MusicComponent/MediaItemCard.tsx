@@ -23,7 +23,7 @@ const MediaItemCard = ({item}: { item: SimplifiedItemResponse }) => {
   return (
     <div className="relative group">
       {content}
-      <div className="absolute bottom-18 right-3 z-10">
+      <div className="absolute top-30 right-3 z-10">
         <button className="opacity-0 translate-y-2 cursor-pointer
             group-hover:opacity-100 group-hover:translate-y-0
             pointer-events-auto
