@@ -258,7 +258,10 @@
         "privacy": "Privacy Policy",
         "terms": "Terms of Service",
         "support": "Support"
-      }
+      },
+      "artist": "Artist",
+      "album": "Album",
+      "track": "Track"
     },
     "Premium": {
       "title": "PureSound Premium Subscription",
@@ -320,27 +323,27 @@
         "quarterly": {
           "individual": {
             "title": "3 Months Plan",
-            "price": "{price}/month",
+            "price": "{price}/3 months",
             "description": "Enjoy the Individual Premium plan with 3 months billing. Save 10% with 3 months billing."
           },
           "student": {
             "title": "Monthly Plan",
-            "price": "{price}/month",
+            "price": "{price}/3 months",
             "description": "Enjoy the Student Premium plan with 3 months billing. Save 10% with 3 months billing."
           }
         },
         "biannually": {
           "individual": {
             "title": "6 Months Plan",
-            "price": "{price}/month",
-            "description": "Enjoy the Individual Premium plan with 3 months billing. Save 15% with 6 months billing."
+            "price": "{price}/6 months",
+            "description": "Enjoy the Individual Premium plan with 6 months billing. Save 15% with 6 months billing."
           }
         },
         "annually": {
           "individual": {
             "title": "Annually Plan",
-            "price": "{price}/month",
-            "description": "Enjoy the Individual Premium plan with 3 months billing. Save 20% with annual billing."
+            "price": "{price}/year",
+            "description": "Enjoy the Individual Premium plan with annually billing. Save 20% with annual billing."
           }
         },
         "popular": "Popular"

@@ -20,7 +20,9 @@ export const useMediaHorizontalScroll = (dependencies: any = []) => {
     }
     
     // Show left button if we are not at the start
-    setShowLeft(scrollLeft > 0);
+    // Add threshold to accept 2px wrong calculations
+    const THRESHOLD = 2;
+    setShowLeft(scrollLeft > THRESHOLD);
     
     // Show right button if we are not at the end
     // Using Math.ceil and -1 to accommodate fractional pixel values on high-DPI screens

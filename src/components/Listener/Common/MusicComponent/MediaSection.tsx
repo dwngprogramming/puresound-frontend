@@ -1,26 +1,29 @@
 import {useTranslations} from "next-intl";
 import Link from "next/link";
-import MediaCard from "@/components/Listener/Common/MusicComponent/MediaCard";
-import {SimplifiedTrackResponse} from "@/models/metadata/track/SimplifiedTrackResponse";
 import {ChevronLeft, ChevronRight} from "lucide-react";
 import {useMediaHorizontalScroll} from "@/hooks/util/useMediaHorizontalScroll";
-import {usePopularTracks} from "@/hooks/metadata/useTrackMetadata";
+import MediaItemCard from "@/components/Listener/Common/MusicComponent/MediaItemCard";
+import {SimplifiedTrackResponse} from "@/models/metadata/track/SimplifiedTrackResponse";
+import {SimplifiedArtistResponse} from "@/models/metadata/artist/SimplifiedArtistResponse";
+import {SimplifiedAlbumResponse} from "@/models/metadata/album/SimplifiedAlbumResponse";
 
-interface SectionInfo {
+export type SimplifiedItemResponse = SimplifiedTrackResponse | SimplifiedArtistResponse | SimplifiedAlbumResponse;
+
+interface MediaSectionInfo {
   title: string;
   numOfItems: number;
+  items: SimplifiedItemResponse[];
 }
 
-const MediaSection = ({title, numOfItems}: SectionInfo) => {
+const MediaSection = <T, >({title, numOfItems, items}: MediaSectionInfo) => {
   const t = useTranslations('Listener.Home.media');
-  const {data: tracks, isLoading} = usePopularTracks();
   const {
     scrollRef,
     showLeft,
     showRight,
     scrollLeft,
     scrollRight
-  } = useMediaHorizontalScroll([tracks]);
+  } = useMediaHorizontalScroll([items]);
   
   return (
     <div className="w-full flex flex-col gap-2">
@@ -47,11 +50,8 @@ const MediaSection = ({title, numOfItems}: SectionInfo) => {
           ref={scrollRef}
           className="flex overflow-x-auto no-scrollbar scroll-smooth"
         >
-          {tracks?.slice(0, numOfItems).map((track: SimplifiedTrackResponse) => (
-            <MediaCard
-              key={track.id}
-              track={track}
-            />
+          {items?.slice(0, numOfItems).map((item: SimplifiedItemResponse) => (
+            <MediaItemCard key={item.id} item={item}/>
           ))}
         </div>
         

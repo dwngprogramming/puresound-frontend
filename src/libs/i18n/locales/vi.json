@@ -261,7 +261,10 @@
         "privacy": "Chính sách bảo mật",
         "terms": "Điều khoản dịch vụ",
         "support": "Liên hệ hỗ trợ"
-      }
+      },
+      "artist": "Nghệ sĩ",
+      "album": "Album",
+      "track": "Bài hát"
     },
     "Premium": {
       "title": "Đăng ký PureSound Premium",
@@ -323,26 +326,26 @@
         "quarterly": {
           "individual": {
             "title": "Gói 3 tháng",
-            "price": "{price}/tháng",
+            "price": "{price}/3 tháng",
             "description": "Tận hưởng gói Individual Premium với thanh toán 3 tháng. Tiết kiệm 10% với gói 3 tháng."
           },
           "student": {
             "title": "Student 3 tháng",
-            "price": "{price}/tháng",
+            "price": "{price}/3 tháng",
             "description": "Tận hưởng gói Student Premium với thanh toán 3 tháng. Tiết kiệm 10% với gói 3 tháng."
           }
         },
         "biannually": {
           "individual": {
             "title": "Gói 6 tháng",
-            "price": "{price}/tháng",
+            "price": "{price}/6 tháng",
             "description": "Tận hưởng gói Individual Premium với thanh toán 6 tháng. Tiết kiệm 15% với gói 6 tháng."
           }
         },
         "annually": {
           "individual": {
             "title": "Gói hàng năm",
-            "price": "{price}/tháng",
+            "price": "{price}/năm",
             "description": "Tận hưởng gói Individual Premium với thanh toán 1 năm. Tiết kiệm 20% với gói hàng năm."
           }
         },
