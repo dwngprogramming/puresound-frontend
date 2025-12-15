@@ -9,7 +9,7 @@ const intlMiddleware = createMiddleware(routing);
 
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+  console.log('Middleware - Incoming request for:', pathname, 'App Env:', process.env.NEXT_PUBLIC_APP_ENV);
   // --- PHẦN 1: XỬ LÝ RIÊNG CHO ROUTE /staging ---
   // Nếu đường dẫn bắt đầu bằng /staging -> Chúng ta tự xử lý logic bảo vệ
   if (pathname.startsWith('/staging')) {

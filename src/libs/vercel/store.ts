@@ -27,7 +27,6 @@ export async function createStagingToken(name: string, role: string) {
 export async function identifyToken(token: string): Promise<StagingUser | null> {
   const rawData = await redis.hget(STORE_KEY, token) as object | null;
   if (!rawData) return null;
-  console.log("Raw data from store:", rawData);
   try {
     return rawData as StagingUser;
   } catch (e) {
