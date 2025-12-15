@@ -1,5 +1,4 @@
 import axios, {AxiosInstance, CreateAxiosDefaults} from "axios";
-import {applyStagingInterceptor} from "@/libs/axios/stagingInterceptor";
 
 const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -9,22 +8,16 @@ const defaultOptions = {
   withCredentials: true
 };
 
-// --- Factory Pattern ---
-const createAxiosClient = (options: CreateAxiosDefaults = {}): AxiosInstance => {
-  const instance = axios.create({ ...defaultOptions, ...options });
-  
-  // "Inject" logic Staging into instance when initializing
-  applyStagingInterceptor(instance);
-  
-  return instance;
+const createDefaultAxiosClient = (options: CreateAxiosDefaults = {}): AxiosInstance => {
+  return axios.create({...defaultOptions, ...options});
 };
 
-export const publicAxiosInstance = createAxiosClient();
+export const publicAxiosInstance = createDefaultAxiosClient();
 
-export const verifyAxiosInstance = createAxiosClient();
+export const verifyAxiosInstance = createDefaultAxiosClient();
 
-export const refreshTokenInstance = createAxiosClient();
+export const refreshTokenInstance = createDefaultAxiosClient();
 
-export const reloginInstance = createAxiosClient();
+export const reloginInstance = createDefaultAxiosClient();
 
-export const streamInstance = createAxiosClient();
+export const streamInstance = createDefaultAxiosClient();
