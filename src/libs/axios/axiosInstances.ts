@@ -1,35 +1,23 @@
-import axios from "axios";
+import axios, {AxiosInstance, CreateAxiosDefaults} from "axios";
 
 const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export const publicAxiosInstance = axios.create({
+const defaultOptions = {
   baseURL: BASE_API_URL,
   timeout: 30000,
   withCredentials: true
-})
+};
 
-export const verifyAxiosInstance = axios.create({
-  baseURL: BASE_API_URL,
-  timeout: 30000,
-  withCredentials: true
-});
+const createDefaultAxiosClient = (options: CreateAxiosDefaults = {}): AxiosInstance => {
+  return axios.create({...defaultOptions, ...options});
+};
 
-export const refreshTokenInstance = axios.create({
-  baseURL: BASE_API_URL,
-  timeout: 30000,
-  withCredentials: true
-});
+export const publicAxiosInstance = createDefaultAxiosClient();
 
-// Instance for relogin
-export const reloginInstance = axios.create({
-  baseURL: BASE_API_URL,
-  timeout: 30000,
-  withCredentials: true
-});
+export const verifyAxiosInstance = createDefaultAxiosClient();
 
-// Instance for streaming service
-export const streamInstance = axios.create({
-  baseURL: BASE_API_URL,
-  timeout: 30000,
-  withCredentials: true
-});
+export const refreshTokenInstance = createDefaultAxiosClient();
+
+export const reloginInstance = createDefaultAxiosClient();
+
+export const streamInstance = createDefaultAxiosClient();
