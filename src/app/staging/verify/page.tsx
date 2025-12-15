@@ -11,7 +11,6 @@ export default function StagingVerifyPage() {
   
   // Check environment on mount
   useEffect(() => {
-    console.log('APP ENV:', process.env.NEXT_PUBLIC_APP_ENV);
     if (process.env.NEXT_PUBLIC_APP_ENV !== 'staging') {
       setIsStaging(false)
       notFound() // Return 404 if not staging

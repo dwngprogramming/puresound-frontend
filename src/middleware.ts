@@ -8,37 +8,35 @@ const IS_STAGING = process.env.NEXT_PUBLIC_APP_ENV === 'staging';
 const intlMiddleware = createMiddleware(routing);
 
 export default function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  console.log('Middleware - Incoming request for:', pathname, 'App Env:', process.env.NEXT_PUBLIC_APP_ENV);
-  // --- PHẦN 1: XỬ LÝ RIÊNG CHO ROUTE /staging ---
-  // Nếu đường dẫn bắt đầu bằng /staging -> Chúng ta tự xử lý logic bảo vệ
-  if (pathname.startsWith('/staging')) {
-    
-    // A. Nếu KHÔNG phải môi trường Staging (ví dụ: Development, Production)
-    // -> Chặn truy cập route này luôn
-    if (!IS_STAGING) {
-      request.nextUrl.pathname = "/404";
-      return NextResponse.rewrite(request.nextUrl);
-    }
-    
-    // B. Logic bỏ qua các file tĩnh/api (thường staging prefix ít khi dính cái này, nhưng cứ giữ cho chắc)
-    if (
-      pathname.startsWith('/_next') ||
+  const {pathname} = request.nextUrl;
+  
+  if (IS_STAGING) {
+    const isPublicPath =
+      pathname === '/staging/verify' ||
       pathname.startsWith('/api') ||
-      pathname === '/staging/verify' // Cho phép vào trang verify
-    ) {
-      return NextResponse.next();
+      pathname.startsWith('/_next') ||
+      pathname.includes('.'); // File tĩnh (favicon.ico, image.png...)
+    
+    // 2. Nếu KHÔNG phải public path thì bắt buộc check token
+    if (!isPublicPath) {
+      const hasToken = request.cookies.has('stg_token');
+      
+      if (!hasToken) {
+        // Nếu chưa có token -> Đưa về trang verify
+        const url = request.nextUrl.clone();
+        url.pathname = '/staging/verify';
+        return NextResponse.redirect(url);
+      }
     }
-    
-    // C. Kiểm tra Token
-    const hasToken = request.cookies.has('stg_token');
-    
-    if (!hasToken) {
-      // Chưa đăng nhập -> Đá về login
+  }
+  
+  if (pathname.startsWith('/staging')) {
+    // Chuyển hướng /staging hoặc /staging/ về /staging/verify
+    if (pathname === '/staging' || pathname === '/staging/') {
       return NextResponse.redirect(new URL('/staging/verify', request.url));
     }
     
-    // D. Bảo vệ trang Admin
+    // Nếu là admin route, kiểm tra role
     if (pathname.startsWith('/staging/admin')) { // Lưu ý check đúng path admin của bạn
       const role = request.cookies.get('stg_role')?.value;
       if (role !== 'admin') {
@@ -46,12 +44,20 @@ export default function middleware(request: NextRequest) {
       }
     }
     
-    // Nếu mọi thứ OK -> Cho phép truy cập route /staging
-    return NextResponse.next();
+    // Nếu là /staging/verify thì cho qua (để render trang login)
+    if (pathname === '/staging/verify') {
+      const hasToken = request.cookies.has('stg_token');
+      if (hasToken) {
+        // Nếu đã có token rồi thì chuyển về trang chính
+        return NextResponse.redirect(new URL('/', request.url));
+      } else {
+        return NextResponse.next();
+      }
+    }
   }
   
-  // --- PHẦN 2: CÁC ROUTE CÒN LẠI (App chính) ---
-  // Nếu không phải /staging, giao lại cho next-intl xử lý đa ngôn ngữ
+  // Giao lại cho next-intl xử lý đa ngôn ngữ
+  // Chỉ chạy xuống đây khi đã qua được lớp bảo vệ Staging ở trên
   return intlMiddleware(request);
 }
 
