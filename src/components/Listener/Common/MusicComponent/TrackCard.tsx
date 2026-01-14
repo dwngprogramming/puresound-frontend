@@ -9,7 +9,7 @@ interface TrackCardProps {
 const TrackCard = ({track}: TrackCardProps) => {
   return (
     <div
-      className="w-28 lg:w-48 p-3 flex flex-col shrink-0 justify-start items-start space-y-2 hover:bg-gray-800 rounded-lg cursor-pointer">
+      className="w-28 md:w-48 p-3 flex flex-col shrink-0 justify-start items-start space-y-2 hover:bg-gray-800 rounded-lg cursor-pointer">
       <Image
         src={track.album.images[0].url}
         alt={track.title}
