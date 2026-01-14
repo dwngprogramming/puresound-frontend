@@ -7,11 +7,11 @@ const ArtistCard = ({artist}: { artist: SimplifiedArtistResponse }) => {
   const t = useTranslations("Listener.Common");
   return (
     <div
-      className="w-28 lg:w-48 p-3 flex flex-col shrink-0 justify-start items-start space-y-2 hover:bg-gray-800 rounded-lg cursor-pointer">
+      className="w-28 md:w-48 p-3 flex flex-col shrink-0 justify-start items-start space-y-2 hover:bg-gray-800 rounded-lg cursor-pointer">
       <Image
-        src={`https://i.scdn.co/image/ab67616d00001e024b56a34b0c2b3798fd46f855`}
+        src={artist.images[0].url}
         alt={artist.stageName}
-        className="rounded-full"
+        className="w-full aspect-square rounded-full object-cover"
       />
       <div className="flex flex-col justify-start items-start space-y-0.5">
         <Link href="#" className="font-bold line-clamp-2 hover:underline">{artist.stageName}</Link>
