@@ -8,6 +8,7 @@ import InitialLoadListener from "@/components/Listener/Common/ClientRenderLayout
 import PageLoader from "@/components/PageLoader";
 import Footer from "@/components/Listener/Common/Footer";
 import MyLibrary from "@/components/Listener/Common/Library";
+import RightContentLayout from "@/components/Listener/Common/RightContentLayout";
 
 const ClientRenderLayout = ({children}: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -28,12 +29,13 @@ const ClientRenderLayout = ({children}: { children: React.ReactNode }) => {
         <Header/>
         <MyLibrary/>
         <MobileOverlay/>
+        <RightContentLayout/>
         
         {/* Content wrapper */}
         {/* flex-1 + h-0 => Tạo ra area content có thể scroll bên trong */}
         <div className="flex-1 flex mt-20 mb-22 h-0">
           <main
-            className="flex-1 ml-4 lg:ml-80 mr-2 px-4 py-3 lg:px-6 lg:py-5 rounded-2xl bg-neutral-900/60 overflow-y-auto vertical-scrollbar">
+            className="flex-1 ml-4 lg:ml-80 lg:mr-80 mr-2 px-4 py-3 lg:pl-6 lg:pr-0 lg:py-5 rounded-2xl bg-neutral-900/60 overflow-y-auto vertical-scrollbar">
             {children}
             <Footer/>
           </main>
