@@ -1,5 +1,5 @@
 import {useAppDispatch, useAppSelector} from "@/libs/redux/hooks";
-import {setQueueCurrentTab} from "@/libs/redux/features/right_sidebar_control/rightSidebarControlSlice";
+import {setQueueCurrentTab} from "@/libs/redux/features/right-sidebar-control/rightSidebarControlSlice";
 
 const QueueOptionButton = () => {
   const currentTab = useAppSelector((state) => state.rightSidebarControl.queue.currentTab);

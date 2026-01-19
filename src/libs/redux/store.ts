@@ -2,7 +2,8 @@ import {configureStore} from "@reduxjs/toolkit";
 import authReducer from "@/libs/redux/features/auth/authSlice";
 import notificationReducer from "@/libs/redux/features/notification/notificationSlice";
 import subscriptionReducer from "@/libs/redux/features/subscription/subscriptionSlice";
-import rightSidebarControlReducer from "@/libs/redux/features/right_sidebar_control/rightSidebarControlSlice";
+import rightSidebarControlReducer from "@/libs/redux/features/right-sidebar-control/rightSidebarControlSlice";
+import playerReducer from "@/libs/redux/features/player/playerSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     notification: notificationReducer,
     subscription: subscriptionReducer,
     rightSidebarControl: rightSidebarControlReducer,
+    player: playerReducer,
   },
 });
 

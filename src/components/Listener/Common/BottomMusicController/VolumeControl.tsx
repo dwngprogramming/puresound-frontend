@@ -1,15 +1,21 @@
 import {Slider, Tooltip} from "@heroui/react";
 import {Volume2, VolumeX} from "lucide-react";
-import {usePlayerContext} from "@/context/player-control-context";
 import {useTranslations} from "next-intl";
+import {useAppDispatch, useAppSelector} from "@/libs/redux/hooks";
+import {setVolume, toggleMute} from "@/libs/redux/features/player/playerSlice";
 
 const VolumeControl = () => {
   const tOption = useTranslations("Components.MusicOption");
-  const {
-    playerControl,
-    handleVolume,
-    handleMuted
-  } = usePlayerContext();
+  const {currentVolume, isMuted} = useAppSelector(state => state.player);
+  const dispatch = useAppDispatch();
+  
+  const handleVolumeChange = (value: number) => {
+    dispatch(setVolume(value));
+  }
+  
+  const handleToggleMute = () => {
+    dispatch(toggleMute());
+  };
   
   return (
     <div className="min-w-[130px] px-2">
@@ -23,12 +29,12 @@ const VolumeControl = () => {
         }}
         aria-label="Playback progress"
         size="sm"
-        value={playerControl.volume}
+        value={currentVolume}
         minValue={0}
         maxValue={100}
-        onChange={(value) => handleVolume(value as number)}
+        onChange={(value) => handleVolumeChange(value as number)}
         startContent={
-          playerControl.isMuted ?
+          isMuted ?
             <Tooltip
               classNames={{content: "bg-gray-800 text-xs"}}
               content={
@@ -40,7 +46,7 @@ const VolumeControl = () => {
             >
               <div
                 className={`group py-1 pr-2 cursor-pointer`}
-                onClick={() => handleMuted(false)}
+                onClick={handleToggleMute}
               >
                 <VolumeX
                   size={21}
@@ -59,7 +65,7 @@ const VolumeControl = () => {
             >
               <div
                 className={`group py-1 pr-2 cursor-pointer`}
-                onClick={() => handleMuted(true)}
+                onClick={handleToggleMute}
               >
                 <Volume2
                   size={21}

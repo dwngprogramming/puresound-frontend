@@ -1,189 +1,165 @@
-import {Dot, Repeat, Repeat1, Shuffle} from "lucide-react";
-import {LoopMode} from "@/const/LoopMode";
-import {Slider, Tooltip} from "@heroui/react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBackwardStep, faForwardStep, faPause, faPlay} from "@fortawesome/free-solid-svg-icons";
-import {formatDuration} from "@/utils/formatDuration";
-import {useTranslations} from "next-intl";
-import {usePlayerContext} from "@/context/player-control-context";
+"use client"
 
-const PlayerControls = () => {
+import React, { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
+import { Tooltip, Slider } from "@heroui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackwardStep, faForwardStep, faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { Shuffle, Repeat, Repeat1, Dot } from "lucide-react"; // Hoặc icon library bạn dùng
+import { useAppDispatch, useAppSelector } from "@/libs/redux/hooks";
+import {
+  playNext,
+  playPrev,
+  setIsPlaying,
+  toggleShuffle,
+  toggleLoop
+} from "@/libs/redux/features/player/playerSlice";
+import { usePlayerContext } from "@/context/player-control-context";
+import { LoopMode } from "@/const/LoopMode";
+import {formatDuration} from "@/utils/formatDuration";
+
+export const PlayerControls = () => {
   const tPlayer = useTranslations("Components.MusicPlayer");
-  const {
-    playerControl,
-    handleLoop,
-    handleShuffle,
-    handlePlayTrack,
-    handleSeekTrack,
-    handleSeekComplete,
-    handleNextTrack
-  } = usePlayerContext();
+  const dispatch = useAppDispatch();
+  
+  const { isShuffling, loopMode, isPlaying } = useAppSelector(state => state.player);
+  
+  const { currentTime, duration, seek } = usePlayerContext();
+  
+  // 3. Local State cho Slider (Để tránh xung đột khi người dùng đang kéo thanh trượt)
+  const [sliderValue, setSliderValue] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // Sync slider với currentTime (chỉ khi user KHÔNG đang kéo)
+  useEffect(() => {
+    if (!isDragging) {
+      setSliderValue(currentTime);
+    }
+  }, [currentTime, isDragging]);
+  
+  const handleTogglePlay = () => {
+    dispatch(setIsPlaying(!isPlaying));
+  };
+  
+  const handleNext = () => {
+    dispatch(playNext({ isListenerClick: true }));
+  };
+  
+  const handlePrev = () => {
+    dispatch(playPrev());
+  };
+  
+  const handleShuffleClick = () => {
+    dispatch(toggleShuffle());
+  };
+  
+  const handleLoopClick = () => {
+    dispatch(toggleLoop());
+  };
+  
+  const onSeekChange = (value: number | number[]) => {
+    setIsDragging(true);
+    setSliderValue(Number(value));
+  };
+  
+  const onSeekEnd = (value: number | number[]) => {
+    setIsDragging(false);
+    seek(Number(value));
+  };
   
   return (
     <div className="absolute left-0 right-0 flex justify-center items-center">
       <div className="flex flex-col items-center space-y-2">
         <div className="flex items-center space-x-6">
+          {/* Shuffle Button */}
           <Tooltip
-            classNames={{content: "bg-gray-800 text-xs"}}
-            content={
-              <div className="flex flex-col items-center">
-                <div
-                  className="font-semibold mb-1">{playerControl.shuffle ? tPlayer("shuffleOff") : tPlayer("shuffleOn")}</div>
-              </div>
-            }
-            delay={500}
-            closeDelay={0}
-            placement="top"
+            content={<div className="font-semibold">{isShuffling ? tPlayer("shuffleOff") : tPlayer("shuffleOn")}</div>}
+            delay={500} closeDelay={0} placement="top"
+            classNames={{ content: "bg-gray-800 text-xs text-white" }}
           >
             <div
-              className={`relative cursor-pointer select-none ${playerControl.shuffle ?
-                "text-blue-400 hover:text-blue-300 transform ease-in-out duration-300" :
-                "text-gray-400 hover:text-white transform ease-in-out duration-300"}`}
-              onClick={handleShuffle}
+              className={`relative cursor-pointer select-none transition-colors duration-300 ${
+                isShuffling ?
+                  "text-blue-400 hover:text-blue-300" :
+                  "text-gray-400 hover:text-white"
+              }`}
+              onClick={handleShuffleClick}
             >
-              <Shuffle size={21}/>
-              {playerControl.shuffle && <Dot className="absolute -bottom-4.5 -left-0.75"/>}
+              <Shuffle size={20} />
+              {isShuffling && <Dot size={18} className="absolute -bottom-3 left-1/2 -translate-x-1/2 text-blue-400" />}
             </div>
           </Tooltip>
           
-          <Tooltip
-            classNames={{content: "bg-gray-800 text-xs"}}
-            content={
-              <div className="flex flex-col items-center">
-                <div className="font-semibold mb-1">{tPlayer("previous")}</div>
-              </div>
-            }
-            delay={500}
-            closeDelay={0}
-            placement="top"
-          >
-            <div className="select-none">
-              <FontAwesomeIcon
-                size="lg"
-                icon={faBackwardStep}
-                className="cursor-pointer text-gray-400 hover:text-white transform ease-in-out duration-300"
-              />
+          {/* Previous Button */}
+          <Tooltip content={tPlayer("previous")} delay={500} closeDelay={0} placement="top" classNames={{ content: "bg-gray-800 text-xs text-white" }}>
+            <div onClick={handlePrev} className="cursor-pointer text-gray-400 hover:text-white transition-colors">
+              <FontAwesomeIcon icon={faBackwardStep} size="lg" />
             </div>
           </Tooltip>
           
+          {/* Play/Pause Button (Main) */}
+          <Tooltip content={isPlaying ? tPlayer("pause") : tPlayer("play")} delay={500} closeDelay={0} placement="top" classNames={{ content: "bg-gray-800 text-xs text-white" }}>
+            <div
+              className={`cursor-pointer rounded-full p-3 hover:scale-105 transition-transform duration-200 flex items-center justify-center w-10 h-10 ${
+                isPlaying ? 'bg-blue-400 text-white' : 'bg-white text-black'
+              }`}
+              onClick={handleTogglePlay}
+            >
+              <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} size="lg" />
+            </div>
+          </Tooltip>
+          
+          {/* Next Button */}
+          <Tooltip content={tPlayer("next")} delay={500} closeDelay={0} placement="top" classNames={{ content: "bg-gray-800 text-xs text-white" }}>
+            <div onClick={handleNext} className="cursor-pointer text-gray-400 hover:text-white transition-colors">
+              <FontAwesomeIcon icon={faForwardStep} size="lg" />
+            </div>
+          </Tooltip>
+          
+          {/* Loop Button */}
           <Tooltip
-            classNames={{content: "bg-gray-800 text-xs"}}
             content={
-              <div className="flex flex-col items-center">
-                <div className="font-semibold mb-1">{playerControl.playing ? tPlayer("pause") : tPlayer("play")}</div>
+              <div className="font-semibold">
+                {loopMode === LoopMode.NONE ? tPlayer("repeatAll") : loopMode === LoopMode.ALL ? tPlayer("repeatOne") : tPlayer("repeatOff")}
               </div>
             }
-            delay={500}
-            closeDelay={0}
-            placement="top"
+            delay={500} closeDelay={0} placement="top" classNames={{ content: "bg-gray-800 text-xs text-white" }}
           >
             <div
-              className={`cursor-pointer rounded-full px-2 py-2 hover:scale-105 transform ease-in-out duration-300 select-none ${playerControl.playing ? 'bg-blue-400' : 'bg-white'}`}
-              onClick={handlePlayTrack}
+              className={`relative cursor-pointer select-none transition-colors duration-300 ${
+                loopMode !== LoopMode.NONE ? "text-blue-400 hover:text-blue-300" : "text-gray-400 hover:text-white"
+              }`}
+              onClick={handleLoopClick}
             >
-              {
-                playerControl.playing ?
-                  <FontAwesomeIcon
-                    size="lg"
-                    icon={faPause}
-                    className="text-gray-200"
-                  /> :
-                  <FontAwesomeIcon
-                    size="lg"
-                    icon={faPlay}
-                    className="text-black"
-                  />
-              }
-            </div>
-          </Tooltip>
-          
-          <Tooltip
-            classNames={{content: "bg-gray-800 text-xs"}}
-            content={
-              <div className="flex flex-col items-center">
-                <div className="font-semibold mb-1">{tPlayer("next")}</div>
-              </div>
-            }
-            delay={500}
-            closeDelay={0}
-            placement="top"
-          >
-            <div
-              className="select-none"
-              onClick={handleNextTrack}
-            >
-              <FontAwesomeIcon
-                size="lg"
-                icon={faForwardStep}
-                className="cursor-pointer text-gray-400 hover:text-white transform ease-in-out duration-300"
-              />
-            </div>
-          </Tooltip>
-          
-          <Tooltip
-            classNames={{content: "bg-gray-800 text-xs"}}
-            content={
-              <div className="flex flex-col items-center">
-                <div className="font-semibold mb-1">
-                  {
-                    playerControl.loopMode === LoopMode.NONE ?
-                      tPlayer("repeatAll") :
-                      playerControl.loopMode === LoopMode.ALL ?
-                        tPlayer("repeatOne") :
-                        tPlayer("repeatOff")
-                  }
-                </div>
-              </div>
-            }
-            delay={500}
-            closeDelay={0}
-            placement="top"
-          >
-            <div className="cursor-pointer select-none">
-              {
-                playerControl.loopMode === LoopMode.NONE ?
-                  <Repeat
-                    size={21}
-                    className="text-gray-400 hover:text-white transform ease-in-out duration-300"
-                    onClick={() => handleLoop(LoopMode.ALL)}
-                  /> :
-                  playerControl.loopMode === LoopMode.ALL ?
-                    <div
-                      className="relative text-blue-400 hover:text-blue-300 transform ease-in-out duration-300"
-                      onClick={() => handleLoop(LoopMode.ONE)}
-                    >
-                      <Repeat size={21}/>
-                      <Dot className="absolute -bottom-4.5 -left-0.5"/>
-                    </div> :
-                    <div
-                      className="relative text-blue-400 hover:text-blue-300 transform ease-in-out duration-300"
-                      onClick={() => handleLoop(LoopMode.NONE)}
-                    >
-                      <Repeat1 size={21}/>
-                      <Dot className="absolute -bottom-4.5 -left-0.5"/>
-                    </div>
-              }
+              {loopMode === LoopMode.ONE ? <Repeat1 size={20} /> : <Repeat size={20} />}
+              {loopMode !== LoopMode.NONE && (
+                <Dot size={18} className="absolute -bottom-3 left-1/2 -translate-x-1/2 text-blue-400" />
+              )}
             </div>
           </Tooltip>
         </div>
         
-        <div className="min-w-[400px]">
+        {/* Progress Slider */}
+        <div className="min-w-[400px] w-full">
           <Slider
+            aria-label="Playback progress"
+            size="sm"
+            // Dùng local state sliderValue thay vì currentTime trực tiếp để mượt mà khi kéo
+            value={sliderValue}
+            minValue={0}
+            maxValue={duration || 100} // Tránh lỗi chia cho 0 hoặc max=0
+            onChange={onSeekChange}    // Đang kéo
+            onChangeEnd={onSeekEnd}    // Thả ra
+            
+            // Custom styles (Giữ nguyên style của bạn)
             classNames={{
               track: `group cursor-pointer border-x-5 m-0 h-[6px]
             data-[fill-start=true]:border-s-blue-400 hover:data-[fill-start=true]:border-s-blue-300
             data-[fill-end=true]:border-e-blue-400 hover:data-[fill-end=true]:border-e-blue-300`,
               filler: `bg-blue-400 group-hover:bg-blue-300 rounded-r-full group-data-[fill-end=true]:rounded-r-none`,
             }}
-            aria-label="Playback progress"
-            size="sm"
-            value={Math.floor(playerControl.current)}
-            minValue={0}
-            maxValue={Math.floor(playerControl.duration)}
-            onChange={(value) => handleSeekTrack(value as number)}
-            onChangeEnd={(value) => handleSeekComplete(value as number)}
-            startContent={<p className="text-xs text-gray-400 w-7.5">{formatDuration(playerControl.current)}</p>}
-            endContent={<p className="text-xs text-gray-400 w-7.5">{formatDuration(playerControl.duration)}</p>}
+            startContent={<p className="text-xs text-gray-400 w-8 text-right mr-2">{formatDuration(sliderValue)}</p>}
+            endContent={<p className="text-xs text-gray-400 w-8 ml-2">{formatDuration(duration)}</p>}
             renderThumb={(props) => (
               <div
                 {...props}
@@ -195,6 +171,6 @@ const PlayerControls = () => {
       </div>
     </div>
   );
-}
+};
 
 export default PlayerControls;
