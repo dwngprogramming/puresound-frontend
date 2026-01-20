@@ -4,6 +4,7 @@ import notificationReducer from "@/libs/redux/features/notification/notification
 import subscriptionReducer from "@/libs/redux/features/subscription/subscriptionSlice";
 import rightSidebarControlReducer from "@/libs/redux/features/right-sidebar-control/rightSidebarControlSlice";
 import playerReducer from "@/libs/redux/features/player/playerSlice";
+import layoutReducer from "@/libs/redux/features/layout/layoutSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     subscription: subscriptionReducer,
     rightSidebarControl: rightSidebarControlReducer,
     player: playerReducer,
+    layout: layoutReducer,
   },
 });
 

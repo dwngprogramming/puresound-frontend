@@ -6,21 +6,10 @@ import streamApi from "@/apis/main/stream/stream.api";
 import {CustomHlsConfig, HlsTokenRefreshLoader} from "@/components/Utility/HlsTokenRefreshLoader";
 import {playNext, setIsPlaying} from "@/libs/redux/features/player/playerSlice";
 
-export interface PlayerControl {
-  trackId: string | null
-  duration: number
-  current: number
-  bitrate: number
-  loopMode: LoopMode
-  shuffle: boolean
-  playing: boolean
-  volume: number
-  isMuted: boolean
-}
-
 export const usePlayerControls = () => {
   const dispatch = useAppDispatch();
-  const {currentTrack, isPlaying, currentVolume, isMuted, loopMode} = useAppSelector(state => state.player);
+  const {currentQueue, currentIndex, isPlaying, currentVolume, isMuted, loopMode} = useAppSelector(state => state.player);
+  const currentTrack = currentQueue[currentIndex] || null;
   const bitrate = 192;    // Tạm thời hardcode bitrate
   
   const [currentTime, setCurrentTime] = useState(0);
@@ -106,7 +95,22 @@ export const usePlayerControls = () => {
             hls.attachMedia(audioRef.current);
             
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
-              audioRef.current?.play().catch(e => console.warn("Autoplay blocked", e));
+              const playPromise = audioRef.current?.play();
+              
+              if (playPromise !== undefined) {
+                playPromise
+                  .then(() => {
+                    if (!isPlaying) dispatch(setIsPlaying(true));
+                  })
+                  .catch((error) => {
+                    if (error.name === 'NotAllowedError') {
+                      console.warn("Autoplay prevented by browser. User interaction needed.");
+                      dispatch(setIsPlaying(false));
+                    } else {
+                      console.error("Playback error:", error);
+                    }
+                  });
+              }
             });
             
             hls.on(Hls.Events.LEVEL_LOADED, (_, data) => {

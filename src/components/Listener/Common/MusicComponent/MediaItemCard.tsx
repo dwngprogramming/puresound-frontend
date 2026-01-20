@@ -5,16 +5,31 @@ import TrackCard from "@/components/Listener/Common/MusicComponent/TrackCard";
 import ArtistCard from "@/components/Listener/Common/MusicComponent/ArtistCard";
 import {faPlay} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useAppDispatch} from "@/libs/redux/hooks";
+import {setIsPlaying, setQueue} from "@/libs/redux/features/player/playerSlice";
 
 const MediaItemCard = ({item}: { item: SimplifiedItemResponse }) => {
   let content = null;
+  let itemType: 'track' | 'artist' | 'unknown' = 'unknown';
+  const dispatch = useAppDispatch();
+  
+  const handlePlayClick = () => {
+    if (itemType === 'track') {
+      dispatch(setQueue({
+        tracks: [item as SimplifiedTrackResponse],
+      }));
+      dispatch(setIsPlaying(true));
+    }
+  }
   
   if (!item) {
     return null;
   } else if ((item as SimplifiedTrackResponse).explicit !== undefined) {
     content = <TrackCard track={item as SimplifiedTrackResponse} />;
+    itemType = 'track';
   } else if ((item as SimplifiedArtistResponse).stageName !== undefined) {
     content = <ArtistCard artist={item as SimplifiedArtistResponse} />;
+    itemType = 'artist';
   } else {
     // Trường hợp không khớp loại nào
     return null;
@@ -33,6 +48,7 @@ const MediaItemCard = ({item}: { item: SimplifiedItemResponse }) => {
             size="lg"
             icon={faPlay}
             className="text-white"
+            onClick={handlePlayClick}
           />
         </button>
       </div>

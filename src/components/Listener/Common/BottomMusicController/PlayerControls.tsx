@@ -1,41 +1,21 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
-import { Tooltip, Slider } from "@heroui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBackwardStep, faForwardStep, faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
-import { Shuffle, Repeat, Repeat1, Dot } from "lucide-react"; // Hoặc icon library bạn dùng
-import { useAppDispatch, useAppSelector } from "@/libs/redux/hooks";
-import {
-  playNext,
-  playPrev,
-  setIsPlaying,
-  toggleShuffle,
-  toggleLoop
-} from "@/libs/redux/features/player/playerSlice";
-import { usePlayerContext } from "@/context/player-control-context";
-import { LoopMode } from "@/const/LoopMode";
-import {formatDuration} from "@/utils/formatDuration";
+import React from "react";
+import {useTranslations} from "next-intl";
+import {Tooltip} from "@heroui/react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faBackwardStep, faForwardStep, faPause, faPlay} from "@fortawesome/free-solid-svg-icons";
+import {Dot, Repeat, Repeat1, Shuffle} from "lucide-react"; // Hoặc icon library bạn dùng
+import {useAppDispatch, useAppSelector} from "@/libs/redux/hooks";
+import {playNext, playPrev, setIsPlaying, toggleLoop, toggleShuffle} from "@/libs/redux/features/player/playerSlice";
+import {LoopMode} from "@/const/LoopMode";
+import PlayerProgressSlider from "@/components/Listener/Common/BottomMusicController/PlayerProgressSlider";
 
 export const PlayerControls = () => {
   const tPlayer = useTranslations("Components.MusicPlayer");
   const dispatch = useAppDispatch();
   
   const { isShuffling, loopMode, isPlaying } = useAppSelector(state => state.player);
-  
-  const { currentTime, duration, seek } = usePlayerContext();
-  
-  // 3. Local State cho Slider (Để tránh xung đột khi người dùng đang kéo thanh trượt)
-  const [sliderValue, setSliderValue] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  
-  // Sync slider với currentTime (chỉ khi user KHÔNG đang kéo)
-  useEffect(() => {
-    if (!isDragging) {
-      setSliderValue(currentTime);
-    }
-  }, [currentTime, isDragging]);
   
   const handleTogglePlay = () => {
     dispatch(setIsPlaying(!isPlaying));
@@ -55,16 +35,6 @@ export const PlayerControls = () => {
   
   const handleLoopClick = () => {
     dispatch(toggleLoop());
-  };
-  
-  const onSeekChange = (value: number | number[]) => {
-    setIsDragging(true);
-    setSliderValue(Number(value));
-  };
-  
-  const onSeekEnd = (value: number | number[]) => {
-    setIsDragging(false);
-    seek(Number(value));
   };
   
   return (
@@ -140,34 +110,7 @@ export const PlayerControls = () => {
         </div>
         
         {/* Progress Slider */}
-        <div className="min-w-[400px] w-full">
-          <Slider
-            aria-label="Playback progress"
-            size="sm"
-            // Dùng local state sliderValue thay vì currentTime trực tiếp để mượt mà khi kéo
-            value={sliderValue}
-            minValue={0}
-            maxValue={duration || 100} // Tránh lỗi chia cho 0 hoặc max=0
-            onChange={onSeekChange}    // Đang kéo
-            onChangeEnd={onSeekEnd}    // Thả ra
-            
-            // Custom styles (Giữ nguyên style của bạn)
-            classNames={{
-              track: `group cursor-pointer border-x-5 m-0 h-[6px]
-            data-[fill-start=true]:border-s-blue-400 hover:data-[fill-start=true]:border-s-blue-300
-            data-[fill-end=true]:border-e-blue-400 hover:data-[fill-end=true]:border-e-blue-300`,
-              filler: `bg-blue-400 group-hover:bg-blue-300 rounded-r-full group-data-[fill-end=true]:rounded-r-none`,
-            }}
-            startContent={<p className="text-xs text-gray-400 w-8 text-right mr-2">{formatDuration(sliderValue)}</p>}
-            endContent={<p className="text-xs text-gray-400 w-8 ml-2">{formatDuration(duration)}</p>}
-            renderThumb={(props) => (
-              <div
-                {...props}
-                className="top-1/2 w-3.5 h-3.5 rounded-full bg-white transition-opacity opacity-0 group-hover:opacity-100"
-              />
-            )}
-          />
-        </div>
+        <PlayerProgressSlider/>
       </div>
     </div>
   );
