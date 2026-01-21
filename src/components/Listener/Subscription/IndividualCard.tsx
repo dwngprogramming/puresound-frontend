@@ -24,9 +24,9 @@ const IndividualCard = ({plan}: { plan: PlanResponse }) => {
               <p className="font-bold text-2xl text-neutral-950">{t('plans.quarterly.individual.title')}</p>
               <Chip
                 size="sm"
-                classNames={{base: 'bg-gradient-to-br from-gray-800/70 via-gray-900/70 via-gray-700/70 to-gray-900/90'}}
+                classNames={{base: 'w-5 h-5 bg-gradient-to-br from-gray-800/70 via-gray-900/70 via-gray-700/70 to-gray-900/90'}}
               >
-                {t('plans.popular')}
+                <span className="text-[11px]">{t('plans.popular')}</span>
               </Chip>
             </div>
             <p className="text-neutral-800 text-sm">{t('plans.quarterly.individual.description')}</p>

@@ -97,7 +97,7 @@ const MyLibrary = () => {
 
   return (
     <aside id="sidebar" className="fixed left-0 top-20 bottom-22 w-76 ml-2 px-4 py-3 lg:px-6 lg:py-5 bg-neutral-900/60 z-40 rounded-2xl
-                            transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+                            transform -translate-x-[105%] lg:translate-x-0 transition-transform duration-300 ease-in-out">
       <div className="flex items-center justify-between">
         <p className="font-bold text-lg">{t('title')}</p>
         <div className="relative">

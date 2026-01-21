@@ -6,6 +6,7 @@ interface ControlButtonProps {
   icon: LucideIcon
   label: string;
   isEnabled: boolean;
+  isActive?: boolean;
   size?: number;
   onClick?: () => void;
   iconClassname?: string;
@@ -15,6 +16,7 @@ const OptionButton = ({
                         icon: Icon,
                         label,
                         isEnabled,
+                        isActive,
                         size = 20,
                         onClick,
                       }: ControlButtonProps) => {
@@ -44,7 +46,8 @@ const OptionButton = ({
           size={size}
           className={`${
             isEnabled
-              ? "text-gray-400 group-hover:scale-105 group-hover:text-white transition ease-in-out duration-300"
+              ? isActive ? "group-hover:scale-105 text-blue-400" :
+                "text-gray-400 group-hover:scale-105 group-hover:text-white transition ease-in-out duration-300"
               : "text-gray-500"
           }`}
           onClick={handleClick}
