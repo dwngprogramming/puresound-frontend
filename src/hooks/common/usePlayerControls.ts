@@ -8,7 +8,7 @@ import {playNext, setIsPlaying} from "@/libs/redux/features/player/playerSlice";
 
 export const usePlayerControls = () => {
   const dispatch = useAppDispatch();
-  const {currentQueue, currentIndex, isPlaying, currentVolume, isMuted, loopMode} = useAppSelector(state => state.player);
+  const {currentQueue, currentIndex, isPlaying, currentVolume, isMuted, loopMode, timestamp} = useAppSelector(state => state.player);
   const currentTrack = currentQueue[currentIndex] || null;
   const bitrate = 192;    // Tạm thời hardcode bitrate
   
@@ -147,10 +147,10 @@ export const usePlayerControls = () => {
       if (hlsRef.current) hlsRef.current.destroy();
     };
     
-    // Quan trọng: Dependency là currentTrack.id
+    // Quan trọng: Dependency là currentTrack.id và timestamp (Khi setQueue mới, timestamp thay đổi)
     // Nếu chỉ để [currentTrack], React có thể so sánh tham chiếu object (reference check)
     // Dùng .id đảm bảo logic chỉ chạy lại khi ĐÚNG LÀ bài hát đã đổi.
-  }, [currentTrack?.id, bitrate, dispatch, handleNewTokenWhenExpired]);
+  }, [currentTrack?.id, timestamp, bitrate, dispatch, handleNewTokenWhenExpired]);
   
   useEffect(() => {
     if (!audioRef.current) return;

@@ -20,7 +20,7 @@ const NowPlayingTrack = () => {
       <Image
         isBlurred={isPremium}
         alt={currentTrack?.title || 'Track Image'}
-        src={currentTrack?.album.images[0].url || ''}
+        src={currentTrack?.album.images[0].url || undefined}
         height={60}
         width={60}
         className="rounded-lg"

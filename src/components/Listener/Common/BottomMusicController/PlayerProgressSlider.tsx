@@ -18,6 +18,14 @@ const PlayerProgressSlider = () => {
     }
   }, [currentTime, isDragging]);
   
+  useEffect(() => {
+    if (duration > 0) {
+      // Tính toán phần trăm (0 - 100)
+      const percentage = (sliderValue / duration) * 100;
+      console.log(`Slider at ${percentage.toFixed(2)}% of duration`);
+    }
+  }, [sliderValue, duration]);
+  
   const onSeekChange = (value: number | number[]) => {
     setIsDragging(true);
     setSliderValue(Number(value));
@@ -37,6 +45,7 @@ const PlayerProgressSlider = () => {
         value={sliderValue}
         minValue={0}
         maxValue={duration || 100} // Tránh lỗi chia cho 0 hoặc max=0
+        step={0.01}
         onChange={onSeekChange}    // Đang kéo
         onChangeEnd={onSeekEnd}    // Thả ra
         

@@ -15,7 +15,7 @@ const MusicQueue = () => {
   const nextUpTracks = useMemo(() => {
     if (currentQueue.length === 0) return [];
     
-    if (loopMode === LoopMode.ALL) {
+    if (currentQueue.length > 1 && loopMode === LoopMode.ALL) {
       const after = currentQueue.slice(currentIndex + 1);
       const before = currentQueue.slice(0, currentIndex);
       return [...after, ...before];
@@ -54,19 +54,23 @@ const MusicQueue = () => {
         </div>
       </div>
       
-      <div className="relative flex-1 h-0 flex flex-col">
-        <div className={`transition-shadow duration-300 ${isScrollQueue ? 'shadow-lg shadow-blue-900/40 z-10' : ''}`}>
-          <p className="font-bold mb-2 ml-2">Next Up</p>
-        </div>
-        <div onScroll={handleScroll} className="flex-1 overflow-y-auto no-scrollbar">
-          {nextUpTracks.length > 0 && nextUpTracks.map((track) => (
-            <QueueTrack
-              key={track.id}
-              track={track}
-            />
-          ))}
-        </div>
-      </div>
+      {/* Next up (appear if 1 tracks in queue */}
+      {nextUpTracks.length > 1 &&
+          <div className="relative flex-1 h-0 flex flex-col">
+              <div
+                  className={`transition-shadow duration-300 ${isScrollQueue ? 'shadow-lg shadow-blue-900/40 z-10' : ''}`}>
+                  <p className="font-bold mb-2 ml-2">Next Up</p>
+              </div>
+              <div onScroll={handleScroll} className="flex-1 overflow-y-auto no-scrollbar">
+                {nextUpTracks.map((track) => (
+                  <QueueTrack
+                    key={track.id}
+                    track={track}
+                  />
+                ))}
+              </div>
+          </div>
+      }
     </div>
   );
 };

@@ -6,7 +6,7 @@ import ArtistCard from "@/components/Listener/Common/MusicComponent/ArtistCard";
 import {faPlay} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useAppDispatch} from "@/libs/redux/hooks";
-import {setIsPlaying, setQueue} from "@/libs/redux/features/player/playerSlice";
+import {setQueue} from "@/libs/redux/features/player/playerSlice";
 
 const MediaItemCard = ({item}: { item: SimplifiedItemResponse }) => {
   let content = null;
@@ -18,7 +18,6 @@ const MediaItemCard = ({item}: { item: SimplifiedItemResponse }) => {
       dispatch(setQueue({
         tracks: [item as SimplifiedTrackResponse],
       }));
-      dispatch(setIsPlaying(true));
     }
   }
   

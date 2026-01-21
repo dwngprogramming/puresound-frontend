@@ -12,6 +12,7 @@ interface PlayerState {
   currentVolume: number;
   prevVolume: number;
   isMuted: boolean;
+  timestamp: number;
 }
 
 const initialState: PlayerState = {
@@ -24,6 +25,7 @@ const initialState: PlayerState = {
   currentVolume: 20,
   prevVolume: 20,
   isMuted: false,
+  timestamp: 0,
 };
 
 const shuffleArray = (array: SimplifiedTrackResponse[]) => {
@@ -53,6 +55,7 @@ const playerSlice = createSlice({
         state.currentIndex = startIndex;
       }
       
+      state.timestamp = Date.now();
       state.isPlaying = true;
     },
     
