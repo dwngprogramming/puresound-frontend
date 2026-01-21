@@ -42,6 +42,7 @@ export default function middleware(request: NextRequest) {
       if (role !== 'admin') {
         return NextResponse.redirect(new URL('/staging/forbidden', request.url));
       }
+      return NextResponse.next();
     }
     
     // Nếu là /staging/verify thì cho qua (để render trang login)
