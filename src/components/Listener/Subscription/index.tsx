@@ -5,11 +5,11 @@ import IndividualSubscription from "@/components/Listener/Subscription/Individua
 import StudentSubscription from "@/components/Listener/Subscription/StudentSubscription";
 import PremiumBenefits from "@/components/Listener/Subscription/PremiumBenefits";
 import {useQuery} from "@tanstack/react-query";
-import listenerPublicApi from "@/apis/main/listener/listenerPublic.api";
 import {useAppSelector} from "@/libs/redux/hooks";
 import {useEffect, useState} from "react";
 import {PlanResponse} from "@/models/listener/subscription/PlanResponse";
 import {SubscriptionType} from "@/const/subscription/SubscriptionType";
+import planApi from "@/apis/main/plan/plan.api";
 
 const Subscription = () => {
   const t = useTranslations("Listener.Premium");
@@ -18,9 +18,9 @@ const Subscription = () => {
   const token = useAppSelector(state => state.auth.token);
   // TODO: Cần thêm stale time để tránh việc fetch lại data liên tục
   const {data, isLoading} = useQuery({
-    queryKey: ['all-subscriptions', token],
+    queryKey: ['plans', token],
     queryFn: async () => {
-      const response = await listenerPublicApi.getAllPlans({
+      const response = await planApi.getPlans({
         headers: {
           Authorization: token ? `Bearer ${token}` : undefined
         }

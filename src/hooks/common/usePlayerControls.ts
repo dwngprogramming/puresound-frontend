@@ -1,363 +1,212 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {LoopMode} from "@/const/LoopMode";
 import Hls from "hls.js";
-import {useAppDispatch} from "@/libs/redux/hooks";
-import {showErrorNotification} from "@/libs/redux/features/notification/notificationAction";
-import {useTranslations} from "next-intl";
+import {useAppDispatch, useAppSelector} from "@/libs/redux/hooks";
 import streamApi from "@/apis/main/stream/stream.api";
 import {CustomHlsConfig, HlsTokenRefreshLoader} from "@/components/Utility/HlsTokenRefreshLoader";
-
-export interface PlayerControl {
-  trackId: string | null
-  duration: number
-  current: number
-  bitrate: number
-  loopMode: LoopMode
-  shuffle: boolean
-  playing: boolean
-  volume: number
-  isMuted: boolean
-}
+import {playNext, setIsPlaying} from "@/libs/redux/features/player/playerSlice";
 
 export const usePlayerControls = () => {
-  const t = useTranslations("Streaming.Error");
   const dispatch = useAppDispatch();
-  const [saved, setSaved] = useState(false);
-  const [isSeeking, setIsSeeking] = useState(false);
-  const defaultVolume = 15;
+  const {currentQueue, currentIndex, isPlaying, currentVolume, isMuted, loopMode, timestamp} = useAppSelector(state => state.player);
+  const currentTrack = currentQueue[currentIndex] || null;
+  const bitrate = 192;    // Tạm thời hardcode bitrate
   
-  const [playerControl, setPlayerControl] = useState<PlayerControl>({
-    trackId: null,
-    duration: 0,
-    current: 0,
-    bitrate: 192,
-    loopMode: LoopMode.NONE,
-    shuffle: false,
-    playing: false,
-    volume: defaultVolume,
-    isMuted: false,
-  });
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const latestVolumeRef = useRef<number>(playerControl.volume);
   const hlsRef = useRef<Hls | null>(null);
   const streamUrlRef = useRef<string | null>(null);
-  const isRefreshingRef = useRef(false);
   const tokenParamRef = useRef<string | null>(null);
   
-  // Sync Volume state & Mute -> Audio Element
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = playerControl.volume / 100;
-      audioRef.current.muted = playerControl.isMuted;
-      
-      if (!playerControl.isMuted) {
-        latestVolumeRef.current = playerControl.volume;
-      }
-    }
-  }, [playerControl.volume, playerControl.isMuted]);
+  // Refs for Token Refresh logic (Avoid Stale Closures inside HLS Loader)
+  const isRefreshingRef = useRef(false);
+  const trackIdRef = useRef<string | null>(null);
+  const bitrateRef = useRef(bitrate);
   
-  // Refresh stream URL khi hết hạn
-  // Using refs to avoid stale closures
-  const trackIdRef = useRef(playerControl.trackId);
-  const bitrateRef = useRef(playerControl.bitrate);
-  
-  // Update refs when trackId or/and bitrate changes
   useEffect(() => {
-    trackIdRef.current = playerControl.trackId;
-    bitrateRef.current = playerControl.bitrate;
-  }, [playerControl.trackId, playerControl.bitrate]);
+    trackIdRef.current = currentTrack?.id || null;
+    bitrateRef.current = bitrate;
+  }, [currentTrack, bitrate]);
   
   const handleNewTokenWhenExpired = useCallback(async () => {
-    if (isRefreshingRef.current) return null; // Avoid multiple refresh
+    if (isRefreshingRef.current) return null;
     isRefreshingRef.current = true;
     
-    const currentTrackId = trackIdRef.current;
+    const currentId = trackIdRef.current; // Lấy ID string
     const currentBitrate = bitrateRef.current;
     
-    if (!currentTrackId) return null;
+    if (!currentId) return null;
     
     try {
-      const response = await streamApi.streamTrack(currentBitrate, currentTrackId);
+      const response = await streamApi.streamTrack(currentBitrate, currentId);
       if (response?.data && streamUrlRef.current) {
         streamUrlRef.current = response.data.streamUrl;
         tokenParamRef.current = response.data.tokenParam;
         return response.data.tokenParam;
-      } else {
-        dispatch(showErrorNotification(t("system")));
       }
     } catch (error) {
-      console.error("Error refresh stream url:", error);
-      dispatch(showErrorNotification(t("system")));
+      console.error("Error refreshing stream url:", error);
     } finally {
       isRefreshingRef.current = false;
     }
     return null;
-  }, [dispatch, t]);
-  
-  // Event Handlers
-  const handleLoadMetadata = useCallback(() => {
-    if (audioRef.current) {
-      setPlayerControl(prev => ({...prev, duration: audioRef.current!.duration}));
-    }
   }, []);
-  
-  const handleTimeUpdate = useCallback(() => {
-    if (isSeeking || !audioRef.current) return;
-    setPlayerControl(prev => ({...prev, current: audioRef.current!.currentTime}));
-  }, [isSeeking]);
-  
-  // Just update Playing State base on real DOM state
-  const handlePlayPause = useCallback((isPlaying: boolean) => {
-    setPlayerControl(prev => ({...prev, playing: isPlaying}));
-  }, []);
-  
-  const handleEnded = useCallback(() => {
-    setPlayerControl(prev => {
-      if (audioRef.current) {
-        if (prev.loopMode === LoopMode.ONE) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.play();
-          return prev;
-        }
-      }
-      // Default: Stop
-      return {...prev, playing: false};
-    });
-  }, []);
-  
-  // Use Ref to save current time, so that when streamUrl changes, we can resume from that time
-  // Avoid adding playerControl.current to dependency to prevent re-creating HLS unnecessarily
-  // Ref not re-render component
-  const currentTimeRef = useRef(0);
-  useEffect(() => {
-    currentTimeRef.current = playerControl.current;
-  }, [playerControl.current]);
   
   // Setup HLS
   useEffect(() => {
-    const {trackId} = playerControl;
-    if (!trackId || !streamUrlRef.current || !audioRef.current) return;
+    // Nếu currentTrack là null, dọn dẹp và return
+    if (!currentTrack) {
+      if (hlsRef.current) hlsRef.current.destroy();
+      return;
+    }
     
-    const streamUrl = streamUrlRef.current;
-    const audio = audioRef.current;
-    
-    const hlsConfig: Partial<CustomHlsConfig> = {
-      maxBufferLength: 30,
-      
-      fLoader: HlsTokenRefreshLoader as any,    // For .ts files
-      pLoader: HlsTokenRefreshLoader as any,
-      
-      handleNewTokenWhenExpired: handleNewTokenWhenExpired,
-      
-      // Đây là setup cho các segment .ts và m3u8 lần đầu (luôn đảm bảo rằng các request đều có token mới nhất)
-      xhrSetup: (xhr: XMLHttpRequest, url: string) => {
-        if (url.includes('.ts') || url.includes('m3u8')) {
-          const baseUrl = url.split('?')[0];
-          xhr.open('GET', `${baseUrl}?${tokenParamRef.current}`, true);
-        }
-      }
-    };
-    
-    let hls: Hls;
-    
-    const initHls = () => {
-      if (Hls.isSupported()) {
-        if (hlsRef.current) {
-          hlsRef.current.destroy();
-        }
+    const loadStream = async () => {
+      try {
+        const response = await streamApi.streamTrack(bitrate, currentTrack.id);
         
-        hls = new Hls(hlsConfig);
-        hlsRef.current = hls;
-        
-        hls.loadSource(streamUrl);
-        hls.attachMedia(audio);
-        
-        hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
-          // data.details.totalduration chứa tổng thời gian chính xác từ file m3u8
-          const durationFromManifest = data.details.totalduration;
+        if (response?.data) {
+          const streamUrl = response.data.streamUrl;
+          streamUrlRef.current = streamUrl;
+          tokenParamRef.current = response.data.tokenParam;
           
-          setPlayerControl(prev => {
-            // Chỉ update nếu duration khác giá trị cũ để tránh render thừa
-            if (prev.duration !== durationFromManifest) {
-              return {...prev, duration: durationFromManifest};
-            }
-            return prev;
-          });
-        });
-        
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          // Resume logic: Chỉ resume nếu currentTimeRef > 0 (tức là refresh token/link)
-          // Nếu là bài mới (loadTrack set current=0) thì nó sẽ chạy từ 0
-          if (currentTimeRef.current > 0.5) {
-            audio.currentTime = currentTimeRef.current;
-          }
-          audio.play().catch(e => console.warn("Autoplay blocked", e));
-        });
-        
-        hls.on(Hls.Events.ERROR, async (event, data) => {
-          if (data.fatal) {
-            console.error("HLS fatal error:", data);
-            switch (data.type) {
-              case Hls.ErrorTypes.NETWORK_ERROR:
-                const httpCode = data.response?.code;
-                // Nếu Loader (đã setup trong HlsConfig)s đã bó tay với 401/403 hoặc file không tồn tại (404)
-                if (httpCode === 401 || httpCode === 403 || httpCode === 404) {
-                  hls.destroy();
-                  dispatch(showErrorNotification(t("system")));
-                  return;
+          if (Hls.isSupported() && audioRef.current) {
+            if (hlsRef.current) hlsRef.current.destroy();
+            
+            const hlsConfig: Partial<CustomHlsConfig> = {
+              maxBufferLength: 30,
+              enableWorker: true,
+              fLoader: HlsTokenRefreshLoader as any,
+              pLoader: HlsTokenRefreshLoader as any,
+              handleNewTokenWhenExpired: handleNewTokenWhenExpired,
+              xhrSetup: (xhr: XMLHttpRequest, url: string) => {
+                if ((url.includes('.ts') || url.includes('m3u8')) && tokenParamRef.current) {
+                  const baseUrl = url.split('?')[0];
+                  xhr.open('GET', `${baseUrl}?${tokenParamRef.current}`, true);
                 }
-                break;
-              case Hls.ErrorTypes.MEDIA_ERROR:
-                console.log("Fatal media error encountered, trying to recover...");
-                hls.recoverMediaError();
-                break;
-              default:
-                hls.destroy();
-                break;
-            }
+              }
+            };
+            
+            const hls = new Hls(hlsConfig);
+            hlsRef.current = hls;
+            
+            hls.loadSource(streamUrl);
+            hls.attachMedia(audioRef.current);
+            
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+              const playPromise = audioRef.current?.play();
+              
+              if (playPromise !== undefined) {
+                playPromise
+                  .then(() => {
+                    if (!isPlaying) dispatch(setIsPlaying(true));
+                  })
+                  .catch((error) => {
+                    if (error.name === 'NotAllowedError') {
+                      console.warn("Autoplay prevented by browser. User interaction needed.");
+                      dispatch(setIsPlaying(false));
+                    } else {
+                      console.error("Playback error:", error);
+                    }
+                  });
+              }
+            });
+            
+            hls.on(Hls.Events.LEVEL_LOADED, (_, data) => {
+              setDuration(data.details.totalduration);
+            });
+            
+            hls.on(Hls.Events.ERROR, (_, data) => {
+              if (data.fatal) {
+                switch (data.type) {
+                  case Hls.ErrorTypes.NETWORK_ERROR:
+                    hls.startLoad();
+                    break;
+                  case Hls.ErrorTypes.MEDIA_ERROR:
+                    hls.recoverMediaError();
+                    break;
+                  default:
+                    hls.destroy();
+                    dispatch(setIsPlaying(false));
+                    break;
+                }
+              }
+            });
           }
-        });
+        }
+      } catch (error) {
+        console.error("Load failed", error);
+        dispatch(setIsPlaying(false));
       }
     };
     
-    initHls();
+    loadStream();
     
     return () => {
       if (hlsRef.current) hlsRef.current.destroy();
-    }
-  }, [playerControl.trackId, handleNewTokenWhenExpired]);
+    };
+    
+    // Quan trọng: Dependency là currentTrack.id và timestamp (Khi setQueue mới, timestamp thay đổi)
+    // Nếu chỉ để [currentTrack], React có thể so sánh tham chiếu object (reference check)
+    // Dùng .id đảm bảo logic chỉ chạy lại khi ĐÚNG LÀ bài hát đã đổi.
+  }, [currentTrack?.id, timestamp, bitrate, dispatch, handleNewTokenWhenExpired]);
   
-  // Setup Event Listeners
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
+    if (!audioRef.current) return;
     
-    const onPlay = () => handlePlayPause(true);
-    const onPause = () => handlePlayPause(false);
-    const onVolumeChange = () => {
-      setPlayerControl(prev => ({
-        ...prev,
-        volume: Math.floor(audio.volume * 100)
-      }));
-    };
-    
-    audio.addEventListener('loadedmetadata', handleLoadMetadata);
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('volumechange', onVolumeChange); // Đã thêm listener
-    audio.addEventListener('play', onPlay);
-    audio.addEventListener('pause', onPause);
-    audio.addEventListener('ended', handleEnded);
-    
-    return () => {
-      audio.removeEventListener('loadedmetadata', handleLoadMetadata);
-      audio.removeEventListener('timeupdate', handleTimeUpdate);
-      audio.removeEventListener('volumechange', onVolumeChange); // Đã thêm remove
-      audio.removeEventListener('play', onPlay);
-      audio.removeEventListener('pause', onPause);
-      audio.removeEventListener('ended', handleEnded);
-    };
-  }, [handleLoadMetadata, handleTimeUpdate, handlePlayPause, handleEnded]);
-  
-  
-  // User Actions
-  const handleSaved = () => setSaved(prev => !prev);
-  
-  const handleLoop = (mode: LoopMode) =>
-    setPlayerControl(prev => ({
-      ...prev,
-      loopMode: mode
-    }));
-  
-  const handleShuffle = () =>
-    setPlayerControl(prev => ({
-      ...prev, shuffle: !prev.shuffle
-    }));
-  
-  const handlePlayTrack = () => {
-    // Just affect DOM, Event Listener auto update state -> Simpler logic
-    if (audioRef.current?.paused) audioRef.current.play();
-    else audioRef.current?.pause();
-  };
-  
-  const handleSeekTrack = useCallback((value: number) => {
-    // Optimistic UI update
-    setPlayerControl(prev => ({...prev, current: value}));
-    setIsSeeking(true);
-  }, []);
-  
-  const handleSeekComplete = useCallback((value: number) => {
-    if (audioRef.current) {
-      // Check if finite to avoid crash
-      if (Number.isFinite(value)) audioRef.current.currentTime = value;
+    if (isPlaying && audioRef.current.paused) {
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) playPromise.catch(() => {});
+    } else if (!isPlaying && !audioRef.current.paused) {
+      audioRef.current.pause();
     }
-    setIsSeeking(false);
-  }, []);
-  
-  const handleVolume = useCallback((volume: number) => {
-    // Just set state, Effect auto update DOM
-    const vol = Math.min(Math.max(volume, 0), 100);
     
-    setPlayerControl(prev => ({
-      ...prev,
-      volume: vol,
-      isMuted: vol === 0
-    }));
+    audioRef.current.volume = isMuted ? 0 : currentVolume / 100;
+    audioRef.current.muted = isMuted;
+    
+  }, [isPlaying, currentVolume, isMuted]);
+  
+  
+  // --- LOGIC 4: DOM EVENTS HANDLERS ---
+  const handleTimeUpdate = useCallback(() => {
+    if (audioRef.current) setCurrentTime(audioRef.current.currentTime);
   }, []);
   
-  const handleMuted = useCallback((value: boolean) => {
-    const volume = value ? 0 : latestVolumeRef.current;
-    // Just set state, Effect auto update DOM
-    setPlayerControl(prev => ({
-      ...prev,
-      isMuted: value,
-      volume: volume
-    }));
-  }, []);
-  
-  const loadTrack = useCallback(async (track: { trackId: string, bitrate: number }) => {
-    try {
-      const response = await streamApi.streamTrack(track.bitrate, track.trackId);
-      
-      if (response?.data) {
-        streamUrlRef.current = response.data.streamUrl;
-        tokenParamRef.current = response.data.tokenParam;
-        
-        setPlayerControl(prev => ({
-          ...prev,
-          trackId: track.trackId,
-          bitrate: track.bitrate,
-          current: 0,
-          duration: 0,
-        }));
+  const handleEnded = useCallback(() => {
+    // Logic Loop:
+    // 1. Loop 1: Tự replay
+    if (loopMode === LoopMode.ONE) {
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play();
       }
-    } catch (error) {
-      console.error("Load track failed", error);
-      dispatch(showErrorNotification(t("system")));
+      return;
     }
-  }, [dispatch, t]);
+    // 2. Loop khác: Gọi Redux đổi bài
+    dispatch(playNext({ isListenerClick: false }));
+  }, [dispatch, loopMode]);
   
-  const handleNextTrack = useCallback(async () => {
-    await loadTrack({trackId: '01K8NFTF9WWMVN4V38ZXE84K1Z', bitrate: 192});
-    setPlayerControl(prev => ({
-      ...prev,
-      playing: true
-    }));
-  }, [loadTrack]);
+  const handleNativePlayPause = useCallback(() => {
+    if (audioRef.current) {
+      dispatch(setIsPlaying(!audioRef.current.paused));
+    }
+  }, [dispatch]);
+  
+  const seek = useCallback((time: number) => {
+    if (audioRef.current && Number.isFinite(time)) {
+      audioRef.current.currentTime = time;
+      setCurrentTime(time);
+    }
+  }, []);
   
   return {
-    playerControl,
     audioRef,
-    saved,
-    handleSaved,
-    handleLoop,
-    handleShuffle,
-    handlePlayTrack,
-    handleSeekTrack,
-    handleSeekComplete,
-    handleVolume,
-    handleMuted,
-    handleNextTrack,
-    loadTrack
+    currentTime,
+    duration,
+    seek,
+    handleTimeUpdate,
+    handleEnded,
+    handleNativePlayPause
   };
 }

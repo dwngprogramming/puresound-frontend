@@ -327,7 +327,7 @@
             "description": "Enjoy the Individual Premium plan with 3 months billing. Save 10% with 3 months billing."
           },
           "student": {
-            "title": "Monthly Plan",
+            "title": "3 Months Plan",
             "price": "{price}/3 months",
             "description": "Enjoy the Student Premium plan with 3 months billing. Save 10% with 3 months billing."
           }

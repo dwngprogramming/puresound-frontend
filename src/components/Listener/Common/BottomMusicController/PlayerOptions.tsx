@@ -1,8 +1,10 @@
 import {ListMusic, Maximize, MicVocal, MonitorSpeaker, Turntable} from "lucide-react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useTranslations} from "next-intl";
 import OptionButton from "@/components/Listener/Common/BottomMusicController/OptionButton";
 import VolumeControl from "@/components/Listener/Common/BottomMusicController/VolumeControl";
+import {useAppDispatch, useAppSelector} from "@/libs/redux/hooks";
+import {toggleQueue} from "@/libs/redux/features/layout/layoutSlice";
 
 export interface PlayerOption {
   showNowPlaying: boolean;
@@ -16,7 +18,30 @@ export interface PlayerOption {
 
 const PlayerOptions = () => {
   const tOption = useTranslations("Components.MusicOption");
-  const [option, setOption] = useState<PlayerOption>();
+  const dispatch = useAppDispatch();
+  const {rightSidebar} = useAppSelector(state => state.layout);
+  const [option, setOption] = useState<PlayerOption>({
+    showNowPlaying: false,
+    showLyrics: false,
+    showPlaylist: false,
+    showConnect: false,
+    showFullscreen: false,
+    mute: false,
+    volume: 50,
+  });
+  
+  useEffect(() => {
+    console.log("Right Sidebar Open Queue:", rightSidebar.openQueue)
+    setOption((prev) => ({
+      ...prev,
+      showPlaylist: rightSidebar.openQueue
+    }));
+  }, [rightSidebar.openQueue]);
+  
+  useEffect(() => {
+    console.log("Option thực tế đã thay đổi thành:", option.showPlaylist);
+  }, [option.showPlaylist]);
+  
   const supportButtons = {
     nowPlaying: false,
     lyrics: false,
@@ -46,7 +71,11 @@ const PlayerOptions = () => {
           icon={ListMusic}
           label={tOption("queue")}
           isEnabled={supportButtons.queue}
+          isActive={option.showPlaylist}
           size={21}
+          onClick={() => {
+            dispatch(toggleQueue());
+          }}
         />
         
         <OptionButton

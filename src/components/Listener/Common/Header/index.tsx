@@ -1,6 +1,5 @@
 'use client';
 
-import Image from "next/image";
 import {useRouter} from "next/navigation";
 import SearchBar from "@/components/Listener/Common/Header/SearchBar";
 import RightButton from "@/components/Listener/Common/Header/RightButton";
