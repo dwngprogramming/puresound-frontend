@@ -241,3 +241,16 @@
     inset: 0 35px 35px 0;
   }
 }
+
+.os-theme-dark.os-scrollbar {
+  --os-size: 14px;
+  --os-handle-min-size: 30px;
+  --os-handle-bg: hsla(0, 0%, 100%, .4);
+  --os-handle-bg-hover: hsla(0, 0%, 100%, .6);
+  --os-handle-bg-active: hsla(0, 0%, 100%, .8);
+  transition: opacity .2s ease 0s, visibility .2s ease;
+}
+
+.os-theme-dark .os-scrollbar-handle {
+  border-radius: 8px;
+}

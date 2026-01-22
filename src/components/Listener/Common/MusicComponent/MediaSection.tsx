@@ -29,14 +29,14 @@ const MediaSection = <T, >({title, numOfItems, items}: MediaSectionInfo) => {
     <div className="w-full flex flex-col gap-2">
       <div className="flex justify-between items-center">
         <h3>{title}</h3>
-        <Link href="#" className="text-sm text-gray-400 hover:underline">
+        <Link href="#" className="text-sm text-gray-400 hover:underline mr-4">
           {t('seeMore')}
         </Link>
       </div>
       <div className="relative">
         {showLeft && (
           <div
-            className="absolute left-0 top-0 z-100 w-30 h-full bg-gradient-to-r from-blue-900/20 to-transparent flex items-center justify-start">
+            className="absolute left-0 top-0 z-100 w-25 h-full bg-gradient-to-r from-blue-900/40 to-transparent flex items-center justify-start">
             <button
               className="rounded-full p-1 ml-3 transition ease-in-out duration-300 bg-blue-900/90 hover:bg-neutral-500 cursor-pointer"
               onClick={scrollLeft}
@@ -57,7 +57,7 @@ const MediaSection = <T, >({title, numOfItems, items}: MediaSectionInfo) => {
         
         {showRight && (
           <div
-            className="absolute right-0 top-0 z-100 w-30 h-full bg-gradient-to-r from-transparent to-blue-900/20 flex items-center justify-end">
+            className="absolute right-0 top-0 z-100 w-25 h-full bg-gradient-to-r from-transparent to-blue-900/50 flex items-center justify-end">
             <button
               className="rounded-full p-1 mr-3 transition ease-in-out duration-300 bg-blue-900/90 hover:bg-neutral-500 cursor-pointer"
               onClick={scrollRight}

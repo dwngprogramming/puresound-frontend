@@ -10,10 +10,11 @@ import Footer from "@/components/Listener/Common/Footer";
 import MyLibrary from "@/components/Listener/Common/Library";
 import RightContentLayout from "@/components/Listener/Common/RightContentLayout";
 import {useAppSelector} from "@/libs/redux/hooks";
+import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
 
 const ClientRenderLayout = ({children}: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const { rightSidebar } = useAppSelector(state => state.layout);
+  const {rightSidebar} = useAppSelector(state => state.layout);
   const isQueueOpen = rightSidebar.openQueue;
   
   useEffect(() => {
@@ -37,11 +38,30 @@ const ClientRenderLayout = ({children}: { children: React.ReactNode }) => {
         {/* Content wrapper */}
         {/* flex-1 + h-0 => Tạo ra area content có thể scroll bên trong */}
         <div className="flex-1 flex mt-20 mb-22 h-0">
-          <main
-            className={`flex-1 ml-4 lg:ml-80 ${isQueueOpen ? 'lg:mr-80' : 'lg:mr-4'} transition-[margin-right] ease-in-out duration-300 mr-2 px-4 py-3 lg:pl-6 lg:pr-6 lg:py-5 rounded-2xl bg-neutral-900/60 overflow-y-auto vertical-scrollbar`}>
-            {children}
-            <Footer/>
-          </main>
+          <OverlayScrollbarsComponent
+            element="main"
+            options={{
+              scrollbars: {
+                theme: 'os-theme-dark',
+                visibility: 'auto',
+                autoHide: 'leave',
+                autoHideDelay: 2000,
+                clickScroll: true,
+              },
+              overflow: {
+                x: 'hidden',
+                y: 'scroll'
+              },
+              paddingAbsolute: true,
+            }}
+            defer
+            className={`flex-1 ml-4 lg:ml-80 ${isQueueOpen ? 'lg:mr-80' : 'lg:mr-4'} transition-[margin-right] ease-in-out duration-300 mr-2 rounded-2xl bg-neutral-900/60`}
+          >
+            <div className="pl-4 py-3 lg:pl-6 lg:py-5">
+              {children}
+              <Footer/>
+            </div>
+          </OverlayScrollbarsComponent>
         </div>
         
         <BottomMusicController/>
