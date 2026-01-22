@@ -1,5 +1,6 @@
 import {Manrope} from 'next/font/google'
 import "@/styles/globals.css";
+import 'overlayscrollbars/overlayscrollbars.css';
 import {hasLocale, NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
 import {notFound} from 'next/navigation';

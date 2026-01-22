@@ -5,7 +5,7 @@ import {Facebook, Instagram, LinkedIn} from "@/components/Icon/Brand/brand";
 const Footer = () => {
   const t = useTranslations("Listener.Common");
   return (
-    <footer className="mt-16 pt-6 border-t border-gray-700/50">
+    <footer className="mt-16 pt-6 mr-4 lg:mr-6 border-t border-gray-700/50">
       {/* Main Footer Content */}
       <div className="flex flex-col justify-center items-center space-y-3 mb-6">
         <PuresoundLogo size={60}/>
