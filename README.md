@@ -12,6 +12,8 @@
 
 This application is built using **Next.js** and **TypeScript**, serving as the client-side counterpart to the Java/Spring Boot backend service.
 
+You can access for this website application via URL: https://app.puresound.space
+
 ### 1.1. Key Features
 
 1.  **Modern UI/UX:** Responsive and interactive interface for music playback.
