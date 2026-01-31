@@ -19,6 +19,9 @@ This application is built using **Next.js** and **TypeScript**, serving as the c
 3.  **Library Management:** Manage playlists, favorites, and user profiles.
 4.  **Secure Authentication:** User login and registration integrated with the backend security layer.
 
+## 1.2. Screenshot
+![img.png](public/screenshot/home.png)
+
 ## 2. Tech Stack
 
 * **Framework:** [Next.js](https://nextjs.org/) (App Router)
