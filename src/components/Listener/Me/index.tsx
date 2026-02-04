@@ -9,7 +9,7 @@ export const Me = () => {
   const { data: me, isLoading } = useQuery<string>({
     queryKey: ["me"],
     queryFn: async () => {
-      return await meApi.getMe(); // ✅ Gọi function đúng cách
+      return await meApi.getMe();
     }
   });
 

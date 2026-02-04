@@ -6,23 +6,17 @@ import PlayerOptions from "@/components/Listener/Common/BottomMusicController/Pl
 import {useEffect} from "react";
 import {useAppDispatch} from "@/libs/redux/hooks";
 import {setQueue} from "@/libs/redux/features/player/playerSlice";
-import trackApi from "@/apis/main/metadata/track.api";
+import {usePopularTracks} from "@/hooks/metadata/useTrackMetadata";
 
 const BottomMusicController = () => {
   const dispatch = useAppDispatch();
+  const {data: tracks} = usePopularTracks();
   
   useEffect(() => {
-    const setupQueue = async () => {
-      // Giả sử ta có hàm fetchQueueTracks để lấy danh sách phát
-      const response = await trackApi.getPopularTracks(1);
-      const tracks = response.data.content;
-      
-      dispatch(setQueue({
-        tracks: tracks
-      }));
-    };
-    setupQueue();
-  }, [dispatch]);
+    if (tracks && tracks.length > 0) {
+      dispatch(setQueue({ tracks }));
+    }
+  }, [dispatch, tracks]);
   
   return (
     <div className="fixed bottom-0 left-0 right-0 h-22 bg-primary-700 z-50 flex items-center justify-between px-4">

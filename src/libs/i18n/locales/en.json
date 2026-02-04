@@ -201,7 +201,8 @@
       "media": {
         "seeMore": "See More",
         "popularTracks": "Popular Tracks",
-        "featuredArtists": "Featured Artists"
+        "featuredArtists": "Featured Artists",
+        "popularAlbums": "Popular Albums"
       }
     },
     "Me": {

@@ -7,10 +7,12 @@ import {faPlay} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useAppDispatch} from "@/libs/redux/hooks";
 import {setQueue} from "@/libs/redux/features/player/playerSlice";
+import {SimplifiedAlbumResponse} from "@/models/metadata/album/SimplifiedAlbumResponse";
+import AlbumCard from "@/components/Listener/Common/MusicComponent/AlbumCard";
 
 const MediaItemCard = ({item}: { item: SimplifiedItemResponse }) => {
   let content = null;
-  let itemType: 'track' | 'artist' | 'unknown' = 'unknown';
+  let itemType: 'track' | 'artist' | 'album' | 'unknown' = 'unknown';
   const dispatch = useAppDispatch();
   
   const handlePlayClick = () => {
@@ -29,7 +31,11 @@ const MediaItemCard = ({item}: { item: SimplifiedItemResponse }) => {
   } else if ((item as SimplifiedArtistResponse).stageName !== undefined) {
     content = <ArtistCard artist={item as SimplifiedArtistResponse} />;
     itemType = 'artist';
-  } else {
+  } else if ((item as SimplifiedAlbumResponse).albumType !== undefined) {
+    content = <AlbumCard album={item as SimplifiedAlbumResponse} />;
+    itemType = 'album';
+  }
+  else {
     // Trường hợp không khớp loại nào
     return null;
   }
