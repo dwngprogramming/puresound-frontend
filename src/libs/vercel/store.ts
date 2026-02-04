@@ -1,6 +1,6 @@
 import {Redis} from "@upstash/redis";
 
-const STORE_KEY = 'staging-tokens';
+const STORE_KEY = 'staging-access-tokens';
 const redis = Redis.fromEnv();
 
 interface StagingUser {
