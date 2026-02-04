@@ -4,19 +4,24 @@ import {AuthState} from "@/models/auth/AuthState";
 const initState: AuthState = {
   principal: null,
   token: null,
-  isAuthenticated: false
+  isAuthenticated: false,
+  isInitialized: false
 };
 
 const auth = createSlice({
   name: 'auth',
   initialState: initState,
   reducers: {
-    setCredentials(state: AuthState, action: PayloadAction<AuthState>) {
+    initializeAuth(state: AuthState) {
+      state.isInitialized = true;
+    },
+    
+    setCredentials(state: AuthState, action: PayloadAction<{principal: AuthState["principal"], token: string}>) {
       state.principal = action.payload.principal;
       state.token = action.payload.token;
       state.isAuthenticated = true;
     },
-
+    
     deleteCredentials(state: AuthState) {
       state.principal = null;
       state.token = null;
@@ -25,5 +30,5 @@ const auth = createSlice({
   }
 });
 
-export const {setCredentials, deleteCredentials} = auth.actions;
+export const {initializeAuth, setCredentials, deleteCredentials} = auth.actions;
 export default auth.reducer;

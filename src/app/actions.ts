@@ -18,7 +18,6 @@ export async function verifyStagingToken(prevState: any, formData: FormData) {
   
   // Check super token
   if (token === SUPER_TOKEN) {
-    console.log("Super Token found.");
     cookieStore.set('stg_role', 'admin', {httpOnly: true, secure: true, path: '/', maxAge: MAX_AGE})
     cookieStore.set('stg_token', token, {httpOnly: true, secure: true, path: '/', maxAge: MAX_AGE})
     redirect('/staging/admin')

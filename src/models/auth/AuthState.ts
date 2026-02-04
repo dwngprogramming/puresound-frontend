@@ -4,4 +4,5 @@ export interface AuthState {
   principal: UserPrincipal | null;
   token: string | null;
   isAuthenticated?: boolean;
+  isInitialized: boolean;
 }

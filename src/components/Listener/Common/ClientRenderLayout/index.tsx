@@ -11,6 +11,7 @@ import MyLibrary from "@/components/Listener/Common/Library";
 import RightContentLayout from "@/components/Listener/Common/RightContentLayout";
 import {useAppSelector} from "@/libs/redux/hooks";
 import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
+import AuthInitializer from "@/components/AuthInitializer";
 
 const ClientRenderLayout = ({children}: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,45 +28,47 @@ const ClientRenderLayout = ({children}: { children: React.ReactNode }) => {
   
   return (
     <>
-      {isLoading && <PageLoader/>}
-      <div className={`bg-primary-700 h-screen flex flex-col ${isLoading ? 'hidden' : 'block'}`}>
-        <InitialLoadListener/>
-        <Header/>
-        <MyLibrary/>
-        <MobileOverlay/>
-        <RightContentLayout/>
-        
-        {/* Content wrapper */}
-        {/* flex-1 + h-0 => Tạo ra area content có thể scroll bên trong */}
-        <div className="flex-1 flex mt-20 mb-22 h-0">
-          <OverlayScrollbarsComponent
-            element="main"
-            options={{
-              scrollbars: {
-                theme: 'os-theme-dark',
-                visibility: 'auto',
-                autoHide: 'leave',
-                autoHideDelay: 2000,
-                clickScroll: true,
-              },
-              overflow: {
-                x: 'hidden',
-                y: 'scroll'
-              },
-              paddingAbsolute: true,
-            }}
-            defer
-            className={`flex-1 ml-4 lg:ml-80 ${isQueueOpen ? 'lg:mr-80' : 'lg:mr-4'} transition-[margin-right] ease-in-out duration-300 mr-2 rounded-2xl bg-neutral-900/60`}
-          >
-            <div className="pl-4 py-3 lg:pl-6 lg:py-5">
-              {children}
-              <Footer/>
-            </div>
-          </OverlayScrollbarsComponent>
+      <AuthInitializer>
+        {isLoading && <PageLoader/>}
+        <div className={`bg-primary-700 h-screen flex flex-col ${isLoading ? 'hidden' : 'block'}`}>
+          <InitialLoadListener/>
+          <Header/>
+          <MyLibrary/>
+          <MobileOverlay/>
+          <RightContentLayout/>
+          
+          {/* Content wrapper */}
+          {/* flex-1 + h-0 => Tạo ra area content có thể scroll bên trong */}
+          <div className="flex-1 flex mt-20 mb-22 h-0">
+            <OverlayScrollbarsComponent
+              element="main"
+              options={{
+                scrollbars: {
+                  theme: 'os-theme-dark',
+                  visibility: 'auto',
+                  autoHide: 'leave',
+                  autoHideDelay: 2000,
+                  clickScroll: true,
+                },
+                overflow: {
+                  x: 'hidden',
+                  y: 'scroll'
+                },
+                paddingAbsolute: true,
+              }}
+              defer
+              className={`flex-1 ml-4 lg:ml-80 ${isQueueOpen ? 'lg:mr-80' : 'lg:mr-4'} transition-[margin-right] ease-in-out duration-300 mr-2 rounded-2xl bg-neutral-900/60`}
+            >
+              <div className="pl-4 py-3 lg:pl-6 lg:py-5">
+                {children}
+                <Footer/>
+              </div>
+            </OverlayScrollbarsComponent>
+          </div>
+          
+          <BottomMusicController/>
         </div>
-        
-        <BottomMusicController/>
-      </div>
+      </AuthInitializer>
     </>
   )
 }

@@ -31,16 +31,11 @@ const PlayerOptions = () => {
   });
   
   useEffect(() => {
-    console.log("Right Sidebar Open Queue:", rightSidebar.openQueue)
     setOption((prev) => ({
       ...prev,
       showPlaylist: rightSidebar.openQueue
     }));
   }, [rightSidebar.openQueue]);
-  
-  useEffect(() => {
-    console.log("Option thực tế đã thay đổi thành:", option.showPlaylist);
-  }, [option.showPlaylist]);
   
   const supportButtons = {
     nowPlaying: false,
