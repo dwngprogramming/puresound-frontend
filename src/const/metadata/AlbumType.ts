@@ -1,5 +1,5 @@
 export enum AlbumType {
-  SINGLE = "SINGLE",
-  ALBUM = "ALBUM",
+  SINGLE = "Single",
+  ALBUM = "Album",
   EP = "EP"
 }
