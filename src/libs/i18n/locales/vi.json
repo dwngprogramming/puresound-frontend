@@ -32,6 +32,11 @@
       "premium": {
         "title": "Khám phá Premium - PureSound",
         "description": "Khám phá các gói Premium trong PureSound - Tinh hoa âm nhạc thuần khiết"
+      },
+      "albumDetail": {
+        "title": "{albumName} - PureSound",
+        "description": "Nghe album {albumName} trên PureSound ngay. • {albumType} • {artistNames} • {albumReleaseYear} • {totalTracks} bài hát • {totalDuration} phút.",
+        "imgAlt": "Ảnh bìa album {albumName} của {artistNames}"
       }
     }
   },
