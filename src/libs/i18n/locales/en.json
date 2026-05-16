@@ -32,6 +32,11 @@
       "premium": {
         "title": "Explore Premium Subscription - PureSound",
         "description": "Explore Premium Subscription in PureSound - Pure Music Essence"
+      },
+      "albumDetail": {
+        "title": "{albumName} - PureSound",
+        "description": "Listen to {albumName} on PureSound now. • {albumType} • {artistNames} • {albumReleaseYear} • {totalTracks} tracks • {totalDuration} minutes.",
+        "imgAlt": "Cover art for {albumName} by {artistNames}"
       }
     }
   },
