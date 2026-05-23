@@ -270,7 +270,11 @@
       },
       "artist": "Nghệ sĩ",
       "album": "Album",
-      "track": "Bài hát"
+      "track": "Bài hát",
+      "song": "Bài hát",
+      "searchNoSuggestions": "Không tìm thấy gợi ý",
+      "clearSearch": "Xóa tìm kiếm",
+      "closeSearchSuggestions": "Đóng gợi ý tìm kiếm"
     },
     "Premium": {
       "title": "Đăng ký PureSound Premium",

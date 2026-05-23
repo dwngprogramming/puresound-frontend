@@ -1,70 +1,151 @@
 import {Input} from "@heroui/react";
 import {PanelBottomClose, Search, X} from "lucide-react";
 import {useTranslations} from "next-intl";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
+import SearchSuggestionDropdown from "@/components/Listener/Common/Header/SearchSuggestionDropdown";
+import {
+  searchSuggestionMockResponse,
+  SearchSuggestionResponse
+} from "@/components/Listener/Common/Header/searchSuggestionMock";
 
 const SearchBar = () => {
   const t = useTranslations('Listener.Common');
   const searchWrapperRef = useRef<HTMLDivElement>(null);
-  const [focused, setFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const normalizedQuery = searchQuery.trim().toLowerCase();
 
   useEffect(() => {
-    if (focused) {
-      // Reset về false trước, sau đó set true để trigger transition
-      setVisible(false);
-      const timeout = setTimeout(() => setVisible(true), 10);
-      return () => clearTimeout(timeout);
-    } else {
-      setVisible(false);
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
     }
-  }, [focused]);
+  }, []);
+
+  const openDropdown = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+
+    setIsDropdownOpen(true);
+    setVisible(false);
+    setTimeout(() => setVisible(true), 10);
+  }
+
+  const closeDropdown = () => {
+    setVisible(false);
+
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+    }
+
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsDropdownOpen(false);
+      closeTimeoutRef.current = null;
+    }, 300);
+  }
+
+  const filteredSuggestions = useMemo<SearchSuggestionResponse>(() => {
+    const suggestions = searchSuggestionMockResponse.data;
+
+    if (!normalizedQuery) {
+      return suggestions;
+    }
+
+    const includesQuery = (value: string) => value.toLowerCase().includes(normalizedQuery);
+
+    return {
+      tracks: suggestions.tracks.filter((track) =>
+        includesQuery(track.title) ||
+        track.artists.some((artist) => includesQuery(artist.stageName)) ||
+        includesQuery(track.album.name)
+      ),
+      artists: suggestions.artists.filter((artist) => includesQuery(artist.stageName)),
+      albums: suggestions.albums.filter((album) =>
+        includesQuery(album.name) ||
+        album.artists.some((artist) => includesQuery(artist.stageName))
+      ),
+    };
+  }, [normalizedQuery]);
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    openDropdown();
+    inputRef.current?.focus();
+  }
+
+  const handleSelectSuggestion = (value: string) => {
+    setSearchQuery(value);
+    closeDropdown();
+  }
 
   const renderEndContent = () => {
     return (
       <div className="flex items-center space-x-1">
         {searchQuery !== '' && (
-          <button className="cursor-pointer">
-            <X className="text-neutral-400 hover:text-neutral-300"/>
+          <button
+            type="button"
+            aria-label={t('clearSearch')}
+            className="cursor-pointer"
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={handleClearSearch}
+          >
+            <X size={20} className="text-neutral-400 hover:text-neutral-300"/>
           </button>
         )}
 
-        <button className="pl-2 border-l border-neutral-500 cursor-pointer">
-          <PanelBottomClose className="text-neutral-400 hover:text-neutral-300"/>
+        <button
+          type="button"
+          aria-label={t('closeSearchSuggestions')}
+          className="pl-2 border-l border-neutral-500 cursor-pointer"
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={closeDropdown}
+        >
+          <PanelBottomClose size={20} className="text-neutral-400 hover:text-neutral-300"/>
         </button>
       </div>
     );
   }
 
   return (
-    <div ref={searchWrapperRef} className="relative">
+    <div ref={searchWrapperRef} className="relative w-full">
       <Input
+        ref={inputRef}
+        value={searchQuery}
+        onValueChange={setSearchQuery}
         classNames={{
-          input: 'text-base',
-          inputWrapper: 'h-13 rounded-full bg-neutral-900/60'
+          input: 'text-sm sm:text-base truncate',
+          inputWrapper: 'h-12 sm:h-13 rounded-full bg-neutral-900/60'
         }}
-        onFocus={() => setFocused(true)}
+        onFocus={openDropdown}
         onBlur={(e) => {
-          // Kiểm tra xem blur có xảy ra do click bên trong wrapper không
           if (!e.relatedTarget || !searchWrapperRef.current?.contains(e.relatedTarget as Node)) {
-            setFocused(false);
+            closeDropdown();
           }
         }}
         disableAnimation
         placeholder={t('searchPlaceholder')}
-        startContent={<Search size={30}/>}
+        startContent={<Search size={24} className="shrink-0 sm:size-[30px]"/>}
         endContent={renderEndContent()}
       />
 
-      {focused && (
+      {isDropdownOpen && (
         <div
-          className={`absolute w-full h-30 bg-primary-900/90 shadow-lg shadow-gray-800 rounded-xl right-0 top-13 z-10 transition-all duration-500 ease-in-out ${
-            visible ? "opacity-100" : "opacity-0"
+          className={`absolute right-0 top-13 z-50 w-full overflow-hidden rounded-xl border border-primary-500/50 bg-primary-700/95 shadow-xl shadow-black/35 backdrop-blur-md transition-all duration-300 ease-in-out ${
+            visible ? "translate-y-0 opacity-100" : "-translate-y-1 opacity-0"
           }`}
-          tabIndex={-1} // Để có thể focus vào div này
-          onMouseDown={(e) => e.preventDefault()} // Chặn việc mất focus của input
+          tabIndex={-1}
+          onMouseDown={(e) => e.preventDefault()}
         >
+          <SearchSuggestionDropdown
+            suggestions={filteredSuggestions}
+            onSelect={handleSelectSuggestion}
+          />
         </div>
       )}
     </div>

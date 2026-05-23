@@ -267,7 +267,11 @@
       },
       "artist": "Artist",
       "album": "Album",
-      "track": "Track"
+      "track": "Track",
+      "song": "Song",
+      "searchNoSuggestions": "No suggestions found",
+      "clearSearch": "Clear search",
+      "closeSearchSuggestions": "Close search suggestions"
     },
     "Premium": {
       "title": "PureSound Premium Subscription",
