@@ -13,18 +13,40 @@ const SearchBar = () => {
   const searchWrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const normalizedQuery = searchQuery.trim().toLowerCase();
-
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const normalizedQuery = debouncedSearchQuery.trim().toLowerCase();
+  
+  // Clean up
   useEffect(() => {
     return () => {
       if (closeTimeoutRef.current) {
         clearTimeout(closeTimeoutRef.current);
       }
+
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
     }
   }, []);
+  
+  // Debounce for searching
+  useEffect(() => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    setIsSearchLoading(true);
+    debounceTimeoutRef.current = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+      setIsSearchLoading(false);
+      debounceTimeoutRef.current = null;
+    }, 300);
+  }, [searchQuery]);
 
   const openDropdown = () => {
     if (closeTimeoutRef.current) {
@@ -48,6 +70,11 @@ const SearchBar = () => {
       setIsDropdownOpen(false);
       closeTimeoutRef.current = null;
     }, 300);
+  }
+
+  const handleSearchQueryChange = (value: string) => {
+    setSearchQuery(value);
+    openDropdown();
   }
 
   const filteredSuggestions = useMemo<SearchSuggestionResponse>(() => {
@@ -75,12 +102,33 @@ const SearchBar = () => {
 
   const handleClearSearch = () => {
     setSearchQuery('');
+    setDebouncedSearchQuery('');
+    setIsSearchLoading(false);
+
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+      debounceTimeoutRef.current = null;
+    }
+
     openDropdown();
     inputRef.current?.focus();
   }
 
   const handleSelectSuggestion = (value: string) => {
     setSearchQuery(value);
+    setDebouncedSearchQuery(value);
+    setIsSearchLoading(false);
+    closeDropdown();
+  }
+
+  const handleFullSearch = () => {
+    const query = searchQuery.trim();
+
+    if (!query) {
+      return;
+    }
+
+    // TODO: Integrate full search result rendering/navigation when that surface exists.
     closeDropdown();
   }
 
@@ -117,7 +165,7 @@ const SearchBar = () => {
       <Input
         ref={inputRef}
         value={searchQuery}
-        onValueChange={setSearchQuery}
+        onValueChange={handleSearchQueryChange}
         classNames={{
           input: 'text-sm sm:text-base truncate',
           inputWrapper: 'h-12 sm:h-13 rounded-full bg-neutral-900/60'
@@ -129,6 +177,11 @@ const SearchBar = () => {
           }
         }}
         disableAnimation
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            handleFullSearch();
+          }
+        }}
         placeholder={t('searchPlaceholder')}
         startContent={<Search size={24} className="shrink-0 sm:size-[30px]"/>}
         endContent={renderEndContent()}
@@ -144,6 +197,7 @@ const SearchBar = () => {
         >
           <SearchSuggestionDropdown
             suggestions={filteredSuggestions}
+            isLoading={isSearchLoading}
             onSelect={handleSelectSuggestion}
           />
         </div>

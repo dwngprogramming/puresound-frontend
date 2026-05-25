@@ -1,3 +1,4 @@
+import {Spinner} from "@heroui/react";
 import {Disc3} from "lucide-react";
 import {useTranslations} from "next-intl";
 import {SearchSuggestionResponse} from "@/components/Listener/Common/Header/searchSuggestionMock";
@@ -9,6 +10,7 @@ type SuggestionType = 'track' | 'artist' | 'album';
 
 interface SearchSuggestionDropdownProps {
   suggestions: SearchSuggestionResponse;
+  isLoading: boolean;
   onSelect: (value: string) => void;
 }
 
@@ -51,13 +53,25 @@ const mapAlbumSuggestion = (album: SimplifiedAlbumResponse, typeLabel: string): 
   imageUrl: album.images[0]?.url,
 });
 
-const SearchSuggestionDropdown = ({suggestions, onSelect}: SearchSuggestionDropdownProps) => {
+const SearchSuggestionDropdown = ({suggestions, isLoading, onSelect}: SearchSuggestionDropdownProps) => {
   const t = useTranslations('Listener.Common');
   const items: SuggestionRowInfo[] = [
     ...suggestions.tracks.map((track) => mapTrackSuggestion(track, t('song'))),
     ...suggestions.artists.map((artist) => mapArtistSuggestion(artist, t('artist'))),
     ...suggestions.albums.map((album) => mapAlbumSuggestion(album, t('album'))),
   ];
+
+  if (isLoading) {
+    return (
+      <div className="flex h-28 items-center justify-center">
+        <Spinner
+          size="sm"
+          color="default"
+          aria-label={t('loadingSearchSuggestions')}
+        />
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
