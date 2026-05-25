@@ -14,6 +14,7 @@ const SearchBar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasShownInitialSkeletonRef = useRef(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,12 +41,21 @@ const SearchBar = () => {
       clearTimeout(debounceTimeoutRef.current);
     }
 
-    setIsSearchLoading(true);
+    if (!searchQuery.trim()) {
+      setDebouncedSearchQuery('');
+      setIsSearchLoading(false);
+      debounceTimeoutRef.current = null;
+      return;
+    }
+
+    const shouldShowSkeleton = !hasShownInitialSkeletonRef.current;
+    setIsSearchLoading(shouldShowSkeleton);
     debounceTimeoutRef.current = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery);
       setIsSearchLoading(false);
+      hasShownInitialSkeletonRef.current = true;
       debounceTimeoutRef.current = null;
-    }, 300);
+    }, 500);
   }, [searchQuery]);
 
   const openDropdown = () => {
@@ -74,7 +84,15 @@ const SearchBar = () => {
 
   const handleSearchQueryChange = (value: string) => {
     setSearchQuery(value);
-    openDropdown();
+
+    if (value.trim()) {
+      openDropdown();
+      return;
+    }
+
+    setDebouncedSearchQuery('');
+    setIsSearchLoading(false);
+    closeDropdown();
   }
 
   const filteredSuggestions = useMemo<SearchSuggestionResponse>(() => {
@@ -110,7 +128,7 @@ const SearchBar = () => {
       debounceTimeoutRef.current = null;
     }
 
-    openDropdown();
+    closeDropdown();
     inputRef.current?.focus();
   }
 
@@ -170,7 +188,11 @@ const SearchBar = () => {
           input: 'text-sm sm:text-base truncate',
           inputWrapper: 'h-12 sm:h-13 rounded-full bg-neutral-900/60'
         }}
-        onFocus={openDropdown}
+        onFocus={() => {
+          if (searchQuery.trim()) {
+            openDropdown();
+          }
+        }}
         onBlur={(e) => {
           if (!e.relatedTarget || !searchWrapperRef.current?.contains(e.relatedTarget as Node)) {
             closeDropdown();

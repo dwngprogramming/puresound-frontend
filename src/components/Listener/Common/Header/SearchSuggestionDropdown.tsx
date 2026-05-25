@@ -1,10 +1,10 @@
-import {Spinner} from "@heroui/react";
 import {Disc3} from "lucide-react";
 import {useTranslations} from "next-intl";
 import {SearchSuggestionResponse} from "@/components/Listener/Common/Header/searchSuggestionMock";
 import {SimplifiedAlbumResponse} from "@/models/metadata/album/SimplifiedAlbumResponse";
 import {SimplifiedArtistResponse} from "@/models/metadata/artist/SimplifiedArtistResponse";
 import {SimplifiedTrackResponse} from "@/models/metadata/track/SimplifiedTrackResponse";
+import SearchSuggestionSkeleton from "@/components/Listener/Common/Header/SearchSuggestionSkeleton";
 
 type SuggestionType = 'track' | 'artist' | 'album';
 
@@ -62,15 +62,7 @@ const SearchSuggestionDropdown = ({suggestions, isLoading, onSelect}: SearchSugg
   ];
 
   if (isLoading) {
-    return (
-      <div className="flex h-28 items-center justify-center">
-        <Spinner
-          size="sm"
-          color="default"
-          aria-label={t('loadingSearchSuggestions')}
-        />
-      </div>
-    );
+    return <SearchSuggestionSkeleton/>;
   }
 
   if (items.length === 0) {

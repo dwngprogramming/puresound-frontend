@@ -270,7 +270,6 @@
       "track": "Track",
       "song": "Song",
       "searchNoSuggestions": "No suggestions found",
-      "loadingSearchSuggestions": "Loading search suggestions",
       "clearSearch": "Clear search",
       "closeSearchSuggestions": "Close search suggestions"
     },
