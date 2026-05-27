@@ -1,16 +1,16 @@
 import {Input} from "@heroui/react";
 import {PanelBottomClose, Search, X} from "lucide-react";
 import {useTranslations} from "next-intl";
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import SearchSuggestionDropdown from "@/components/Listener/Common/Header/SearchSuggestionDropdown";
 import {
   searchSuggestionMockResponse,
   SearchSuggestionResponse
 } from "@/components/Listener/Common/Header/searchSuggestionMock";
+import useClickOutside from "@/hooks/util/useClickOutside";
 
 const SearchBar = () => {
   const t = useTranslations('Listener.Common');
-  const searchWrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -21,6 +21,21 @@ const SearchBar = () => {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const normalizedQuery = debouncedSearchQuery.trim().toLowerCase();
+
+  const closeDropdown = useCallback(() => {
+    setVisible(false);
+
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+    }
+
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsDropdownOpen(false);
+      closeTimeoutRef.current = null;
+    }, 300);
+  }, []);
+
+  const searchWrapperRef = useClickOutside(closeDropdown, isDropdownOpen);
   
   // Clean up
   useEffect(() => {
@@ -67,19 +82,6 @@ const SearchBar = () => {
     setIsDropdownOpen(true);
     setVisible(false);
     setTimeout(() => setVisible(true), 10);
-  }
-
-  const closeDropdown = () => {
-    setVisible(false);
-
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current);
-    }
-
-    closeTimeoutRef.current = setTimeout(() => {
-      setIsDropdownOpen(false);
-      closeTimeoutRef.current = null;
-    }, 300);
   }
 
   const handleSearchQueryChange = (value: string) => {
