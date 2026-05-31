@@ -3,11 +3,12 @@ import {PanelBottomClose, Search, X} from "lucide-react";
 import {useTranslations} from "next-intl";
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import SearchSuggestionDropdown from "@/components/Listener/Common/Header/SearchSuggestionDropdown";
-import {
-  searchSuggestionMockResponse,
-  SearchSuggestionResponse
-} from "@/components/Listener/Common/Header/searchSuggestionMock";
 import useClickOutside from "@/hooks/util/useClickOutside";
+import {
+  createEmptySearchSuggestionResponse,
+  SearchSuggestionResponse
+} from "@/models/search/SearchSuggestionResponse";
+import {useSearchSuggestions} from "@/hooks/search/useSearchSuggestions";
 
 const SearchBar = () => {
   const t = useTranslations('Listener.Common');
@@ -20,21 +21,26 @@ const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const normalizedQuery = debouncedSearchQuery.trim().toLowerCase();
-
+  const normalizedQuery = debouncedSearchQuery.trim();
+  const {data: searchSuggestions, isFetching: isFetchingSuggestions} = useSearchSuggestions(normalizedQuery);
+  const suggestions = useMemo<SearchSuggestionResponse>(
+    () => searchSuggestions ?? createEmptySearchSuggestionResponse(normalizedQuery),
+    [normalizedQuery, searchSuggestions]
+  );
+  
   const closeDropdown = useCallback(() => {
     setVisible(false);
-
+    
     if (closeTimeoutRef.current) {
       clearTimeout(closeTimeoutRef.current);
     }
-
+    
     closeTimeoutRef.current = setTimeout(() => {
       setIsDropdownOpen(false);
       closeTimeoutRef.current = null;
     }, 300);
   }, []);
-
+  
   const searchWrapperRef = useClickOutside(closeDropdown, isDropdownOpen);
   
   // Clean up
@@ -43,7 +49,7 @@ const SearchBar = () => {
       if (closeTimeoutRef.current) {
         clearTimeout(closeTimeoutRef.current);
       }
-
+      
       if (debounceTimeoutRef.current) {
         clearTimeout(debounceTimeoutRef.current);
       }
@@ -55,14 +61,14 @@ const SearchBar = () => {
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
     }
-
+    
     if (!searchQuery.trim()) {
       setDebouncedSearchQuery('');
       setIsSearchLoading(false);
       debounceTimeoutRef.current = null;
       return;
     }
-
+    
     const shouldShowSkeleton = !hasShownInitialSkeletonRef.current;
     setIsSearchLoading(shouldShowSkeleton);
     debounceTimeoutRef.current = setTimeout(() => {
@@ -72,86 +78,63 @@ const SearchBar = () => {
       debounceTimeoutRef.current = null;
     }, 500);
   }, [searchQuery]);
-
+  
   const openDropdown = () => {
     if (closeTimeoutRef.current) {
       clearTimeout(closeTimeoutRef.current);
       closeTimeoutRef.current = null;
     }
-
+    
     setIsDropdownOpen(true);
     setVisible(false);
     setTimeout(() => setVisible(true), 10);
   }
-
+  
   const handleSearchQueryChange = (value: string) => {
     setSearchQuery(value);
-
+    
     if (value.trim()) {
       openDropdown();
       return;
     }
-
+    
     setDebouncedSearchQuery('');
     setIsSearchLoading(false);
     closeDropdown();
   }
-
-  const filteredSuggestions = useMemo<SearchSuggestionResponse>(() => {
-    const suggestions = searchSuggestionMockResponse.data;
-
-    if (!normalizedQuery) {
-      return suggestions;
-    }
-
-    const includesQuery = (value: string) => value.toLowerCase().includes(normalizedQuery);
-
-    return {
-      tracks: suggestions.tracks.filter((track) =>
-        includesQuery(track.title) ||
-        track.artists.some((artist) => includesQuery(artist.stageName)) ||
-        includesQuery(track.album.name)
-      ),
-      artists: suggestions.artists.filter((artist) => includesQuery(artist.stageName)),
-      albums: suggestions.albums.filter((album) =>
-        includesQuery(album.name) ||
-        album.artists.some((artist) => includesQuery(artist.stageName))
-      ),
-    };
-  }, [normalizedQuery]);
-
+  
   const handleClearSearch = () => {
     setSearchQuery('');
     setDebouncedSearchQuery('');
     setIsSearchLoading(false);
-
+    
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
       debounceTimeoutRef.current = null;
     }
-
+    
     closeDropdown();
     inputRef.current?.focus();
   }
-
+  
   const handleSelectSuggestion = (value: string) => {
     setSearchQuery(value);
     setDebouncedSearchQuery(value);
     setIsSearchLoading(false);
     closeDropdown();
   }
-
+  
   const handleFullSearch = () => {
     const query = searchQuery.trim();
-
+    
     if (!query) {
       return;
     }
-
+    
     // TODO: Integrate full search result rendering/navigation when that surface exists.
     closeDropdown();
   }
-
+  
   const renderEndContent = () => {
     return (
       <div className="flex items-center space-x-1">
@@ -166,7 +149,7 @@ const SearchBar = () => {
             <X size={20} className="text-neutral-400 hover:text-neutral-300"/>
           </button>
         )}
-
+        
         <button
           type="button"
           aria-label={t('closeSearchSuggestions')}
@@ -179,7 +162,7 @@ const SearchBar = () => {
       </div>
     );
   }
-
+  
   return (
     <div ref={searchWrapperRef} className="relative w-full">
       <Input
@@ -210,7 +193,7 @@ const SearchBar = () => {
         startContent={<Search size={24} className="shrink-0 sm:size-[30px]"/>}
         endContent={renderEndContent()}
       />
-
+      
       {isDropdownOpen && (
         <div
           className={`absolute right-0 top-13 z-50 w-full overflow-hidden rounded-xl border border-primary-500/50 bg-primary-700/95 shadow-xl shadow-black/35 backdrop-blur-md transition-all duration-300 ease-in-out ${
@@ -220,8 +203,8 @@ const SearchBar = () => {
           onMouseDown={(e) => e.preventDefault()}
         >
           <SearchSuggestionDropdown
-            suggestions={filteredSuggestions}
-            isLoading={isSearchLoading}
+            suggestions={suggestions}
+            isLoading={isSearchLoading || isFetchingSuggestions}
             onSelect={handleSelectSuggestion}
           />
         </div>

@@ -1,6 +1,6 @@
 import {Disc3} from "lucide-react";
 import {useTranslations} from "next-intl";
-import {SearchSuggestionResponse} from "@/components/Listener/Common/Header/searchSuggestionMock";
+import {SearchSuggestionResponse} from "@/models/search/SearchSuggestionResponse";
 import {SimplifiedAlbumResponse} from "@/models/metadata/album/SimplifiedAlbumResponse";
 import {SimplifiedArtistResponse} from "@/models/metadata/artist/SimplifiedArtistResponse";
 import {SimplifiedTrackResponse} from "@/models/metadata/track/SimplifiedTrackResponse";
@@ -53,6 +53,9 @@ const mapAlbumSuggestion = (album: SimplifiedAlbumResponse, typeLabel: string): 
   imageUrl: album.images[0]?.url,
 });
 
+const getSuggestionSubtitle = (item: SuggestionRowInfo) =>
+  item.type === 'artist' ? item.typeLabel : `${item.typeLabel} \u00B7 ${item.artistNames}`;
+
 const SearchSuggestionDropdown = ({suggestions, isLoading, onSelect}: SearchSuggestionDropdownProps) => {
   const t = useTranslations('Listener.Common');
   const items: SuggestionRowInfo[] = [
@@ -60,11 +63,11 @@ const SearchSuggestionDropdown = ({suggestions, isLoading, onSelect}: SearchSugg
     ...suggestions.artists.map((artist) => mapArtistSuggestion(artist, t('artist'))),
     ...suggestions.albums.map((album) => mapAlbumSuggestion(album, t('album'))),
   ];
-
+  
   if (isLoading) {
     return <SearchSuggestionSkeleton/>;
   }
-
+  
   if (items.length === 0) {
     return (
       <div className="flex h-28 flex-col items-center justify-center gap-2 px-4 text-center text-sm text-neutral-400">
@@ -73,7 +76,7 @@ const SearchSuggestionDropdown = ({suggestions, isLoading, onSelect}: SearchSugg
       </div>
     );
   }
-
+  
   return (
     <div className="max-h-[min(60vh,28rem)] overflow-y-auto overscroll-contain p-2">
       <div className="flex flex-col gap-1">
@@ -90,13 +93,13 @@ const SearchSuggestionDropdown = ({suggestions, isLoading, onSelect}: SearchSugg
               alt={item.title}
               className={`h-11 w-11 object-cover ${item.type === 'artist' ? 'rounded-full' : 'rounded-md'}`}
             />
-
+            
             <span className="flex min-w-0 flex-col gap-1">
               <span className="block truncate text-sm font-semibold text-neutral-100">
                 {item.title}
               </span>
               <span className="block truncate text-xs text-neutral-400">
-                {item.typeLabel} · {item.artistNames}
+                {getSuggestionSubtitle(item)}
               </span>
             </span>
           </button>

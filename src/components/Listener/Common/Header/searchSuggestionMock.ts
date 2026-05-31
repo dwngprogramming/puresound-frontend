@@ -3,12 +3,7 @@ import {ApiResponse} from "@/models/ApiResponse";
 import {SimplifiedAlbumResponse} from "@/models/metadata/album/SimplifiedAlbumResponse";
 import {SimplifiedArtistResponse} from "@/models/metadata/artist/SimplifiedArtistResponse";
 import {SimplifiedTrackResponse} from "@/models/metadata/track/SimplifiedTrackResponse";
-
-export interface SearchSuggestionResponse {
-  tracks: SimplifiedTrackResponse[];
-  artists: SimplifiedArtistResponse[];
-  albums: SimplifiedAlbumResponse[];
-}
+import {SearchSuggestionResponse} from "@/models/search/SearchSuggestionResponse";
 
 const createAlbumImage = (id: string, name: string) => ({
   id,
@@ -77,6 +72,7 @@ export const searchSuggestionMockResponse: ApiResponse<SearchSuggestionResponse>
   code: '200',
   message: 'Mock search suggestions',
   data: {
+    keyword: '',
     tracks: [
       {
         id: 'mock-track-golden-hour',
